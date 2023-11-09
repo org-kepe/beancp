@@ -117,7 +117,7 @@ public class BeancpInfoASMTool implements Opcodes
 			asmContext.getNextLine();
 		}
 		{
-			methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "(Lcom/kepe/beancp/config/BeancpFeature;"+BeancpInfoASMTool.desc(BeancpConverterInfo.class)+"Lcom/kepe/beancp/info/BeancpInfo;Lcom/kepe/beancp/info/BeancpInfo;)V", null, null);
+			methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "(Lorg/kepe/beancp/config/BeancpFeature;"+BeancpInfoASMTool.desc(BeancpConverterInfo.class)+"Lcom/kepe/beancp/info/BeancpInfo;Lcom/kepe/beancp/info/BeancpInfo;)V", null, null);
 
 			methodVisitor.visitParameter("feature", 0);
 			methodVisitor.visitParameter("info", 0);
