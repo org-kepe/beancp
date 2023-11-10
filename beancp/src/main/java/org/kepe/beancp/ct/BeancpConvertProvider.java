@@ -1,5 +1,6 @@
 package org.kepe.beancp.ct;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.kepe.beancp.ct.asm.BeancpInfoASMTool;
 import org.kepe.beancp.ct.convert.BeancpConvertCustomProvider;
 import org.kepe.beancp.ct.convert.BeancpConvertNonProvider;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.invocation.BeancpInvocationImp;
 import org.kepe.beancp.ct.itf.BeancpASMConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
 import org.kepe.beancp.info.BeancpInfo;
@@ -21,15 +23,19 @@ import org.kepe.beancp.info.BeancpInfo;
  */
 public abstract class BeancpConvertProvider
 {
-    private static List<BeancpConverterInfo> converterList=new ArrayList<>();
+
     private final static Map<BeancpInfo,Map<BeancpInfo,Map<BeancpFeature,BeancpConvertProvider>>> C_MAP=new ConcurrentHashMap<>();
+	private static List<BeancpConverterInfo> converterList=new ArrayList<>();
+
     protected BeancpConverterInfo info;
     protected BeancpInfo fromInfo;
     protected BeancpInfo toInfo;
     protected BeancpFeature flag;
     protected int distance;
+    private BeancpConvertProvider parent;
+    private BeancpInvocationImp invocation;
 
-    public BeancpConvertProvider(BeancpFeature flag,BeancpConverterInfo info,BeancpInfo fromInfo,BeancpInfo toInfo){
+    public BeancpConvertProvider(BeancpConvertProvider parent,BeancpFeature flag,BeancpConverterInfo info,BeancpInfo fromInfo,BeancpInfo toInfo){
         this.info=info;
         this.fromInfo=fromInfo;
         this.toInfo=toInfo;
@@ -39,6 +45,8 @@ public abstract class BeancpConvertProvider
         }else {
             this.distance=info.getConverter().distance(flag, fromInfo.getBType(), fromInfo.getBClass(), toInfo.getBType(), toInfo.getBClass());
         }
+        this.parent=parent;
+        this.invocation=new BeancpInvocationImp(parent);
     }
     public int getDistance() {
     	return this.distance;
@@ -302,33 +310,41 @@ public abstract class BeancpConvertProvider
         }
         return of(this.flag,fromInfo1,this.toInfo);
     }
+    protected BeancpInvocationImp getInvocation() {
+    	return null;
+    }
     public static BeancpConvertProvider of(BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
         return C_MAP.computeIfAbsent(fromInfo, key->new ConcurrentHashMap<>()).computeIfAbsent(toInfo, key->new ConcurrentHashMap<>()).computeIfAbsent(flag, key->generateProvider(flag,fromInfo,toInfo));
-        
     }
-    private static BeancpConvertProvider generateProvider(BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
-        int length=converterList.size();
-        for(int i=0;i<length;i++){
-            BeancpConverterInfo info=converterList.get(i);
-            if(info.matches(fromInfo,toInfo)){
-                if(info.getConverter() instanceof BeancpCustomConverter){
-                    return new BeancpConvertCustomProvider(flag,info,fromInfo,toInfo);
-                }else if(info.getConverter() instanceof BeancpASMConverter){
-                    return BeancpInfoASMTool.generateASMProvider(info,flag,fromInfo,toInfo);
-                }
-            }
-        }
-        return new BeancpConvertNonProvider(flag,fromInfo,toInfo);
-    }
+    
 
     
     public static void register(BeancpConverterInfo info) {
-        synchronized(converterList){
+    	synchronized(converterList){
             converterList.add(info);
             converterList.sort((key1,key2)->{
                 return key1.getPriority()-key2.getPriority();
             });
         }
-        
     }
+    
+    private static BeancpConvertProvider generateProvider(BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
+        int length=converterList.size();
+        BeancpConvertProvider provider=null;
+        for(int i=length-1;i>=0;i--){
+            BeancpConverterInfo info=converterList.get(i);
+            if(info.matches(fromInfo,toInfo)){
+                if(info.getConverter() instanceof BeancpCustomConverter){
+                	provider = new BeancpConvertCustomProvider(provider,flag,info,fromInfo,toInfo);
+                }else if(info.getConverter() instanceof BeancpASMConverter){
+                	provider = BeancpInfoASMTool.generateASMProvider(provider,info,flag,fromInfo,toInfo);
+                }
+            }
+        }
+        if(provider==null) {
+        	provider=new BeancpConvertNonProvider(null,flag,fromInfo,toInfo);
+        }
+        return new BeancpConvertProviderProxy(provider); 
+    }
+	
 }

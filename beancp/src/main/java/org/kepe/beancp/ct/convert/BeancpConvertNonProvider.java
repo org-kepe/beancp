@@ -14,14 +14,18 @@ import org.kepe.beancp.info.BeancpInfo;
  */
 public class BeancpConvertNonProvider extends BeancpConvertProvider
 {
-    public final static BeancpConvertNonProvider INSTANCE=new BeancpConvertNonProvider();
-    private BeancpConvertNonProvider() {
-        super(null, null, null, null);
+	public final static BeancpConvertNonProvider INSTANCE=new BeancpConvertNonProvider();
+
+	private BeancpConvertNonProvider() {
+        super(null,null, null, null, null);
     }
-    public BeancpConvertNonProvider(BeancpFeature flag, BeancpInfo fromInfo,
-            BeancpInfo toInfo) {
-        super(flag, null, fromInfo, toInfo);
-    }
+    public BeancpConvertNonProvider(BeancpConvertProvider parent, BeancpFeature flag,
+			BeancpInfo fromInfo, BeancpInfo toInfo) {
+		super(parent, flag, null, fromInfo, toInfo);
+		// TODO Auto-generated constructor stub
+	}
+    
+    
     @Override
     public <T,R> R convert(BeancpContext context,T fromObj, R toObj) {
     	if(this.fromInfo==null) {

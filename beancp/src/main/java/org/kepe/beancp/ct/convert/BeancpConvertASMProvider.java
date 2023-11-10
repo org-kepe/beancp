@@ -12,13 +12,12 @@ import org.kepe.beancp.info.BeancpInfo;
  */
 public abstract class BeancpConvertASMProvider extends BeancpConvertProvider
 {
-    
-    public BeancpConvertASMProvider(BeancpFeature flag, BeancpConverterInfo info, BeancpInfo fromInfo,
-            BeancpInfo toInfo) {
-        super(flag, info, fromInfo, toInfo);
-    }
-    
-    @Override
+    public BeancpConvertASMProvider(BeancpConvertProvider parent, BeancpFeature flag, BeancpConverterInfo info,
+			BeancpInfo fromInfo, BeancpInfo toInfo) {
+		super(parent, flag, info, fromInfo, toInfo);
+		// TODO Auto-generated constructor stub
+	}
+	@Override
 	public <T,R> R convert(BeancpContext context,T fromObj, R toObj) {
 		if(toObj==null){
             return convert0(context,fromObj);

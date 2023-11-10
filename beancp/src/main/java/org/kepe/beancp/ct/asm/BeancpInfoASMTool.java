@@ -52,7 +52,7 @@ import org.objectweb.asm.RecordComponentVisitor;
 import org.objectweb.asm.util.ASMifier;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.objectweb.asm.util.Textifier;
-
+import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.asm.BeancpInfoASMTool;
 import org.kepe.beancp.ct.asm.MethodASMContext;
 
@@ -93,7 +93,7 @@ public class BeancpInfoASMTool implements Opcodes
 	    typeMapping.put(double.class, "D");
 	}
 	
-	public static BeancpConvertASMProvider generateASMProvider(BeancpConverterInfo info,BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
+	public static BeancpConvertASMProvider generateASMProvider(BeancpConvertProvider provider,BeancpConverterInfo info,BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
     	BeancpASMConverter asmConverter=(BeancpASMConverter) info.getConverter();
     	ClassVisitor classWriter;
     	if(checkClass) {
@@ -193,7 +193,7 @@ public class BeancpInfoASMTool implements Opcodes
 //			e.printStackTrace();
 //		}
 		try {
-			return (BeancpConvertASMProvider) clazz.getConstructors()[0].newInstance(flag, info, fromInfo, toInfo);
+			return (BeancpConvertASMProvider) clazz.getConstructors()[0].newInstance(provider,flag, info, fromInfo, toInfo);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
