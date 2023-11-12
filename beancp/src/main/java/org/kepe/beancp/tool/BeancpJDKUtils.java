@@ -14,7 +14,7 @@ import java.util.function.*;
 
 import static java.lang.invoke.MethodType.methodType;
 
-public class JDKUtils {
+public class BeancpJDKUtils {
     public static final Unsafe UNSAFE;
     public static final long ARRAY_BYTE_BASE_OFFSET;
     public static final long ARRAY_CHAR_BASE_OFFSET;

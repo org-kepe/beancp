@@ -27,5 +27,5 @@ public class BeancpConvertDefaultProvider extends BeancpConvertProvider
 	public int getDistance() {
 		return -1;
 	}
-   
+    
 }

@@ -1,6 +1,7 @@
 package org.kepe.beancp.ct;
 
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,11 +47,12 @@ public abstract class BeancpConvertProvider
             this.distance=info.getConverter().distance(flag, fromInfo.getBType(), fromInfo.getBClass(), toInfo.getBType(), toInfo.getBClass());
         }
         this.parent=parent;
-        this.invocation=new BeancpInvocationImp(parent);
+        this.invocation=new BeancpInvocationImp(parent,this,flag,fromInfo,toInfo);
     }
     public int getDistance() {
     	return this.distance;
     }
+    
     public abstract <T,R> R convert(BeancpContext context,T fromObj,R toObj);
     public <R> R convert(BeancpContext context,int fromObj,R toObj) {
     	return convert(context,(Integer)fromObj,toObj);
@@ -330,7 +332,7 @@ public abstract class BeancpConvertProvider
     
     private static BeancpConvertProvider generateProvider(BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
         int length=converterList.size();
-        BeancpConvertProvider provider=null;
+        BeancpConvertProvider provider=new BeancpConvertNonProvider(null,flag,fromInfo,toInfo);;
         for(int i=length-1;i>=0;i--){
             BeancpConverterInfo info=converterList.get(i);
             if(info.matches(fromInfo,toInfo)){
@@ -341,10 +343,7 @@ public abstract class BeancpConvertProvider
                 }
             }
         }
-        if(provider==null) {
-        	provider=new BeancpConvertNonProvider(null,flag,fromInfo,toInfo);
-        }
-        return new BeancpConvertProviderProxy(provider); 
+        return BeancpConvertProviderProxy.createProxy(provider);// new BeancpConvertProviderProxy(provider); 
     }
 	
 }

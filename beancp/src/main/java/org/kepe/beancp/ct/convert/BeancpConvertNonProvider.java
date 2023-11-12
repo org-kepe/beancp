@@ -39,5 +39,6 @@ public class BeancpConvertNonProvider extends BeancpConvertProvider
 	public int getDistance() {
 		return -1;
 	}
+	
    
 }

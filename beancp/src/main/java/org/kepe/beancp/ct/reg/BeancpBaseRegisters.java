@@ -6,6 +6,8 @@ import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.invocation.BeancpInvocationOI;
+import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
 import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
 import org.kepe.beancp.ct.reg.converter.BeancpDirectCustomConverter;
@@ -14,17 +16,18 @@ import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 
 public class BeancpBaseRegisters {
 	public static void registers() {
-		BeancpCustomConverter<Object,Object> defaultConverter=(feature, context, fromObj, fromType, fromClass, toObj, toType, toClass) -> null;
+		BeancpCustomConverter<Object,Object> defaultConverter=(invocation, context, fromObj, toObj) -> null;
 		BeancpCustomConverter<Object,Object> defaultConverter0=new BeancpCustomConverter<Object, Object>() {
-			public int distance(BeancpFeature flag, Class fromClass, Class toClass) {
+			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
 				return 0;
-			};
-			@Override
-			public Object convert(BeancpFeature feature, BeancpContext context, Object fromObj, Type fromType,
-					Class<Object> fromClass, Object toObj, Type toType, Class<Object> toClass) {
-				// TODO Auto-generated method stub
-				return null;
 			}
+
+			@Override
+			public Object convert(BeancpInvocationOO<Object, Object> invocation, BeancpContext context, Object fromObj,
+					Object toObj) {
+				return null;
+			};
+			
 		};
 
 		register(int.class,int.class,defaultConverter0,0);
@@ -100,8 +103,7 @@ public class BeancpBaseRegisters {
 				return 1000;
 			};
 			@Override
-			public Object convert(BeancpFeature feature, BeancpContext context, Object fromObj, Type fromType,
-					Class fromClass, Object toObj, Type toType, Class toClass) {
+			public Object convert(BeancpInvocationOO invocation, BeancpContext context, Object fromObj, Object toObj) {
 				return fromObj;
 			}
 			
@@ -129,7 +131,25 @@ public class BeancpBaseRegisters {
 		register(double.class,Double.class, BeancpDirectCustomConverter.INSTANCE, 1);
 		register(byte.class,Byte.class, BeancpDirectCustomConverter.INSTANCE, 1);
 		
-		
+		register(String.class,int.class, new BeancpCustomConverter<String, Object>() {
+			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
+				return 0;
+			}
+
+			@Override
+			public Object convert(BeancpInvocationOO<String, Object> invocation, BeancpContext context, String fromObj,
+					Object toObj) {
+				return null;
+			};
+			public int convert(BeancpInvocationOI<String> invocation, BeancpContext context, String fromObj, int toObj) {
+				if(fromObj==null||"".equals(fromObj)) {
+					return 0;
+				}
+				return Integer.parseInt(fromObj);
+			};
+			
+			
+		},1);
 		//register(boolean.class,Boolean.class,defaultConverter,100);
 	}
 	

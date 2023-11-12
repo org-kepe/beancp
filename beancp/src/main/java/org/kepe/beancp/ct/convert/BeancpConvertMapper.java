@@ -14,6 +14,8 @@ import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.config.BeancpValueFilter;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.asm.BeancpInfoASMTool;
+import org.kepe.beancp.ct.invocation.BeancpInvocationII;
+import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.info.BeancpFieldInfo;
 import org.kepe.beancp.info.BeancpGetInfo;
 import org.kepe.beancp.info.BeancpInfo;
@@ -43,6 +45,9 @@ public abstract class BeancpConvertMapper {
 		this.info=info;
 		this.feature=feature;
 		if(feature.is(BeancpFeature.ACCESS_PRIVATE)||feature.is(BeancpFeature.ACCESS_PROTECTED)) {
+			info.initProxyOpClass();
+		}
+		if(info.cloneInfo!=null&&info.cloneInfo.needProxy()) {
 			info.initProxyOpClass();
 		}
 		this.getKeys=Collections.unmodifiableSet(getKeys);
@@ -553,6 +558,36 @@ public abstract class BeancpConvertMapper {
 		}
 		return map;
 	}
+	public Object clone(BeancpContext context,Object obj) {
+		Object ret=null;
+		try {
+			ret=this.clone(obj);
+		} catch (Exception e) {
+			Throwable e1=e;
+			int i=0;
+			boolean ignore=false;
+			while(e1!=null) {
+				if(i>10) {
+					break;
+				}
+				i++;
+				if(e1 instanceof CloneNotSupportedException) {
+					ignore=true;
+					break;
+				}
+				e1=e1.getCause();
+			}
+			if(!ignore) {
+				throw new BeancpException(e);
+			}
+		}
+		if(ret==null) {
+			ret=this.newInstance(context, obj,this.info);
+			ret=BeancpConvertProvider.of(feature, info, info).convert(context, obj, ret);
+		}
+		return ret;
+	}
+	protected abstract Object clone(Object obj) throws Exception;
 	protected Object filterValue(Object obj,String[] key,Object value,BeancpContext context){
 		if(context==null) {
 			return value;

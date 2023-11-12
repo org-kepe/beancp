@@ -10,11 +10,11 @@ import org.kepe.beancp.config.BeancpFeature;
  */
 public interface BeancpConverter
 {
-    default int distance(BeancpFeature flag,Class fromClass,Class toClass){
+    default int distance(BeancpFeature feature,Class fromClass,Class toClass){
         return 1;
     }
-    default int distance(BeancpFeature flag,Type fromType,Class fromClass,Type toType,Class toClass){
-        return distance(flag,fromClass,toClass);
+    default int distance(BeancpFeature feature,Type fromType,Class fromClass,Type toType,Class toClass){
+        return distance(feature,fromClass,toClass);
     }
    
 }

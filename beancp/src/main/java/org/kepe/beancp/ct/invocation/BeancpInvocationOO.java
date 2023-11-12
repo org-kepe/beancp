@@ -2,6 +2,8 @@ package org.kepe.beancp.ct.invocation;
 
 import org.kepe.beancp.config.BeancpContext;
 
-public interface BeancpInvocationOO<T,R> extends BeancpInvocation<T,R> {
-	Object proceed(BeancpContext context,T fromObj, R toObj);
+public interface BeancpInvocationOO<T,R> extends BeancpInvocation {
+	R proceed(BeancpContext context,T fromObj, R toObj);
+	Class<T> getFromClass();
+	Class<R> getToClass();
 }

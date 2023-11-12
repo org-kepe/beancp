@@ -33,6 +33,7 @@ import org.kepe.beancp.ct.convert.BeancpConvertProviderTool;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
 import org.kepe.beancp.ct.itf.BeancpASMConverter;
 import org.kepe.beancp.exception.BeancpException;
+import org.kepe.beancp.info.BeancpCloneInfo;
 import org.kepe.beancp.info.BeancpFieldInfo;
 import org.kepe.beancp.info.BeancpGetInfo;
 import org.kepe.beancp.info.BeancpInfo;
@@ -117,8 +118,8 @@ public class BeancpInfoASMTool implements Opcodes
 			asmContext.getNextLine();
 		}
 		{
-			methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "(Lorg/kepe/beancp/config/BeancpFeature;"+BeancpInfoASMTool.desc(BeancpConverterInfo.class)+"Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)V", null, null);
-
+			methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "(Lorg/kepe/beancp/ct/BeancpConvertProvider;Lorg/kepe/beancp/config/BeancpFeature;"+BeancpInfoASMTool.desc(BeancpConverterInfo.class)+"Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)V", null, null);
+			methodVisitor.visitParameter("parent", 0);
 			methodVisitor.visitParameter("feature", 0);
 			methodVisitor.visitParameter("info", 0);
 			methodVisitor.visitParameter("fromInfo", 0);
@@ -132,7 +133,8 @@ public class BeancpInfoASMTool implements Opcodes
 			methodVisitor.visitVarInsn(ALOAD, 2);
 			methodVisitor.visitVarInsn(ALOAD, 3);
 			methodVisitor.visitVarInsn(ALOAD, 4);
-			methodVisitor.visitMethodInsn(INVOKESPECIAL, BeancpInfoASMTool.getClassName(BeancpConvertASMProvider.class), "<init>", "(Lorg/kepe/beancp/config/BeancpFeature;"+BeancpInfoASMTool.desc(BeancpConverterInfo.class)+"Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)V", false);
+			methodVisitor.visitVarInsn(ALOAD, 5);
+			methodVisitor.visitMethodInsn(INVOKESPECIAL, BeancpInfoASMTool.getClassName(BeancpConvertASMProvider.class), "<init>", "(Lorg/kepe/beancp/ct/BeancpConvertProvider;Lorg/kepe/beancp/config/BeancpFeature;"+BeancpInfoASMTool.desc(BeancpConverterInfo.class)+"Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)V", false);
 			asmContext.setMethodVisitor(methodVisitor);
 			asmConverter.init(asmContext, flag, fromInfo.getBType(),fromInfo.getBClass(),toInfo.getBType(),toInfo.getBClass());
 			
@@ -202,24 +204,29 @@ public class BeancpInfoASMTool implements Opcodes
 		List<BeancpInitInfo> proxyOpList1=new ArrayList<>();
     	List<BeancpGetInfo> proxyOpList2=new ArrayList<>();
     	List<BeancpSetInfo> proxyOpList3=new ArrayList<>();
-    	for(BeancpInitInfo initInfo:info.inits) {
-    		if(initInfo.needProxy()) {
-    			proxyOpList1.add(initInfo);
-    		}
+    	if(info.inits!=null) {
+    		for(BeancpInitInfo initInfo:info.inits) {
+        		if(initInfo.needProxy()) {
+        			proxyOpList1.add(initInfo);
+        		}
+        	}
     	}
-    	for(BeancpFieldInfo fieldInfo:info.fields.values()) {
-    		for(BeancpGetInfo getInfo:fieldInfo.getGetterList()) {
-    			if(getInfo.needProxy()) {
-    				proxyOpList2.add(getInfo);
-    			}
-    		}
-    		for(BeancpSetInfo setInfo:fieldInfo.getSetterList()) {
-    			if(setInfo.needProxy()) {
-    				proxyOpList3.add(setInfo);
-    			}
-    		}
+    	if(info.fields!=null) {
+    		for(BeancpFieldInfo fieldInfo:info.fields.values()) {
+        		for(BeancpGetInfo getInfo:fieldInfo.getGetterList()) {
+        			if(getInfo.needProxy()) {
+        				proxyOpList2.add(getInfo);
+        			}
+        		}
+        		for(BeancpSetInfo setInfo:fieldInfo.getSetterList()) {
+        			if(setInfo.needProxy()) {
+        				proxyOpList3.add(setInfo);
+        			}
+        		}
+        	}
     	}
-    	if(proxyOpList1.isEmpty()&&proxyOpList2.isEmpty()&&proxyOpList3.isEmpty()) {
+    	
+    	if(proxyOpList1.isEmpty()&&proxyOpList2.isEmpty()&&proxyOpList3.isEmpty()&&(info.cloneInfo==null||!info.cloneInfo.needProxy())) {
     		return;
     	}
     	Class<?> clazz=null;
@@ -264,6 +271,15 @@ public class BeancpInfoASMTool implements Opcodes
     				}
     			}
     		}
+    		if(info.cloneInfo!=null&&info.cloneInfo.needProxy()) {
+    			for(Method method:methods) {
+    				if("clone".equals(method.getName())) {
+    					info.cloneInfo.updateMethod(method);
+    					break;
+    				}
+    			}
+    		}
+    		
     	}
 	}
 	private static Class<?> generateProxyOpClass(boolean isInvoke,BeancpInfo info,List<BeancpInitInfo> proxyOpList1,List<BeancpGetInfo> proxyOpList2,List<BeancpSetInfo> proxyOpList3){
@@ -333,6 +349,10 @@ public class BeancpInfoASMTool implements Opcodes
 			}
 			fieldVisitor.visitEnd();
 		}
+		if(info.cloneInfo!=null&&info.cloneInfo.needProxy()) {
+			fieldVisitor = classWriter.visitField(ACC_PRIVATE | ACC_STATIC, "methodClone", "Ljava/lang/reflect/Method;", null, null);
+			fieldVisitor.visitEnd();
+		}
 		asmContext.getNextLine(4);
 		{
 			methodVisitor = classWriter.visitMethod(ACC_STATIC, "<clinit>", "()V", null, null);
@@ -395,6 +415,16 @@ public class BeancpInfoASMTool implements Opcodes
 					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "getSetField", "(Ljava/lang/String;I)Ljava/lang/reflect/Field;", false);
 					methodVisitor.visitFieldInsn(PUTSTATIC, classpath, "fieldSet"+i, "Ljava/lang/reflect/Field;");
 				}
+			}
+			if(info.cloneInfo!=null&&info.cloneInfo.needProxy()) {
+				Label label2 = new Label();
+				methodVisitor.visitLabel(label2);
+				methodVisitor.visitLineNumber(asmContext.getNextLine(), label2);
+				visitInt(methodVisitor, info.getId());
+				methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
+				methodVisitor.visitFieldInsn(GETFIELD, "org/kepe/beancp/info/BeancpInfo", "cloneInfo", "Lorg/kepe/beancp/info/BeancpCloneInfo;");
+				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpCloneInfo", "getMethod", "()Ljava/lang/reflect/Method;", false);
+				methodVisitor.visitFieldInsn(PUTSTATIC, classpath, "methodClone", "Ljava/lang/reflect/Method;");
 			}
 			methodVisitor.visitInsn(RETURN);
 			methodVisitor.visitMaxs(3, 0);
@@ -629,6 +659,51 @@ public class BeancpInfoASMTool implements Opcodes
 				methodVisitor.visitLineNumber(asmContext.getNextLine(), label1);
 				methodVisitor.visitInsn(RETURN);
 				methodVisitor.visitMaxs(3, 2);
+				methodVisitor.visitEnd();
+			}
+		}
+		if(info.cloneInfo!=null&&info.cloneInfo.needProxy()) {
+			asmContext.getNextLine(3);
+			BeancpCloneInfo cloneInfo=info.cloneInfo;
+			if(!isInvoke&&cloneInfo.getAccess()==1) {
+				methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_STATIC, "clone", "("+desc(info.getFinalPublicClass())+")Ljava/lang/Object;", null, new String[] { "java/lang/Exception" });
+				methodVisitor.visitParameter("h", 0);
+				methodVisitor.visitCode();
+				Label label0 = new Label();
+				Label label1 = new Label();
+				Label label2 = new Label();
+				methodVisitor.visitTryCatchBlock(label0, label1, label2, "java/lang/IllegalAccessError");
+				methodVisitor.visitLabel(label0);
+				methodVisitor.visitLineNumber(asmContext.getNextLine(), label0);
+				methodVisitor.visitVarInsn(ALOAD, 0);
+				visitMethod(methodVisitor, cloneInfo.getMethod());
+				methodVisitor.visitLabel(label1);
+				methodVisitor.visitInsn(ARETURN);
+				methodVisitor.visitLabel(label2);
+				methodVisitor.visitLineNumber(asmContext.getNextLine(), label2);
+				methodVisitor.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] {"java/lang/IllegalAccessError"});
+				methodVisitor.visitVarInsn(ASTORE, 1);
+				Label label3 = new Label();
+				methodVisitor.visitLabel(label3);
+				methodVisitor.visitLineNumber(asmContext.getNextLine(), label3);
+				methodVisitor.visitVarInsn(ALOAD, 0);
+				methodVisitor.visitFieldInsn(GETSTATIC, classpath, "methodClone", "Ljava/lang/reflect/Method;");
+				methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "invokeCloneMethod", "(Ljava/lang/Object;Ljava/lang/reflect/Method;)Ljava/lang/Object;", false);
+				methodVisitor.visitInsn(ARETURN);				
+				methodVisitor.visitMaxs(2, 2);
+				methodVisitor.visitEnd();
+			}else {
+				methodVisitor = classWriter.visitMethod(ACC_PUBLIC | ACC_STATIC, "clone", "("+desc(info.getFinalPublicClass())+")Ljava/lang/Object;", null, null);
+				methodVisitor.visitParameter("h", 0);
+				methodVisitor.visitCode();
+				Label label0 = new Label();
+				methodVisitor.visitLabel(label0);
+				methodVisitor.visitLineNumber(asmContext.getNextLine(), label0);
+				methodVisitor.visitVarInsn(ALOAD, 0);
+				methodVisitor.visitFieldInsn(GETSTATIC, classpath, "methodClone", "Ljava/lang/reflect/Method;");
+				methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "invokeCloneMethod", "(Ljava/lang/Object;Ljava/lang/reflect/Method;)Ljava/lang/Object;", false);
+				methodVisitor.visitInsn(ARETURN);
+				methodVisitor.visitMaxs(2, 1);
 				methodVisitor.visitEnd();
 			}
 		}
@@ -1386,6 +1461,25 @@ public class BeancpInfoASMTool implements Opcodes
     		methodVisitor.visitInsn(ACONST_NULL);
     		methodVisitor.visitInsn(ARETURN);
     		methodVisitor.visitMaxs(2, 3);
+    		methodVisitor.visitEnd();
+    	}
+    	{
+    		methodVisitor = classWriter.visitMethod(ACC_PROTECTED, "clone", "(Ljava/lang/Object;)Ljava/lang/Object;", null, new String[] { "java/lang/Exception" });
+    		methodVisitor.visitCode();
+    		Label label0 = new Label();
+    		methodVisitor.visitLabel(label0);
+    		methodVisitor.visitLineNumber(asmContext.getNextLine(), label0);
+    		if(info.cloneInfo!=null&&info.cloneInfo.isUseful(feature,null)) {
+    			methodVisitor.visitVarInsn(ALOAD, 1);
+        		methodVisitor.visitTypeInsn(CHECKCAST, getClassName(info.getFinalPublicClass()));
+        		visitMethod(methodVisitor, info.cloneInfo.getMethod());
+    		}else {
+    			methodVisitor.visitInsn(ACONST_NULL);
+    		}
+    		
+    		methodVisitor.visitInsn(ARETURN);
+    		
+    		methodVisitor.visitMaxs(1, 2);
     		methodVisitor.visitEnd();
     	}
     	classWriter.visitEnd();

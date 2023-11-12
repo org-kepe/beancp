@@ -138,6 +138,24 @@ public class BeancpConvertProviderTool {
 			}
 		}
 	}
+	public static Object invokeCloneMethod(Object obj,Method method) {
+		boolean accessible=method.isAccessible();
+		try {
+			if(!accessible) {
+				method.setAccessible(true);
+			}
+			return method.invoke(obj);
+		} catch (Exception e) {
+			throw new BeancpException("",e);
+		} finally {
+			if(!accessible) {
+				try {
+					method.setAccessible(false);
+				} catch (Exception e) {
+				}
+			}
+		}
+	}
 	public static Object invokeGetMethod(Object obj,Method method) {
 		boolean accessible=method.isAccessible();
 		try {

@@ -28,6 +28,9 @@ import org.kepe.beancp.ct.asm.MethodASMContext;
 import org.kepe.beancp.ct.convert.BeancpConvertMapper;
 import org.kepe.beancp.ct.convert.BeancpConvertProviderTool;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.invocation.BeancpInvocation;
+import org.kepe.beancp.ct.invocation.BeancpInvocationImp;
+import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
 import org.kepe.beancp.ct.itf.BeancpASMConverter;
 import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
@@ -2152,19 +2155,16 @@ public class BeancpBeanRegisters {
 		registerMap2Bean(new BeancpCustomConverter() {
 
 			@Override
-			public Object convert(BeancpFeature feature, BeancpContext context, Object fromObj, Type fromType,
-					Class fromClass, Object toObj, Type toType, Class toClass) {
-				
-				return BeancpConvertMapper.of(BeancpInfo.of(toType,toClass), feature).putAll(toObj, (Map)fromObj, BeancpInfo.of(fromType,fromClass), context);
+			public Object convert(BeancpInvocationOO invocation, BeancpContext context, Object fromObj, Object toObj) {
+				return BeancpConvertMapper.of( ((BeancpInvocationImp)invocation).getToInfo(), invocation.getFeature()).putAll(toObj, (Map)fromObj, ((BeancpInvocationImp)invocation).getFromInfo(), context);
 			}
 			
 		},1);
 		registerBean2Map(new BeancpCustomConverter() {
 
 			@Override
-			public Object convert(BeancpFeature feature, BeancpContext context, Object fromObj, Type fromType,
-					Class fromClass, Object toObj, Type toType, Class toClass) {
-				return BeancpConvertMapper.of(BeancpInfo.of(fromType,fromClass), feature).toMap(fromObj, (Map)toObj, BeancpInfo.of(toType,toClass), context);
+			public Object convert(BeancpInvocationOO invocation, BeancpContext context, Object fromObj, Object toObj) {
+				return BeancpConvertMapper.of(((BeancpInvocationImp)invocation).getFromInfo(), invocation.getFeature()).toMap(fromObj, (Map)toObj, ((BeancpInvocationImp)invocation).getToInfo(), context);
 			}
 			
 		},1);

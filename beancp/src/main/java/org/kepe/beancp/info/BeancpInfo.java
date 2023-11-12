@@ -108,6 +108,7 @@ public class BeancpInfo
     public Map<String,BeancpFieldInfo> fields;
     public List<BeancpInitInfo> inits;
     private BeancpInfo[] genericInfo;
+    public BeancpCloneInfo cloneInfo;
 
     public boolean instanceOf(BeancpInfo info){
     	if(this.id==info.id) {
@@ -487,7 +488,27 @@ public class BeancpInfo
             		return c1.order()-c2.order();
             	});
             }
-            
+            if(Cloneable.class.isAssignableFrom(info.fclazz)) {
+            	Class mclazz=info.fclazz;
+            	Method method=null;
+            	while(mclazz!=Object.class) {
+            		try {
+						method=mclazz.getDeclaredMethod("clone");
+					} catch (Exception e) {
+					}
+            		if(method!=null) {
+            			break;
+            		}
+            	}
+            	if(method!=null) {
+            		info.cloneInfo=new BeancpCloneInfo(info, method);
+            		if(info.cloneInfo.needProxy()) {
+            			
+            		}
+            		
+            	}
+            	
+            } 
             
             return info;
         });
@@ -502,7 +523,7 @@ public class BeancpInfo
     		if(isInitTargetProxy) {
         		return;
         	}
-    		if(this.isBean) {
+    		if(!this.isPrimitive) {
     			System.out.println(this.clazz.getName());
     			BeancpInfoASMTool.initProxyOpClass(this);
     		}
