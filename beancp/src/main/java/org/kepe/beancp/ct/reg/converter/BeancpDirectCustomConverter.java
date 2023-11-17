@@ -32,18 +32,18 @@ public class BeancpDirectCustomConverter implements BeancpCustomConverter {
 	};
 	@Override
 	public Object convert(BeancpInvocationOO invocation, BeancpContext context, Object fromObj, Object toObj) {
+		if(fromObj==null) {
+			return toObj;
+		}
 		if(toObj==null) {
 			if(invocation.getFeature().is(BeancpFeature.ALLWAYS_NEW)) {
-				if(fromObj instanceof Cloneable) {
-					return BeancpConvertMapper.of(((BeancpInvocationImp)invocation).getFromInfo(), invocation.getFeature()).clone(context,fromObj);
-				}
+				return BeancpConvertMapper.of(((BeancpInvocationImp)invocation).getFromInfo(), invocation.getFeature()).clone(context,fromObj);
 			}else {
 				return fromObj;
 			}
 		}else {
 			return invocation.proceed(context, fromObj, toObj);
 		}
-		return fromObj;
 	}
 	
 	

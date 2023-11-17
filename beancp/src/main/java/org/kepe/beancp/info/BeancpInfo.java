@@ -1,5 +1,8 @@
 package org.kepe.beancp.info;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -10,6 +13,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Date;
 import java.util.AbstractCollection;
 import java.util.AbstractList;
 import java.util.AbstractMap;
@@ -39,11 +45,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.asm.BeancpInfoASMTool;
+import org.kepe.beancp.ct.convert.BeancpConvertMapper;
 import org.kepe.beancp.tool.BeancpBeanTool;
 import org.kepe.beancp.tool.BeancpTool;
 import org.objectweb.asm.TypeReference;
@@ -109,6 +118,7 @@ public class BeancpInfo
     public List<BeancpInitInfo> inits;
     private BeancpInfo[] genericInfo;
     public BeancpCloneInfo cloneInfo;
+    private BeancpConvertMapper mapper;
 
     public boolean instanceOf(BeancpInfo info){
     	if(this.id==info.id) {
@@ -168,6 +178,16 @@ public class BeancpInfo
     }
     public Class<?> getFClass(){
         return this.fclazz;
+    }
+    
+    public BeancpConvertMapper  getDefaultMapper() {
+    	if(mapper==null) {
+    		if(this.isPrimitive) {
+    			return null;
+    		}
+    		mapper=BeancpConvertMapper.of(this, BeancpFeature.DEFAULT_FEATURE);
+    	}
+    	return mapper;
     }
     public Class<?> getFinalPublicClass(){
     	return BeancpBeanTool.getFinalPublicClass(fclazz);
@@ -317,7 +337,7 @@ public class BeancpInfo
             	info.isMap=true;
             }
             
-            if(info.isPrimitive||info.isEnum||info.fclazz==String.class||Number.class.isAssignableFrom(info.fclazz)){
+            if(info.isPrimitive||info.isEnum||String.class.isAssignableFrom(info.clazz)||Number.class.isAssignableFrom(info.fclazz)||Date.class.isAssignableFrom(info.clazz)||InputStream.class.isAssignableFrom(info.clazz)||OutputStream.class.isAssignableFrom(info.clazz)||File.class.isAssignableFrom(info.clazz)||Clob.class.isAssignableFrom(info.clazz)||Blob.class.isAssignableFrom(info.clazz)||AtomicBoolean.class.isAssignableFrom(info.clazz)||AtomicInteger.class.isAssignableFrom(info.clazz)||AtomicLong.class.isAssignableFrom(info.clazz)){
                 info.isBase=true;
                 info.isChangeable=false;
             }
@@ -375,7 +395,7 @@ public class BeancpInfo
             		Method[] methods1=mclazz.getDeclaredMethods();
             		for(Method method:methods1) {
             			String methodName=method.getName();
-            			if(!methodName.equals("getClass")&&((methodName.startsWith("get")&&methodName.length()>3&&method.getParameterCount()==0)||(methodName.startsWith("is")&&methodName.length()>2&&method.getParameterCount()==0&&method.getReturnType()==boolean.class)||(methodName.startsWith("set")&&methodName.length()>3&&method.getParameterCount()==1)||(methodName.startsWith("is")&&methodName.length()>2&&method.getParameterCount()==1&&method.getParameterTypes()[0]==boolean.class))) {
+            			if(!methodName.equals("getClass")&&((methodName.startsWith("get")&&methodName.length()>3&&method.getParameterCount()==0&&method.getReturnType()!=Void.TYPE)||(methodName.startsWith("is")&&methodName.length()>2&&method.getParameterCount()==0&&method.getReturnType()==boolean.class)||(methodName.startsWith("set")&&methodName.length()>3&&method.getParameterCount()==1)||(methodName.startsWith("is")&&methodName.length()>2&&method.getParameterCount()==1&&method.getParameterTypes()[0]==boolean.class))) {
             				Class<?>[] types=method.getParameterTypes();
             				StringBuffer sb=new StringBuffer();
             				sb.append(methodName).append(":");
@@ -488,17 +508,20 @@ public class BeancpInfo
             		return c1.order()-c2.order();
             	});
             }
-            if(Cloneable.class.isAssignableFrom(info.fclazz)) {
+            if(!info.isPrimitive&&Cloneable.class.isAssignableFrom(info.fclazz)) {
             	Class mclazz=info.fclazz;
             	Method method=null;
             	while(mclazz!=Object.class) {
             		try {
+            			
 						method=mclazz.getDeclaredMethod("clone");
 					} catch (Exception e) {
 					}
             		if(method!=null) {
+            			System.out.println("clone:"+mclazz.getName());
             			break;
             		}
+            		mclazz=mclazz.getSuperclass();
             	}
             	if(method!=null) {
             		info.cloneInfo=new BeancpCloneInfo(info, method);

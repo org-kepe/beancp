@@ -15,6 +15,9 @@ public class BeancpException
         super(message);
         this.etype=etype;
     }
+	public BeancpException(EType etype,Throwable cause) {
+        super(cause);
+    }
     public BeancpException(Throwable cause) {
         super(cause);
     }

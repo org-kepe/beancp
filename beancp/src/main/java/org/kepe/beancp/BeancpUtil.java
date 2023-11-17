@@ -20,6 +20,12 @@ public class BeancpUtil
         }
         copy(fromObj, null,toObj, null, null, null, null);
     }
+    public static void copy(Object fromObj,Object toObj,BeancpFeature feature){
+        if(toObj==null){
+            return;
+        }
+        copy(fromObj, null,toObj, null, null, feature, null);
+    }
     public static void copy(Object fromObj,Object toObj,Type toType){
         if(toObj==null){
             return;

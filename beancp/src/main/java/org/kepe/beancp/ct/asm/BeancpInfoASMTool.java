@@ -833,8 +833,8 @@ public class BeancpInfoASMTool implements Opcodes
 			BeancpFieldInfo fieldInfo=e.getValue();
 			BeancpName name=fieldInfo.getName();
 			for(BeancpName fname: name.friends) {
-				if(fname.type==BeancpName.NameType.UNDERLINE||fname.type==BeancpName.NameType.UPPERUNDERLINE&&!fields.containsKey(name.name)) {
-					fields.put(name.name, new Tuple2<>(fieldInfo,null));
+				if((fname.type==BeancpName.NameType.UNDERLINE||fname.type==BeancpName.NameType.UPPERUNDERLINE)&&!fields.containsKey(fname.name)) {
+					fields.put(fname.name, new Tuple2<>(fieldInfo,null));
 				}
 			}
 		}
@@ -1304,7 +1304,7 @@ public class BeancpInfoASMTool implements Opcodes
     		methodVisitor.visitParameter("argInfos", 0);
     		methodVisitor.visitParameter("context", 0);
     		methodVisitor.visitCode();
-    		if(!keys.isEmpty()) {
+    		if(!inits.isEmpty()) {
     			Label label0 = new Label();
         		methodVisitor.visitLabel(label0);
         		methodVisitor.visitLineNumber(asmContext.getNextLine(), label0);
@@ -1316,7 +1316,7 @@ public class BeancpInfoASMTool implements Opcodes
     			labelList.add(new Label());
     		}
     		Label label4 = new Label();
-    		if(!keys.isEmpty()) {
+    		if(!inits.isEmpty()) {
         		methodVisitor.visitTableSwitchInsn(0, inits.size()-1, label4,labelList.toArray(new Label[] {}));
     		}
     		for(int i=0;i<labelList.size();i++) {
@@ -1402,7 +1402,7 @@ public class BeancpInfoASMTool implements Opcodes
     		methodVisitor.visitParameter("beanmapper", 0);
     		methodVisitor.visitParameter("context", 0);
     		methodVisitor.visitCode();
-    		if(!keys.isEmpty()) {
+    		if(!inits.isEmpty()) {
     			Label label0 = new Label();
         		methodVisitor.visitLabel(label0);
         		methodVisitor.visitLineNumber(asmContext.getNextLine(), label0);
@@ -1414,7 +1414,7 @@ public class BeancpInfoASMTool implements Opcodes
     			labelList.add(new Label());
     		}
     		Label label4 = new Label();
-    		if(!keys.isEmpty()) {
+    		if(!inits.isEmpty()) {
         		methodVisitor.visitTableSwitchInsn(0, inits.size()-1, label4,labelList.toArray(new Label[] {}));
     		}
     		for(int i=0;i<labelList.size();i++) {

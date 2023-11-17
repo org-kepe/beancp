@@ -311,6 +311,7 @@ public abstract class BeancpConvertMapper {
 		int idx=t2.r2.intValue();
 		//if(this.isForceEquals)
 		int getIdx=findGetInfo(valueInfo,getterList);
+		if(getIdx<0) {return null;}
 		BeancpGetInfo getInfo=getterList.get(getIdx);
 		BeancpInfo fromInfo=getInfo.getInfo();
 		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
@@ -329,6 +330,134 @@ public abstract class BeancpConvertMapper {
 		int idx=t2.r2.intValue();
 		//if(this.isForceEquals)
 		int getIdx=findGetInfo(valueInfo,getterList);
+		if(getIdx<0) {return 0;}
+		BeancpGetInfo getInfo=getterList.get(getIdx);
+		BeancpInfo fromInfo=getInfo.getInfo();
+		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
+	}
+	
+	public long get(Object obj,String key,long value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return 0;
+		}
+		List<BeancpGetInfo> getterList=t2.r1.getGetterList();
+		if(getterList.isEmpty()) {
+			return 0;
+		}
+		valueInfo=BeancpInfo.LONG_INFO;
+		int idx=t2.r2.intValue();
+		//if(this.isForceEquals)
+		int getIdx=findGetInfo(valueInfo,getterList);
+		if(getIdx<0) {return 0;}
+		BeancpGetInfo getInfo=getterList.get(getIdx);
+		BeancpInfo fromInfo=getInfo.getInfo();
+		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
+	}
+	public short get(Object obj,String key,short value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return 0;
+		}
+		List<BeancpGetInfo> getterList=t2.r1.getGetterList();
+		if(getterList.isEmpty()) {
+			return 0;
+		}
+		valueInfo=BeancpInfo.SHORT_INFO;
+		int idx=t2.r2.intValue();
+		//if(this.isForceEquals)
+		int getIdx=findGetInfo(valueInfo,getterList);
+		if(getIdx<0) {return 0;}
+		BeancpGetInfo getInfo=getterList.get(getIdx);
+		BeancpInfo fromInfo=getInfo.getInfo();
+		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
+	}
+	public float get(Object obj,String key,float value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return 0;
+		}
+		List<BeancpGetInfo> getterList=t2.r1.getGetterList();
+		if(getterList.isEmpty()) {
+			return 0;
+		}
+		valueInfo=BeancpInfo.FLOAT_INFO;
+		int idx=t2.r2.intValue();
+		//if(this.isForceEquals)
+		int getIdx=findGetInfo(valueInfo,getterList);
+		if(getIdx<0) {return 0;}
+		BeancpGetInfo getInfo=getterList.get(getIdx);
+		BeancpInfo fromInfo=getInfo.getInfo();
+		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
+	}
+	public double get(Object obj,String key,double value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return 0;
+		}
+		List<BeancpGetInfo> getterList=t2.r1.getGetterList();
+		if(getterList.isEmpty()) {
+			return 0;
+		}
+		valueInfo=BeancpInfo.DOUBLE_INFO;
+		int idx=t2.r2.intValue();
+		//if(this.isForceEquals)
+		int getIdx=findGetInfo(valueInfo,getterList);
+		if(getIdx<0) {return 0;}
+		BeancpGetInfo getInfo=getterList.get(getIdx);
+		BeancpInfo fromInfo=getInfo.getInfo();
+		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
+	}
+	public byte get(Object obj,String key,byte value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return 0;
+		}
+		List<BeancpGetInfo> getterList=t2.r1.getGetterList();
+		if(getterList.isEmpty()) {
+			return 0;
+		}
+		valueInfo=BeancpInfo.BYTE_INFO;
+		int idx=t2.r2.intValue();
+		//if(this.isForceEquals)
+		int getIdx=findGetInfo(valueInfo,getterList);
+		if(getIdx<0) {return 0;}
+		BeancpGetInfo getInfo=getterList.get(getIdx);
+		BeancpInfo fromInfo=getInfo.getInfo();
+		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
+	}
+	public char get(Object obj,String key,char value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return 0;
+		}
+		List<BeancpGetInfo> getterList=t2.r1.getGetterList();
+		if(getterList.isEmpty()) {
+			return 0;
+		}
+		valueInfo=BeancpInfo.CHAR_INFO;
+		int idx=t2.r2.intValue();
+		//if(this.isForceEquals)
+		int getIdx=findGetInfo(valueInfo,getterList);
+		if(getIdx<0) {return 0;}
+		BeancpGetInfo getInfo=getterList.get(getIdx);
+		BeancpInfo fromInfo=getInfo.getInfo();
+		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
+	}
+	public boolean get(Object obj,String key,boolean value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return false;
+		}
+		List<BeancpGetInfo> getterList=t2.r1.getGetterList();
+		if(getterList.isEmpty()) {
+			return false;
+		}
+		valueInfo=BeancpInfo.LONG_INFO;
+		int idx=t2.r2.intValue();
+		//if(this.isForceEquals)
+		int getIdx=findGetInfo(valueInfo,getterList);
+		if(getIdx<0) {return false;}
 		BeancpGetInfo getInfo=getterList.get(getIdx);
 		BeancpInfo fromInfo=getInfo.getInfo();
 		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
@@ -349,19 +478,17 @@ public abstract class BeancpConvertMapper {
 		if(!this.isSetValueWhenNull&&value==null) {
 			return;
 		}
-		if(value==null) {
-			if(valueInfo==null) {
-				valueInfo=BeancpInfo.OBJECT_INFO;
-			}
-		}else {
-			valueInfo=valueInfo.of(value);
+		if(valueInfo==null) {
+			valueInfo=BeancpInfo.OBJECT_INFO;
 		}
+		valueInfo=valueInfo.of(value);
 		//（非永远new  类型一致 null赋值 ）
 		try {
 			int idx=t2.r2.intValue();
 			
 			//if(this.isForceEquals)
 			int setIdx=findSetInfo(valueInfo,setterList);
+			if(setIdx<0) {return;}
 			BeancpSetInfo setInfo=setterList.get(setIdx);
 			BeancpInfo toInfo=setInfo.getInfo();
 			this.put(obj, idx, setIdx, value, setInfo.getPossNames(), valueInfo, toInfo, context);
@@ -386,6 +513,7 @@ public abstract class BeancpConvertMapper {
 			
 			//if(this.isForceEquals)
 			int setIdx=findSetInfo(valueInfo,setterList);
+			if(setIdx<0) {return;}
 			BeancpSetInfo setInfo=setterList.get(setIdx);
 			BeancpInfo toInfo=setInfo.getInfo();
 			this.put(obj, idx, setIdx, value, setInfo.getPossNames(), valueInfo, toInfo, context);
@@ -394,6 +522,189 @@ public abstract class BeancpConvertMapper {
 			BeancpConvertProviderTool.handleException(this, feature, context, key, 0, e);
 		}
 	}
+	public void put(Object obj,String key,long value,BeancpInfo valueInfo,BeancpContext context) {
+		
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return;
+		}
+		List<BeancpSetInfo> setterList=t2.r1.getSetterList();
+		if(setterList.isEmpty()) {
+			return;
+		}
+		valueInfo=BeancpInfo.LONG_INFO;
+		//（非永远new  类型一致 null赋值 ）
+		try {
+			int idx=t2.r2.intValue();
+			
+			//if(this.isForceEquals)
+			int setIdx=findSetInfo(valueInfo,setterList);
+			if(setIdx<0) {return;}
+			BeancpSetInfo setInfo=setterList.get(setIdx);
+			BeancpInfo toInfo=setInfo.getInfo();
+			this.put(obj, idx, setIdx, value, setInfo.getPossNames(), valueInfo, toInfo, context);
+			
+		} catch (Exception e) {
+			BeancpConvertProviderTool.handleException(this, feature, context, key, 0, e);
+		}
+	}
+	public void put(Object obj,String key,float value,BeancpInfo valueInfo,BeancpContext context) {
+		
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return;
+		}
+		List<BeancpSetInfo> setterList=t2.r1.getSetterList();
+		if(setterList.isEmpty()) {
+			return;
+		}
+		valueInfo=BeancpInfo.FLOAT_INFO;
+		//（非永远new  类型一致 null赋值 ）
+		try {
+			int idx=t2.r2.intValue();
+			
+			//if(this.isForceEquals)
+			int setIdx=findSetInfo(valueInfo,setterList);
+			if(setIdx<0) {return;}
+			BeancpSetInfo setInfo=setterList.get(setIdx);
+			BeancpInfo toInfo=setInfo.getInfo();
+			this.put(obj, idx, setIdx, value, setInfo.getPossNames(), valueInfo, toInfo, context);
+			
+		} catch (Exception e) {
+			BeancpConvertProviderTool.handleException(this, feature, context, key, 0, e);
+		}
+	}
+	public void put(Object obj,String key,double value,BeancpInfo valueInfo,BeancpContext context) {
+		
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return;
+		}
+		List<BeancpSetInfo> setterList=t2.r1.getSetterList();
+		if(setterList.isEmpty()) {
+			return;
+		}
+		valueInfo=BeancpInfo.DOUBLE_INFO;
+		//（非永远new  类型一致 null赋值 ）
+		try {
+			int idx=t2.r2.intValue();
+			
+			//if(this.isForceEquals)
+			int setIdx=findSetInfo(valueInfo,setterList);
+			if(setIdx<0) {return;}
+			BeancpSetInfo setInfo=setterList.get(setIdx);
+			BeancpInfo toInfo=setInfo.getInfo();
+			this.put(obj, idx, setIdx, value, setInfo.getPossNames(), valueInfo, toInfo, context);
+			
+		} catch (Exception e) {
+			BeancpConvertProviderTool.handleException(this, feature, context, key, 0, e);
+		}
+	}
+	public void put(Object obj,String key,short value,BeancpInfo valueInfo,BeancpContext context) {
+		
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return;
+		}
+		List<BeancpSetInfo> setterList=t2.r1.getSetterList();
+		if(setterList.isEmpty()) {
+			return;
+		}
+		valueInfo=BeancpInfo.SHORT_INFO;
+		//（非永远new  类型一致 null赋值 ）
+		try {
+			int idx=t2.r2.intValue();
+			
+			//if(this.isForceEquals)
+			int setIdx=findSetInfo(valueInfo,setterList);
+			if(setIdx<0) {return;}
+			BeancpSetInfo setInfo=setterList.get(setIdx);
+			BeancpInfo toInfo=setInfo.getInfo();
+			this.put(obj, idx, setIdx, value, setInfo.getPossNames(), valueInfo, toInfo, context);
+			
+		} catch (Exception e) {
+			BeancpConvertProviderTool.handleException(this, feature, context, key, 0, e);
+		}
+	}
+	public void put(Object obj,String key,boolean value,BeancpInfo valueInfo,BeancpContext context) {
+		
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return;
+		}
+		List<BeancpSetInfo> setterList=t2.r1.getSetterList();
+		if(setterList.isEmpty()) {
+			return;
+		}
+		valueInfo=BeancpInfo.BOOLEAN_INFO;
+		//（非永远new  类型一致 null赋值 ）
+		try {
+			int idx=t2.r2.intValue();
+			
+			//if(this.isForceEquals)
+			int setIdx=findSetInfo(valueInfo,setterList);
+			if(setIdx<0) {return;}
+			BeancpSetInfo setInfo=setterList.get(setIdx);
+			BeancpInfo toInfo=setInfo.getInfo();
+			this.put(obj, idx, setIdx, value, setInfo.getPossNames(), valueInfo, toInfo, context);
+			
+		} catch (Exception e) {
+			BeancpConvertProviderTool.handleException(this, feature, context, key, 0, e);
+		}
+	}
+	public void put(Object obj,String key,byte value,BeancpInfo valueInfo,BeancpContext context) {
+		
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return;
+		}
+		List<BeancpSetInfo> setterList=t2.r1.getSetterList();
+		if(setterList.isEmpty()) {
+			return;
+		}
+		valueInfo=BeancpInfo.BYTE_INFO;
+		//（非永远new  类型一致 null赋值 ）
+		try {
+			int idx=t2.r2.intValue();
+			
+			//if(this.isForceEquals)
+			int setIdx=findSetInfo(valueInfo,setterList);
+			if(setIdx<0) {return;}
+			BeancpSetInfo setInfo=setterList.get(setIdx);
+			BeancpInfo toInfo=setInfo.getInfo();
+			this.put(obj, idx, setIdx, value, setInfo.getPossNames(), valueInfo, toInfo, context);
+			
+		} catch (Exception e) {
+			BeancpConvertProviderTool.handleException(this, feature, context, key, 0, e);
+		}
+	}
+	public void put(Object obj,String key,char value,BeancpInfo valueInfo,BeancpContext context) {
+		
+		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
+		if(t2==null) {
+			return;
+		}
+		List<BeancpSetInfo> setterList=t2.r1.getSetterList();
+		if(setterList.isEmpty()) {
+			return;
+		}
+		valueInfo=BeancpInfo.CHAR_INFO;
+		//（非永远new  类型一致 null赋值 ）
+		try {
+			int idx=t2.r2.intValue();
+			
+			//if(this.isForceEquals)
+			int setIdx=findSetInfo(valueInfo,setterList);
+			if(setIdx<0) {return;}
+			BeancpSetInfo setInfo=setterList.get(setIdx);
+			BeancpInfo toInfo=setInfo.getInfo();
+			this.put(obj, idx, setIdx, value, setInfo.getPossNames(), valueInfo, toInfo, context);
+			
+		} catch (Exception e) {
+			BeancpConvertProviderTool.handleException(this, feature, context, key, 0, e);
+		}
+	}
+	
 	private int findGetInfo(BeancpInfo valueInfo,List<BeancpGetInfo> getterList) {
 		if(getterList.size()==1) {
 			BeancpInfo info0=getterList.get(0).getInfo();
@@ -481,6 +792,7 @@ public abstract class BeancpConvertMapper {
 	protected abstract void put(Object obj,int idx,int setIdx,boolean value,String[] key,BeancpInfo valueInfo,BeancpInfo toInfo,BeancpContext context) throws Exception;
 	protected abstract void put(Object obj,int idx,int setIdx,float value,String[] key,BeancpInfo valueInfo,BeancpInfo toInfo,BeancpContext context) throws Exception;
 	protected abstract void put(Object obj,int idx,int setIdx,double value,String[] key,BeancpInfo valueInfo,BeancpInfo toInfo,BeancpContext context) throws Exception;
+	protected abstract void put(Object obj,int idx,int setIdx,short value,String[] key,BeancpInfo valueInfo,BeancpInfo toInfo,BeancpContext context) throws Exception;
 
 	protected abstract Object get(Object obj,int idx,int getIdx,Object value,BeancpInfo valueInfo,BeancpInfo fromInfo,BeancpContext context) throws Exception;
 	protected abstract long get(Object obj,int idx,int getIdx,long value,BeancpInfo valueInfo,BeancpInfo fromInfo,BeancpContext context) throws Exception;
@@ -490,7 +802,8 @@ public abstract class BeancpConvertMapper {
 	protected abstract boolean get(Object obj,int idx,int getIdx,boolean value,BeancpInfo valueInfo,BeancpInfo fromInfo,BeancpContext context) throws Exception;
 	protected abstract float get(Object obj,int idx,int getIdx,float value,BeancpInfo valueInfo,BeancpInfo fromInfo,BeancpContext context) throws Exception;
 	protected abstract double get(Object obj,int idx,int getIdx,double value,BeancpInfo valueInfo,BeancpInfo fromInfo,BeancpContext context) throws Exception;
-	
+	protected abstract short get(Object obj,int idx,int getIdx,short value,BeancpInfo valueInfo,BeancpInfo fromInfo,BeancpContext context) throws Exception;
+
 	
 	public Object putAll(Object obj,Map map,BeancpInfo mapInfo,BeancpContext context){
 		if(obj==null) {

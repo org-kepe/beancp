@@ -53,7 +53,7 @@ public class BeancpName {
 					char[] arr=name.toCharArray();
 					boolean isNumFirst=false;
 					for(int i=0;i<arr.length;i++) {
-						char c=arr[0];
+						char c=arr[i];
 						if(i==0) {
 							sb.append(Character.toLowerCase(c));
 						}else if(c>='A'&&c<='Z') {

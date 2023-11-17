@@ -30,10 +30,21 @@ public class BeancpInfoMatcherTool
             return info1.instanceOf(info);
         };
     }
+    public static BeancpInfoMatcher createSuperMatcher(BeancpInfo info){
+        return info1->{
+            return info.instanceOf(info1);
+        };
+    }
     
     public static BeancpInfoMatcher createBeanMatcher() {
     	return info1->{
             return info1.isBean;
         };
     }
+    public static BeancpInfoMatcher createAnyMatcher() {
+    	return info1->{
+            return true;
+        };
+    }
 }
+

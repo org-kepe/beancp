@@ -313,7 +313,7 @@ public abstract class BeancpConvertProvider
         return of(this.flag,fromInfo1,this.toInfo);
     }
     protected BeancpInvocationImp getInvocation() {
-    	return null;
+    	return invocation;
     }
     public static BeancpConvertProvider of(BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
         return C_MAP.computeIfAbsent(fromInfo, key->new ConcurrentHashMap<>()).computeIfAbsent(toInfo, key->new ConcurrentHashMap<>()).computeIfAbsent(flag, key->generateProvider(flag,fromInfo,toInfo));

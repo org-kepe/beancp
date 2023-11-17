@@ -227,7 +227,7 @@ public interface BeancpCustomConverter<T,R> extends BeancpConverter
     	return (float)fromObj;
     }
     default boolean convert(BeancpInvocationCZ invocation,BeancpContext context,char fromObj,boolean toObj) {
-    	return fromObj=='Y'||fromObj=='y'||fromObj=='1';
+    	return fromObj=='1'||fromObj=='Y'||fromObj=='y';
     }
     default char convert(BeancpInvocationCC invocation,BeancpContext context,char fromObj,char toObj) {
     	return fromObj;
@@ -340,4 +340,5 @@ public interface BeancpCustomConverter<T,R> extends BeancpConverter
     default long convert(BeancpInvocationJJ invocation,BeancpContext context,long fromObj,long toObj) {
     	return fromObj;
     }
+    
 }

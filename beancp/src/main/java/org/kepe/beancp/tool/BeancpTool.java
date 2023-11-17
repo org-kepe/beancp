@@ -17,12 +17,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
+import org.kepe.beancp.config.BeancpOOConverter;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.asm.MethodASMContext;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
 import org.kepe.beancp.ct.itf.BeancpASMConverter;
 import org.kepe.beancp.ct.itf.BeancpConvertByObject;
 import org.kepe.beancp.ct.itf.BeancpConverter;
+import org.kepe.beancp.ct.itf.BeancpCustomConverter;
 import org.kepe.beancp.ct.itf.BeancpSimpleCustomConverter;
 import org.kepe.beancp.ct.reg.BeancpRegisters;
 import org.kepe.beancp.info.BeancpInfo;
@@ -160,5 +163,20 @@ public class BeancpTool {
 		}
 		return false;
 	}
+	
+	public static BeancpCustomConverter create(int dinstance,BeancpOOConverter ooConverter) {
+    	return new BeancpCustomConverter() {
+    		@Override
+    		public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
+    			return dinstance;
+    		}
+
+			@Override
+			public Object convert(BeancpInvocationOO invocation, BeancpContext context, Object fromObj, Object toObj) {
+				return ooConverter.convert(invocation, context, fromObj, toObj);
+			}
+    		
+    	};
+    }
 	
 }
