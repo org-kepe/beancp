@@ -223,7 +223,7 @@ public class BeancpConvertProviderProxy extends BeancpConvertProvider implements
     }
 	@Override
 	public <T, R> R convert(BeancpContext context, T fromObj, R toObj) {
-		if(this.getDistance()>=0) {return provider.convert(context, fromObj, toObj);}
+		if(this.getDistance()>=0) {if(fromObj==null) {return toObj;}return provider.convert(context, fromObj, toObj);}
 		throw new BeancpException(EType.IGNORE,"unexpected conversion");
 	}
 	@Override
@@ -243,43 +243,43 @@ public class BeancpConvertProviderProxy extends BeancpConvertProvider implements
 	@Override
 	public <T> int convert(BeancpContext context, T fromObj, int toObj) {
 		if(this.getDistance()>=0) {
-			return provider.convert(context, fromObj, toObj);
+			if(fromObj==null) {return toObj;}return provider.convert(context, fromObj, toObj);
 		}
 		throw new BeancpException(EType.IGNORE,"unexpected conversion");
 	}
 	@Override
 	public <T> float convert(BeancpContext context, T fromObj, float toObj) {
-		if(this.getDistance()>=0) {return provider.convert(context, fromObj, toObj);}
+		if(this.getDistance()>=0) {if(fromObj==null) {return toObj;}return provider.convert(context, fromObj, toObj);}
 		throw new BeancpException(EType.IGNORE,"unexpected conversion");
 	}
 	@Override
 	public <T> boolean convert(BeancpContext context, T fromObj, boolean toObj) {
-		if(this.getDistance()>=0) {return provider.convert(context, fromObj, toObj);}
+		if(this.getDistance()>=0) {if(fromObj==null) {return toObj;}return provider.convert(context, fromObj, toObj);}
 		throw new BeancpException(EType.IGNORE,"unexpected conversion");
 	}
 	@Override
 	public <T> char convert(BeancpContext context, T fromObj, char toObj) {
-		if(this.getDistance()>=0) {return provider.convert(context, fromObj, toObj);}
+		if(this.getDistance()>=0) {if(fromObj==null) {return toObj;}return provider.convert(context, fromObj, toObj);}
 		throw new BeancpException(EType.IGNORE,"unexpected conversion");
 	}
 	@Override
 	public <T> double convert(BeancpContext context, T fromObj, double toObj) {
-		if(this.getDistance()>=0) {return provider.convert(context, fromObj, toObj);}
+		if(this.getDistance()>=0) {if(fromObj==null) {return toObj;}return provider.convert(context, fromObj, toObj);}
 		throw new BeancpException(EType.IGNORE,"unexpected conversion");
 	}
 	@Override
 	public <T> short convert(BeancpContext context, T fromObj, short toObj) {
-		if(this.getDistance()>=0) {return provider.convert(context, fromObj, toObj);}
+		if(this.getDistance()>=0) {if(fromObj==null) {return toObj;}return provider.convert(context, fromObj, toObj);}
 		throw new BeancpException(EType.IGNORE,"unexpected conversion");
 	}
 	@Override
 	public <T> byte convert(BeancpContext context, T fromObj, byte toObj) {
-		if(this.getDistance()>=0) {return provider.convert(context, fromObj, toObj);}
+		if(this.getDistance()>=0) {if(fromObj==null) {return toObj;}return provider.convert(context, fromObj, toObj);}
 		throw new BeancpException(EType.IGNORE,"unexpected conversion");
 	}
 	@Override
 	public <T> long convert(BeancpContext context, T fromObj, long toObj) {
-		if(this.getDistance()>=0) {return provider.convert(context, fromObj, toObj);}
+		if(this.getDistance()>=0) {if(fromObj==null) {return toObj;}return provider.convert(context, fromObj, toObj);}
 		throw new BeancpException(EType.IGNORE,"unexpected conversion");
 	}
 	@Override

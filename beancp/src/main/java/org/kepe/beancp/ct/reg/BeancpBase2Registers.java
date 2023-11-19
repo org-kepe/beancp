@@ -35,9 +35,6 @@ public class BeancpBase2Registers  implements BeancpRegister{
 			@Override
 			public AtomicBoolean convert(BeancpInvocationOO<Boolean, AtomicBoolean> invocation, BeancpContext context, Boolean fromObj,
 					AtomicBoolean toObj) {
-				if(fromObj==null) {
-					return toObj;
-				}
 				if(toObj!=null) {
 					toObj.set(fromObj);
 					return toObj;
@@ -66,9 +63,6 @@ public class BeancpBase2Registers  implements BeancpRegister{
 			@Override
 			public Boolean convert(BeancpInvocationOO<AtomicBoolean,Boolean> invocation, BeancpContext context, AtomicBoolean fromObj,
 					Boolean toObj) {
-				if(fromObj==null) {
-					return toObj;
-				}
 				return fromObj.get();
 			};
 			@Override
@@ -92,9 +86,6 @@ public class BeancpBase2Registers  implements BeancpRegister{
 			@Override
 			public AtomicInteger convert(BeancpInvocationOO<Integer, AtomicInteger> invocation, BeancpContext context, Integer fromObj,
 					AtomicInteger toObj) {
-				if(fromObj==null) {
-					return toObj;
-				}
 				if(toObj!=null) {
 					toObj.set(fromObj);
 					return toObj;
@@ -123,9 +114,6 @@ public class BeancpBase2Registers  implements BeancpRegister{
 			@Override
 			public Integer convert(BeancpInvocationOO<AtomicInteger,Integer> invocation, BeancpContext context, AtomicInteger fromObj,
 					Integer toObj) {
-				if(fromObj==null) {
-					return toObj;
-				}
 				return fromObj.get();
 			};
 			@Override
@@ -150,9 +138,6 @@ public class BeancpBase2Registers  implements BeancpRegister{
 			@Override
 			public AtomicLong convert(BeancpInvocationOO<Long, AtomicLong> invocation, BeancpContext context, Long fromObj,
 					AtomicLong toObj) {
-				if(fromObj==null) {
-					return toObj;
-				}
 				if(toObj!=null) {
 					toObj.set(fromObj);
 					return toObj;
@@ -181,9 +166,6 @@ public class BeancpBase2Registers  implements BeancpRegister{
 			@Override
 			public Long convert(BeancpInvocationOO<AtomicLong,Long> invocation, BeancpContext context, AtomicLong fromObj,
 					Long toObj) {
-				if(fromObj==null) {
-					return toObj;
-				}
 				return fromObj.get();
 			};
 			@Override

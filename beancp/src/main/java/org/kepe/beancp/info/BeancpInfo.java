@@ -119,7 +119,8 @@ public class BeancpInfo
     private BeancpInfo[] genericInfo;
     public BeancpCloneInfo cloneInfo;
     private BeancpConvertMapper mapper;
-
+    private Enum[] enumConstants;
+    private List<BeancpInfo> genericSuperInfo;
     public boolean instanceOf(BeancpInfo info){
     	if(this.id==info.id) {
     		return true;
@@ -332,6 +333,7 @@ public class BeancpInfo
             }
             if(info.clazz.isEnum()) {
             	info.isEnum=true;
+            	info.enumConstants=(Enum[]) info.clazz.getEnumConstants();
             }
             if(Map.class.isAssignableFrom(info.clazz)) {
             	info.isMap=true;
@@ -347,7 +349,7 @@ public class BeancpInfo
             if(Modifier.isAbstract(info.fclazz.getModifiers())) {
             	info.isFAbstract=true;
             }
-            if(!info.isFAbstract&&!info.isFInterface&&!info.isPrimitive&&!info.isBase&&!info.isArray&&!info.isList&&!info.isMap) {
+            if(!info.isFAbstract&&!info.isFInterface&&!info.isPrimitive&&!info.isBase&&!info.isArray&&!info.isList&&!info.isMap&&!Collection.class.isAssignableFrom(info.clazz) ) {
             	info.isBean=true; 
             }
             if(info.isBean) {
@@ -751,5 +753,82 @@ public class BeancpInfo
 	public Type getFtype() {
 		return ftype;
 	}
-    
+    public Enum[] getEnumConstants() {
+    	return this.enumConstants;
+    }
+	public List<BeancpInfo> getGenericSuperInfo() {
+		if(genericSuperInfo==null) {
+			if (type.getClass() == Class.class) {
+	            return (Class<?>) type;
+	        }
+
+	        if (type instanceof ParameterizedType) {
+	            return getClassByType(((ParameterizedType) type).getRawType());
+	        }
+
+	        if (type instanceof TypeVariable) {
+	            Type boundType = ((TypeVariable<?>) type).getBounds()[0];
+	            if (boundType instanceof Class) {
+	                return (Class) boundType;
+	            }
+	            return getClassByType(boundType);
+	        }
+
+	        if (type instanceof WildcardType) {
+	            Type[] upperBounds = ((WildcardType) type).getUpperBounds();
+	            if (upperBounds.length == 1) {
+	                return getClassByType(upperBounds[0]);
+	            }
+	        }
+
+	        if (type instanceof GenericArrayType) {
+	        	//TODO 加快速度
+	            Type genericComponentType = ((GenericArrayType) type).getGenericComponentType();
+	            Class<?> componentClass = getClassByType(genericComponentType);
+	            return getArrayClass(componentClass);
+	        }
+			
+		}
+		return genericSuperInfo;
+	}
+	
+	private void addGenericSuperInfo(List list,Type type) {
+		if (type.getClass() == Class.class) {
+            return;
+        }
+		
+		if (type instanceof ParameterizedType) {
+			Class clazz=getClassByType(type);
+			TypeVariable[] tvs=clazz.getTypeParameters();
+			if(clazz!=Object.class) {
+				addGenericSuperInfo(list,tvs,clazz.getSuperclass());
+			}
+			while(clazz1!=Object.class)
+            return getClassByType(((ParameterizedType) type).getRawType());
+        }
+	}
+	private void addGenericSuperInfo(List list,TypeVariable[] superTvs,Class clazz) {
+		TypeVariable[] tvs=clazz.getTypeParameters();
+		if(tvs.length==0) {
+			return;
+		}
+		for(TypeVariable tv:superTvs) {
+			
+		}
+		list.add(tvs)
+		
+		if (type.getClass() == Class.class) {
+            return;
+        }
+		
+		if (type instanceof ParameterizedType) {
+			Class clazz=getClassByType(type);
+			clazz.getTypeParameters();
+			if(clazz!=Object.class) {
+				clazz.getSuperclass();
+			}
+			while(clazz1!=Object.class)
+            return getClassByType(((ParameterizedType) type).getRawType());
+        }
+	}
 }

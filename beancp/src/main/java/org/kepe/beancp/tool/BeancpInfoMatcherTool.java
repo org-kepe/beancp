@@ -27,12 +27,17 @@ public class BeancpInfoMatcherTool
 
     public static BeancpInfoMatcher createExtendsMatcher(BeancpInfo info){
         return info1->{
-            return info1.instanceOf(info);
+            return info1.instanceOf(info.getBClass());
+        };
+    }
+    public static BeancpInfoMatcher createEnumMatcher(){
+        return info1->{
+            return info1.isEnum;
         };
     }
     public static BeancpInfoMatcher createSuperMatcher(BeancpInfo info){
         return info1->{
-            return info.instanceOf(info1);
+            return info1.getBClass().isAssignableFrom(info.getBClass());
         };
     }
     

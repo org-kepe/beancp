@@ -29,6 +29,9 @@ public class BeancpBaseRegisters  implements BeancpRegister{
 		BeancpBase1Registers.registers();
 		BeancpBase2Registers.registers();
 		BeancpBase3Registers.registers();
+		BeancpBase4Registers.registers();
+		BeancpBase5Registers.registers();
+		BeancpBase6Registers.registers();
 	}
 	
 	private static void register(Type fromType, Type toType, BeancpConverter converter,int priority) {
