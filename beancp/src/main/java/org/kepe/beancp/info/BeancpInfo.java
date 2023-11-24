@@ -3,7 +3,6 @@ package org.kepe.beancp.info;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -11,11 +10,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Date;
+import java.time.temporal.Temporal;
 import java.util.AbstractCollection;
 import java.util.AbstractList;
 import java.util.AbstractMap;
@@ -23,6 +21,7 @@ import java.util.AbstractSequentialList;
 import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -55,7 +54,6 @@ import org.kepe.beancp.ct.asm.BeancpInfoASMTool;
 import org.kepe.beancp.ct.convert.BeancpConvertMapper;
 import org.kepe.beancp.tool.BeancpBeanTool;
 import org.kepe.beancp.tool.BeancpTool;
-import org.objectweb.asm.TypeReference;
 
 /**
  * Hello world!
@@ -63,7 +61,7 @@ import org.objectweb.asm.TypeReference;
  */
 public class BeancpInfo
 {
-    private static final Map<Class,Map<Type,BeancpInfo>> C_MAP=new ConcurrentHashMap<>();
+    private static final Map<Class<?>,Map<Type,BeancpInfo>> C_MAP=new ConcurrentHashMap<>();
     private static final AtomicInteger INDEX=new AtomicInteger(0);
 
 	public final static BeancpInfo OBJECT_INFO=BeancpInfo.of(Object.class);
@@ -100,8 +98,8 @@ public class BeancpInfo
     private Type type;
     private Class<?> fclazz;
     private Type ftype;
-    private TypeReference typeReference;
-    private String typeDescriptionStr;
+    private BeancpTypeInfo typeInfo;
+    //private String typeDescriptionStr;
     private volatile boolean isInitTargetProxy;
     public boolean isBase;
     public boolean isChangeable;
@@ -111,6 +109,7 @@ public class BeancpInfo
     public boolean isArray;
     public boolean isBean;
     public boolean isMap;
+    public int stage;
     private boolean isFInterface;
     private boolean isFAbstract;
     private boolean hasType;
@@ -120,29 +119,21 @@ public class BeancpInfo
     public BeancpCloneInfo cloneInfo;
     private BeancpConvertMapper mapper;
     private Enum[] enumConstants;
-    private List<BeancpInfo> genericSuperInfo;
+    private BeancpInfo componentType;
+
+    public BeancpInfo getComponentType() {
+    	if(this.isArray&&this.componentType==null) {
+    		if(type instanceof Class) {
+    			this.componentType=of(((Class)type).getComponentType());
+    		}else if(type instanceof GenericArrayType) {
+    			this.componentType= of(((GenericArrayType) type).getGenericComponentType());
+    		}
+    	}
+    	return this.componentType;
+    }
+
     public boolean instanceOf(BeancpInfo info){
-    	if(this.id==info.id) {
-    		return true;
-    	}
-    	if(info.clazz.isAssignableFrom(this.clazz)) {
-    		if(!info.hasType) {
-    			return true;
-    		}
-    		BeancpInfo[] genericInfo1= info.getGenericInfos();
-    		BeancpInfo[] genericInfo2= this.getGenericInfos();
-    		if(genericInfo1.length==genericInfo2.length) {
-    			for(int i=0;i<genericInfo1.length;i++) {
-    				if(!genericInfo2[i].instanceOf(genericInfo1[i])) {
-    					return false;
-    				}
-    			}
-    			return true;
-    		}else {
-    			return false;
-    		}
-    	}
-        return false;
+    	return this.typeInfo.instanceOf(info.typeInfo);
     }
     public boolean instanceOf(Class clazz){
         if(clazz.isAssignableFrom(this.clazz)){
@@ -216,63 +207,7 @@ public class BeancpInfo
     }
 
     
-    public static Class<?> getClassByType(Type type){
-    	if (type == null) {
-            return null;
-        }
-
-        if (type.getClass() == Class.class) {
-            return (Class<?>) type;
-        }
-
-        if (type instanceof ParameterizedType) {
-            return getClassByType(((ParameterizedType) type).getRawType());
-        }
-
-        if (type instanceof TypeVariable) {
-            Type boundType = ((TypeVariable<?>) type).getBounds()[0];
-            if (boundType instanceof Class) {
-                return (Class) boundType;
-            }
-            return getClassByType(boundType);
-        }
-
-        if (type instanceof WildcardType) {
-            Type[] upperBounds = ((WildcardType) type).getUpperBounds();
-            if (upperBounds.length == 1) {
-                return getClassByType(upperBounds[0]);
-            }
-        }
-
-        if (type instanceof GenericArrayType) {
-        	//TODO 加快速度
-            Type genericComponentType = ((GenericArrayType) type).getGenericComponentType();
-            Class<?> componentClass = getClassByType(genericComponentType);
-            return getArrayClass(componentClass);
-        }
-        return Object.class;
-    }
-    public static Class<?> getArrayClass(Class componentClass) {
-        if (componentClass == int.class) {
-            return int[].class;
-        }
-        if (componentClass == byte.class) {
-            return byte[].class;
-        }
-        if (componentClass == short.class) {
-            return short[].class;
-        }
-        if (componentClass == long.class) {
-            return long[].class;
-        }
-        if (componentClass == String.class) {
-            return String[].class;
-        }
-        if (componentClass == Object.class) {
-            return Object[].class;
-        }
-        return Array.newInstance(componentClass, 1).getClass();
-    }
+    
     public BeancpInfo of(Object obj){
         if(obj==null||this.clazz==obj.getClass()){
             return this;
@@ -290,30 +225,32 @@ public class BeancpInfo
     	if(type==null) {
     		type=clazz;
     	}
-    	if(clazz==null){
-            clazz=getClassByType(type);
-        }
-    	if(type instanceof Class) {
+    	if(clazz!=null&&type instanceof Class) {
     		type=clazz;
     	}
-        return trans(type,clazz);
+    	BeancpTypeInfo typeInfo=BeancpTypeInfo.of(type);
+    	if(clazz==null){
+            clazz=typeInfo.getRawClass();
+        }
+        return trans(typeInfo,clazz);
     }
-    public static BeancpInfo of(Type type,Class clazz,Object obj){
+    public static BeancpInfo of(Type type,Class<?> clazz,Object obj){
         if(obj!=null){
             clazz=obj.getClass();
         }
         return of(type,clazz);
     }
     
-    private static BeancpInfo trans(Type type,Class clazz) {
+    private static BeancpInfo trans(BeancpTypeInfo typeInfo,Class clazz) {
         //TODO 转换type和clazz到小范围
-    	
+    	Type type=typeInfo.getType();
     	BeancpInfo infoff= C_MAP.computeIfAbsent(clazz, key->new ConcurrentHashMap<>()).computeIfAbsent(type, key->{
         	//System.out.println("初始化beaninfo:"+type.getTypeName()+" class:"+clazz.getName());
     		Type ftype=type;
         	Class fclazz=clazz;
         	BeancpInfo info=new BeancpInfo();
             info.id=INDEX.incrementAndGet();
+            info.typeInfo=typeInfo;
             info.clazz=clazz;
             info.type=type;
 //            int mod=clazz.getModifiers();
@@ -326,10 +263,28 @@ public class BeancpInfo
             	info.hasType=true;
             }
             info.isPrimitive=info.fclazz.isPrimitive();
+            info.isChangeable=true;
             if(info.clazz.isPrimitive()){
                 info.isPrimitive=true;
                 info.isBase=true;
                 info.isChangeable=false;
+                if(Long.TYPE==type) {
+        			info.stage=2;
+        		}else if(Boolean.TYPE==type) {
+        			info.stage=3;
+        		}else if(Character.TYPE==type) {
+        			info.stage=6;
+        		}else if(Byte.TYPE==type) {
+        			info.stage=8;
+        		}else if(Short.TYPE==type) {
+        			info.stage=7;
+        		}else if(Integer.TYPE==type) {
+        			info.stage=1;
+        		}else if(Float.TYPE==type) {
+        			info.stage=4;
+        		}else if(Double.TYPE==type) {
+        			info.stage=5;
+        		}
             }
             if(info.clazz.isEnum()) {
             	info.isEnum=true;
@@ -339,9 +294,11 @@ public class BeancpInfo
             	info.isMap=true;
             }
             
-            if(info.isPrimitive||info.isEnum||String.class.isAssignableFrom(info.clazz)||Number.class.isAssignableFrom(info.fclazz)||Date.class.isAssignableFrom(info.clazz)||InputStream.class.isAssignableFrom(info.clazz)||OutputStream.class.isAssignableFrom(info.clazz)||File.class.isAssignableFrom(info.clazz)||Clob.class.isAssignableFrom(info.clazz)||Blob.class.isAssignableFrom(info.clazz)||AtomicBoolean.class.isAssignableFrom(info.clazz)||AtomicInteger.class.isAssignableFrom(info.clazz)||AtomicLong.class.isAssignableFrom(info.clazz)){
+            if(info.isPrimitive||info.isEnum||String.class.isAssignableFrom(info.clazz)||Number.class.isAssignableFrom(info.fclazz)||Date.class.isAssignableFrom(info.clazz)||InputStream.class.isAssignableFrom(info.clazz)||OutputStream.class.isAssignableFrom(info.clazz)||File.class.isAssignableFrom(info.clazz)||Clob.class.isAssignableFrom(info.clazz)||Blob.class.isAssignableFrom(info.clazz)||AtomicBoolean.class.isAssignableFrom(info.clazz)||AtomicInteger.class.isAssignableFrom(info.clazz)||AtomicLong.class.isAssignableFrom(info.clazz)||Calendar.class.isAssignableFrom(info.clazz)){
                 info.isBase=true;
-                info.isChangeable=false;
+            }
+            if(info.isEnum||String.class.isAssignableFrom(info.clazz)||Number.class.isAssignableFrom(info.fclazz)||Clob.class.isAssignableFrom(info.clazz)||Blob.class.isAssignableFrom(info.clazz)||Temporal.class.isAssignableFrom(info.clazz)) {
+            	info.isChangeable=false;
             }
             if(info.fclazz.isInterface()) {
             	info.isFInterface=true;
@@ -756,79 +713,5 @@ public class BeancpInfo
     public Enum[] getEnumConstants() {
     	return this.enumConstants;
     }
-	public List<BeancpInfo> getGenericSuperInfo() {
-		if(genericSuperInfo==null) {
-			if (type.getClass() == Class.class) {
-	            return (Class<?>) type;
-	        }
-
-	        if (type instanceof ParameterizedType) {
-	            return getClassByType(((ParameterizedType) type).getRawType());
-	        }
-
-	        if (type instanceof TypeVariable) {
-	            Type boundType = ((TypeVariable<?>) type).getBounds()[0];
-	            if (boundType instanceof Class) {
-	                return (Class) boundType;
-	            }
-	            return getClassByType(boundType);
-	        }
-
-	        if (type instanceof WildcardType) {
-	            Type[] upperBounds = ((WildcardType) type).getUpperBounds();
-	            if (upperBounds.length == 1) {
-	                return getClassByType(upperBounds[0]);
-	            }
-	        }
-
-	        if (type instanceof GenericArrayType) {
-	        	//TODO 加快速度
-	            Type genericComponentType = ((GenericArrayType) type).getGenericComponentType();
-	            Class<?> componentClass = getClassByType(genericComponentType);
-	            return getArrayClass(componentClass);
-	        }
-			
-		}
-		return genericSuperInfo;
-	}
 	
-	private void addGenericSuperInfo(List list,Type type) {
-		if (type.getClass() == Class.class) {
-            return;
-        }
-		
-		if (type instanceof ParameterizedType) {
-			Class clazz=getClassByType(type);
-			TypeVariable[] tvs=clazz.getTypeParameters();
-			if(clazz!=Object.class) {
-				addGenericSuperInfo(list,tvs,clazz.getSuperclass());
-			}
-			while(clazz1!=Object.class)
-            return getClassByType(((ParameterizedType) type).getRawType());
-        }
-	}
-	private void addGenericSuperInfo(List list,TypeVariable[] superTvs,Class clazz) {
-		TypeVariable[] tvs=clazz.getTypeParameters();
-		if(tvs.length==0) {
-			return;
-		}
-		for(TypeVariable tv:superTvs) {
-			
-		}
-		list.add(tvs)
-		
-		if (type.getClass() == Class.class) {
-            return;
-        }
-		
-		if (type instanceof ParameterizedType) {
-			Class clazz=getClassByType(type);
-			clazz.getTypeParameters();
-			if(clazz!=Object.class) {
-				clazz.getSuperclass();
-			}
-			while(clazz1!=Object.class)
-            return getClassByType(((ParameterizedType) type).getRawType());
-        }
-	}
 }

@@ -1,40 +1,21 @@
 package org.kepe.beancp.ct.reg;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
-import org.kepe.beancp.config.BeancpOOConverter;
 import org.kepe.beancp.ct.BeancpConvertProvider;
-import org.kepe.beancp.ct.convert.BeancpConvertMapper;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
 import org.kepe.beancp.ct.invocation.BeancpInvocationIO;
 import org.kepe.beancp.ct.invocation.BeancpInvocationImp;
-import org.kepe.beancp.ct.invocation.BeancpInvocationJO;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOI;
-import org.kepe.beancp.ct.invocation.BeancpInvocationOJ;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
-import org.kepe.beancp.ct.invocation.BeancpInvocationOZ;
-import org.kepe.beancp.ct.invocation.BeancpInvocationZO;
 import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
-import org.kepe.beancp.ct.reg.converter.BeancpDirectCustomConverter;
-import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 import org.kepe.beancp.tool.BeancpTool;
-import org.kepe.beancp.tool.TimeTool;
 
 public class BeancpBase6Registers  implements BeancpRegister{
 	public static void registers() {
@@ -67,12 +48,19 @@ public class BeancpBase6Registers  implements BeancpRegister{
 			public Object convert(BeancpInvocationOO invocation, BeancpContext context, Object fromObj,
 					Object toObj) {
 				Enum[] enums=((BeancpInvocationImp)invocation).getToInfo().getEnumConstants();
-				return enums[(Integer)fromObj];
+				int i=(Integer)fromObj;
+				if(i>=0&&i<enums.length) {
+					return enums[i];
+				}
+				return null;
 			};
 			@Override
 			public Object convert(BeancpInvocationIO invocation, BeancpContext context, int fromObj, Object toObj) {
 				Enum[] enums=((BeancpInvocationImp)invocation).getToInfo().getEnumConstants();
-				return enums[fromObj];
+				if(fromObj>=0&&fromObj<enums.length) {
+					return enums[fromObj];
+				}
+				return null;
 			}
 			
 		};

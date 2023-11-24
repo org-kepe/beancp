@@ -35,6 +35,11 @@ public class BeancpInfoMatcherTool
             return info1.isEnum;
         };
     }
+    public static BeancpInfoMatcher createArrayMatcher(){
+        return info1->{
+            return info1.isArray;
+        };
+    }
     public static BeancpInfoMatcher createSuperMatcher(BeancpInfo info){
         return info1->{
             return info1.getBClass().isAssignableFrom(info.getBClass());

@@ -13,6 +13,7 @@ import org.kepe.beancp.ct.asm.BeancpInfoASMTool;
 import org.kepe.beancp.ct.convert.BeancpConvertCustomProvider;
 import org.kepe.beancp.ct.convert.BeancpConvertNonProvider;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.converter.BeancpConverterInfoGroup;
 import org.kepe.beancp.ct.invocation.BeancpInvocationImp;
 import org.kepe.beancp.ct.itf.BeancpASMConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
@@ -321,6 +322,7 @@ public abstract class BeancpConvertProvider
     
 
     
+    
     public static void register(BeancpConverterInfo info) {
     	synchronized(converterList){
             converterList.add(info);
@@ -329,7 +331,6 @@ public abstract class BeancpConvertProvider
             });
         }
     }
-    
     private static BeancpConvertProvider generateProvider(BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
         int length=converterList.size();
         BeancpConvertProvider provider=new BeancpConvertNonProvider(null,flag,fromInfo,toInfo);;
@@ -343,7 +344,7 @@ public abstract class BeancpConvertProvider
                 }
             }
         }
-        return BeancpConvertProviderProxy.createProxy(provider);// new BeancpConvertProviderProxy(provider); 
+        return BeancpConvertProviderProxy.createProxy(provider);
     }
 	
 }
