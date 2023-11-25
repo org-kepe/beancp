@@ -2164,9 +2164,6 @@ public class BeancpBeanRegisters {
 
 			@Override
 			public Object convert(BeancpInvocationOO invocation, BeancpContext context, Object fromObj, Object toObj) {
-				if(fromObj==null) {
-					return toObj;
-				}
 				return BeancpConvertMapper.of(((BeancpInvocationImp)invocation).getFromInfo(), invocation.getFeature()).toMap(fromObj, (Map)toObj, ((BeancpInvocationImp)invocation).getToInfo(), context);
 			}
 			

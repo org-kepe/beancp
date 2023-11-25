@@ -74,6 +74,7 @@ public class BeancpInfo
 	public final static BeancpInfo BYTE_INFO=BeancpInfo.of(byte.class);
 	public final static BeancpInfo FLOAT_INFO=BeancpInfo.of(float.class);
 	public final static BeancpInfo DOUBLE_INFO=BeancpInfo.of(double.class);
+	public final static BeancpInfo STRING_INFO=BeancpInfo.of(String.class);
 	
 	static final Class CLASS_EMPTY_SET = Collections.emptySet().getClass();
     static final Class CLASS_EMPTY_LIST = Collections.emptyList().getClass();

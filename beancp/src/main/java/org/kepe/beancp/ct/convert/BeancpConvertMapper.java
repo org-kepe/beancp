@@ -836,7 +836,7 @@ public abstract class BeancpConvertMapper {
 			return null;
 		}
 		BeancpInfo keyInfo=mapInfo.getGenericInfo(0);
-		if(keyInfo!=null&&keyInfo!=BeancpInfo.OBJECT_INFO&&!keyInfo.instanceOf(String.class)) {
+		if(keyInfo!=null&&keyInfo!=BeancpInfo.OBJECT_INFO&&!keyInfo.instanceOf(BeancpInfo.STRING_INFO)) {
 			return map;
 		}
 		if(map==null) {
