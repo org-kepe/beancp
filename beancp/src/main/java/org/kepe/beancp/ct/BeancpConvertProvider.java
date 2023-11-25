@@ -306,12 +306,20 @@ public abstract class BeancpConvertProvider
         }
         return of(this.flag,fromInfo1,toInfo1);
     }
+    
     public BeancpConvertProvider of(Object fromObj){
         BeancpInfo fromInfo1=this.fromInfo.of(fromObj);
         if(fromInfo1==this.fromInfo){
             return this;
         }
         return of(this.flag,fromInfo1,this.toInfo);
+    }
+    public BeancpConvertProvider of2(Object toObj){
+        BeancpInfo toInfo1=this.toInfo.of(toObj);
+        if(toInfo1==this.toInfo){
+            return this;
+        }
+        return of(this.flag,this.fromInfo,toInfo1);
     }
     protected BeancpInvocationImp getInvocation() {
     	return invocation;

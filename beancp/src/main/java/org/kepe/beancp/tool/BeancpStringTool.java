@@ -12,4 +12,10 @@ public class BeancpStringTool
         }
         return false;
     }
+    public static <T> T nvl(T t,T defaultValue) {
+    	if(isEmpty(t)) {
+    		return defaultValue;
+    	}
+    	return t;
+    }
 }

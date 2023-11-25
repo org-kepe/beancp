@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Date;
@@ -152,7 +153,12 @@ public class BeancpInfo
     			}
     			this.genericInfo=genericInfo;
     		}else {
-    			this.genericInfo=new BeancpInfo[] {};
+    			TypeVariable<?>[] tvs= this.clazz.getTypeParameters();
+    			BeancpInfo[] genericInfo=new BeancpInfo[tvs.length];
+    			for(int i=0;i<genericInfo.length;i++) {
+    				genericInfo[i]=BeancpInfo.of(tvs[i]);
+    			}
+    			this.genericInfo=genericInfo;
     		}
     	}
     	return genericInfo;

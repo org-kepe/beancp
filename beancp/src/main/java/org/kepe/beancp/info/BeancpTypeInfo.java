@@ -393,6 +393,9 @@ public class BeancpTypeInfo {
 		}
 	}
 	private void addGenericSuperInfo(List list,TypeVariable[] superTvs,Class clazz) {
+		if(clazz==null) {
+			return;
+		}
 		TypeVariable[] tvs=clazz.getTypeParameters();
 		if(tvs.length==0) {
 			return;
