@@ -482,7 +482,6 @@ public abstract class BeancpConvertMapper {
 			valueInfo=BeancpInfo.OBJECT_INFO;
 		}
 		valueInfo=valueInfo.of(value);
-		//（非永远new  类型一致 null赋值 ）
 		try {
 			int idx=t2.r2.intValue();
 			
@@ -507,7 +506,6 @@ public abstract class BeancpConvertMapper {
 			return;
 		}
 		valueInfo=BeancpInfo.INT_INFO;
-		//（非永远new  类型一致 null赋值 ）
 		try {
 			int idx=t2.r2.intValue();
 			
@@ -533,7 +531,6 @@ public abstract class BeancpConvertMapper {
 			return;
 		}
 		valueInfo=BeancpInfo.LONG_INFO;
-		//（非永远new  类型一致 null赋值 ）
 		try {
 			int idx=t2.r2.intValue();
 			
@@ -559,7 +556,6 @@ public abstract class BeancpConvertMapper {
 			return;
 		}
 		valueInfo=BeancpInfo.FLOAT_INFO;
-		//（非永远new  类型一致 null赋值 ）
 		try {
 			int idx=t2.r2.intValue();
 			
@@ -585,7 +581,6 @@ public abstract class BeancpConvertMapper {
 			return;
 		}
 		valueInfo=BeancpInfo.DOUBLE_INFO;
-		//（非永远new  类型一致 null赋值 ）
 		try {
 			int idx=t2.r2.intValue();
 			
@@ -611,7 +606,6 @@ public abstract class BeancpConvertMapper {
 			return;
 		}
 		valueInfo=BeancpInfo.SHORT_INFO;
-		//（非永远new  类型一致 null赋值 ）
 		try {
 			int idx=t2.r2.intValue();
 			
@@ -637,7 +631,6 @@ public abstract class BeancpConvertMapper {
 			return;
 		}
 		valueInfo=BeancpInfo.BOOLEAN_INFO;
-		//（非永远new  类型一致 null赋值 ）
 		try {
 			int idx=t2.r2.intValue();
 			
@@ -663,7 +656,6 @@ public abstract class BeancpConvertMapper {
 			return;
 		}
 		valueInfo=BeancpInfo.BYTE_INFO;
-		//（非永远new  类型一致 null赋值 ）
 		try {
 			int idx=t2.r2.intValue();
 			
@@ -689,7 +681,6 @@ public abstract class BeancpConvertMapper {
 			return;
 		}
 		valueInfo=BeancpInfo.CHAR_INFO;
-		//（非永远new  类型一致 null赋值 ）
 		try {
 			int idx=t2.r2.intValue();
 			

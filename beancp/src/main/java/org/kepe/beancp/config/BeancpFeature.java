@@ -12,19 +12,19 @@ import org.kepe.beancp.config.BeancpFeature;
 public class BeancpFeature
 {
     private final static Map<Long,BeancpFeature> FLAGCACHE_MAP=new ConcurrentHashMap<>();
-    //javabean转换为map时优先使用下滑线
+    //When converting a Javabean to a map, prioritize using a sliding line 
     public final static BeancpFeature BEAN2MAP_UNDERLINE = getFlag(1);
-    //即使源属性是空也进行赋值
+    //Assign even if the source attribute is empty
     public final static BeancpFeature SETVALUE_WHENNOTNULL = getFlag(1<<1);
-    //赋值新对象即使与原对象类型一致
+    //Assign a new object even if it is of the same type as the original object
     public final static BeancpFeature ALLWAYS_NEW = getFlag(1<<2);
-    //只有类型完全一致时才赋值
+    //Assign values only when the types are completely consistent
     public final static BeancpFeature SETVALUE_TYPEEQUALS = getFlag(1<<3);
-    //包括受保护的属性和默认权限属性
+    //Including protected attributes and default permission attributes
     public final static BeancpFeature ACCESS_PROTECTED = getFlag(1<<4);
-    //包括受保护的属性和默认权限属性
+    //Including protected attributes and default permission attributes including protected attributes and default permission attributes
     public final static BeancpFeature ACCESS_PRIVATE = getFlag(1<<5);
-    //遇到异常是否抛出
+    //Whether to throw an exception when encountering it
     public final static BeancpFeature THROW_EXCEPTION = getFlag(1<<6);
     public final static BeancpFeature BEAN2MAP_UNDERLINE_UPPER = getFlag(1<<7);
     private final long flag;

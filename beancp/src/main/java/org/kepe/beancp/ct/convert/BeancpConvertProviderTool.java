@@ -99,8 +99,8 @@ public class BeancpConvertProviderTool {
 		System.out.println(message);
 	}
 	public static void log(Throwable e) {
-		e.printStackTrace();
 		System.out.println("eee:"+e.getMessage());
+		e.printStackTrace();
 	}
 	public static Object invokeGetField(Object obj,Field field) {
 		boolean accessible=field.isAccessible();

@@ -22,7 +22,6 @@ public class BeancpConvertNonProvider extends BeancpConvertProvider
     public BeancpConvertNonProvider(BeancpConvertProvider parent, BeancpFeature flag,
 			BeancpInfo fromInfo, BeancpInfo toInfo) {
 		super(parent, flag, null, fromInfo, toInfo);
-		// TODO Auto-generated constructor stub
 	}
     
     

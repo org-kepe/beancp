@@ -6,7 +6,7 @@ import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.exception.BeancpException;
-import org.kepe.beancp.info.BeancpInfo;//
+import org.kepe.beancp.info.BeancpInfo;
 
 public class BeancpInvocationImp implements BeancpInvocationOI,BeancpInvocationOF,BeancpInvocationOO,BeancpInvocationII,BeancpInvocationOZ,BeancpInvocationOC,BeancpInvocationOD,BeancpInvocationOS,BeancpInvocationOB,BeancpInvocationOJ,BeancpInvocationIO,BeancpInvocationIF,BeancpInvocationIZ,BeancpInvocationIC,BeancpInvocationID,BeancpInvocationIS,BeancpInvocationIB,BeancpInvocationIJ,BeancpInvocationFO,BeancpInvocationFI,BeancpInvocationFF,BeancpInvocationFZ,BeancpInvocationFC,BeancpInvocationFD,BeancpInvocationFS,BeancpInvocationFB,BeancpInvocationFJ,BeancpInvocationZO,BeancpInvocationZI,BeancpInvocationZF,BeancpInvocationZZ,BeancpInvocationZC,BeancpInvocationZD,BeancpInvocationZS,BeancpInvocationZB,BeancpInvocationZJ,BeancpInvocationCO,BeancpInvocationCI,BeancpInvocationCF,BeancpInvocationCZ,BeancpInvocationCC,BeancpInvocationCD,BeancpInvocationCS,BeancpInvocationCB,BeancpInvocationCJ,BeancpInvocationDO,BeancpInvocationDI,BeancpInvocationDF,BeancpInvocationDZ,BeancpInvocationDC,BeancpInvocationDD,BeancpInvocationDS,BeancpInvocationDB,BeancpInvocationDJ,BeancpInvocationSO,BeancpInvocationSI,BeancpInvocationSF,BeancpInvocationSZ,BeancpInvocationSC,BeancpInvocationSD,BeancpInvocationSS,BeancpInvocationSB,BeancpInvocationSJ,BeancpInvocationBO,BeancpInvocationBI,BeancpInvocationBF,BeancpInvocationBZ,BeancpInvocationBC,BeancpInvocationBD,BeancpInvocationBS,BeancpInvocationBB,BeancpInvocationBJ,BeancpInvocationJO,BeancpInvocationJI,BeancpInvocationJF,BeancpInvocationJZ,BeancpInvocationJC,BeancpInvocationJD,BeancpInvocationJS,BeancpInvocationJB,BeancpInvocationJJ{
 	private BeancpConvertProvider provider;
@@ -606,18 +606,15 @@ public class BeancpInvocationImp implements BeancpInvocationOI,BeancpInvocationO
 	
 	@Override
 	public Type getFromType() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.fromInfo.getBType();
 	}
 	@Override
 	public Type getToType() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.toInfo.getBType();
 	}
 	@Override
 	public Class getToClass() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.toInfo.getBClass();
 	}
 	
 	

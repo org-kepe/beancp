@@ -75,7 +75,7 @@ public class BeancpBeanRegisters {
 				
 				boolean isForceEquals=flag.is(BeancpFeature.SETVALUE_TYPEEQUALS);
 
-				//确定如何初始化
+				//Determine how to initialize
 				if(toInfo.inits!=null) {
 					int minNum=Integer.MAX_VALUE;
 					for(BeancpInitInfo initInfo1:toInfo.inits) {
@@ -217,15 +217,7 @@ public class BeancpBeanRegisters {
 				BeancpInitInfo initInfo=asmContext.getObj("initInfo");
     			List<BeancpGetInfo> initGetList=asmContext.getObj("initGetList");
     			List<Tuple2<BeancpGetInfo,BeancpSetInfo>> gsetList=asmContext.getObj("gsetList");
-//    			for(int i=gsetList.size()-1;i>=0;i--) {
-//    				
-//    				if(!"key1".equals(gsetList.get(i).r2.getName().name)) {
-//    					gsetList.remove(i);
-//    				}else {
-//    					System.out.println("擦擦擦："+gsetList.get(i).r2.getName().name);
-//    				}
-//    			}
-    			//gsetList.clear();
+
 				MethodVisitor methodVisitor=asmContext.getMethodVisitor();
 				final int varContext=1;
 				int varOriFromObj=2;
@@ -257,8 +249,7 @@ public class BeancpBeanRegisters {
 				boolean isAllwaysNew=flag.is(BeancpFeature.ALLWAYS_NEW);
 				boolean isSetValueWhenNull=!flag.is(BeancpFeature.SETVALUE_WHENNOTNULL);
 				
-				//开始初始化
-				//几个gset   new一次大的
+				//Start initialization
 				List<Label[]> gsetTcLabelList=new ArrayList<>();
 				for(Tuple2<BeancpGetInfo,BeancpSetInfo> tuple2:gsetList) {
 					Label label0 = new Label();
@@ -360,8 +351,8 @@ public class BeancpBeanRegisters {
 					boolean isGetPrim=getInfo.getInfo().isPrimitive;
 					boolean isSetPrim=setInfo.getInfo().isPrimitive;
 					
-					if((isSetValueWhenNull&&isDirectTrans)||(!isSetValueWhenNull&&isDirectTrans&&isGetPrim)) {//null赋值、不转换
-						//直接赋值
+					if((isSetValueWhenNull&&isDirectTrans)||(!isSetValueWhenNull&&isDirectTrans&&isGetPrim)) {//Null assignment, no conversion
+						//Direct assignment
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
@@ -369,8 +360,8 @@ public class BeancpBeanRegisters {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
 						BeancpInfoASMTool.visitSetInfo(methodVisitor, setInfo);
-					}else if(!isSetValueWhenNull&&isDirectTrans&&!isGetPrim) {//null赋值、不转换
-						//判断null之后赋值
+					}else if(!isSetValueWhenNull&&isDirectTrans&&!isGetPrim) {//Null assignment, no conversion
+						//Assign a value after determining null
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitVarInsn(ASTORE, varTemp1);
@@ -389,7 +380,7 @@ public class BeancpBeanRegisters {
 						}
 						BeancpInfoASMTool.visitSetInfo(methodVisitor, setInfo);
 					}else if(isSetValueWhenNull&&!isDirectTrans&&!isGetPrim) {
-						//类型转换后赋值
+						//Assign value after type conversion
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitVarInsn(ASTORE, varTemp1);
@@ -622,8 +613,8 @@ public class BeancpBeanRegisters {
 					boolean isSetPrim=setInfo.getInfo().isPrimitive;
 					
 					
-					if((isSetValueWhenNull&&isDirectTrans)||(!isSetValueWhenNull&&isDirectTrans&&isGetPrim)) {//null赋值、不转换
-						//直接赋值
+					if((isSetValueWhenNull&&isDirectTrans)||(!isSetValueWhenNull&&isDirectTrans&&isGetPrim)) {//Null assignment, no conversion
+						//Direct assignment
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);
@@ -1234,8 +1225,7 @@ public class BeancpBeanRegisters {
 				boolean isAllwaysNew=flag.is(BeancpFeature.ALLWAYS_NEW);
 				boolean isSetValueWhenNull=!flag.is(BeancpFeature.SETVALUE_WHENNOTNULL);
 				
-				//开始初始化
-				//几个gset   new一次大的
+				//Start initialization
 				List<Label[]> gsetTcLabelList=new ArrayList<>();
 				for(Tuple2<BeancpGetInfo,BeancpSetInfo> tuple2:gsetList) {
 					Label label0 = new Label();
@@ -1314,8 +1304,8 @@ public class BeancpBeanRegisters {
 					boolean isGetPrim=getInfo.getInfo().isPrimitive;
 					boolean isSetPrim=setInfo.getInfo().isPrimitive;
 					
-					if((isSetValueWhenNull&&isDirectTrans)||(!isSetValueWhenNull&&isDirectTrans&&isGetPrim)) {//null赋值、不转换
-						//直接赋值
+					if((isSetValueWhenNull&&isDirectTrans)||(!isSetValueWhenNull&&isDirectTrans&&isGetPrim)) {//Null assignment, no conversion
+						//Direct assignment
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
@@ -1323,8 +1313,8 @@ public class BeancpBeanRegisters {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
 						BeancpInfoASMTool.visitSetInfo(methodVisitor, setInfo);
-					}else if(!isSetValueWhenNull&&isDirectTrans&&!isGetPrim) {//null赋值、不转换
-						//判断null之后赋值
+					}else if(!isSetValueWhenNull&&isDirectTrans&&!isGetPrim) {
+						//Assign a value after determining null
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitVarInsn(ASTORE, varTemp1);
@@ -1343,7 +1333,7 @@ public class BeancpBeanRegisters {
 						}
 						BeancpInfoASMTool.visitSetInfo(methodVisitor, setInfo);
 					}else if(isSetValueWhenNull&&!isDirectTrans&&!isGetPrim) {
-						//类型转换后赋值
+						//Assign value after type conversion
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitVarInsn(ASTORE, varTemp1);
@@ -1575,8 +1565,8 @@ public class BeancpBeanRegisters {
 					boolean isSetPrim=setInfo.getInfo().isPrimitive;
 					
 					
-					if((isSetValueWhenNull&&isDirectTrans)||(!isSetValueWhenNull&&isDirectTrans&&isGetPrim)) {//null赋值、不转换
-						//直接赋值
+					if((isSetValueWhenNull&&isDirectTrans)||(!isSetValueWhenNull&&isDirectTrans&&isGetPrim)) {
+						//Direct assignment
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);

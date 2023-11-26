@@ -249,10 +249,8 @@ public class BeancpInfo
     }
     
     private static BeancpInfo trans(BeancpTypeInfo typeInfo,Class clazz) {
-        //TODO 转换type和clazz到小范围
     	Type type=typeInfo.getType();
     	BeancpInfo infoff= C_MAP.computeIfAbsent(clazz, key->new ConcurrentHashMap<>()).computeIfAbsent(type, key->{
-        	//System.out.println("初始化beaninfo:"+type.getTypeName()+" class:"+clazz.getName());
     		Type ftype=type;
         	Class fclazz=clazz;
         	BeancpInfo info=new BeancpInfo();
@@ -484,7 +482,6 @@ public class BeancpInfo
 					} catch (Exception e) {
 					}
             		if(method!=null) {
-            			System.out.println("clone:"+mclazz.getName());
             			break;
             		}
             		mclazz=mclazz.getSuperclass();
@@ -513,7 +510,6 @@ public class BeancpInfo
         		return;
         	}
     		if(!this.isPrimitive) {
-    			System.out.println(this.clazz.getName());
     			BeancpInfoASMTool.initProxyOpClass(this);
     		}
     		this.isInitTargetProxy=true;

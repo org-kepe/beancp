@@ -15,7 +15,6 @@ public abstract class BeancpConvertASMProvider extends BeancpConvertProvider
     public BeancpConvertASMProvider(BeancpConvertProvider parent, BeancpFeature flag, BeancpConverterInfo info,
 			BeancpInfo fromInfo, BeancpInfo toInfo) {
 		super(parent, flag, info, fromInfo, toInfo);
-		// TODO Auto-generated constructor stub
 	}
 	@Override
 	public <T,R> R convert(BeancpContext context,T fromObj, R toObj) {

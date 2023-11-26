@@ -460,7 +460,7 @@ public class BeancpTypeInfo {
         }
 
         if (type instanceof GenericArrayType) {
-        	//TODO 加快速度
+        	//TODO Accelerate speed
             Type genericComponentType = ((GenericArrayType) type).getGenericComponentType();
             Class<?> componentClass = getClassByType(genericComponentType);
             return getArrayClass(componentClass);

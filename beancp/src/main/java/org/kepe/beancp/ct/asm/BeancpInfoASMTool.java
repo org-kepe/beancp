@@ -188,12 +188,6 @@ public class BeancpInfoASMTool implements Opcodes
 		}
         Class<? extends BeancpConvertASMProvider> clazz=(Class<? extends BeancpConvertASMProvider>) CLASS_LOADER.defineClassPublic(null, code, 0, code.length);
 
-//        try {
-//			Textifier.main(new String[]{clazz.getName()});
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		try {
 			return (BeancpConvertASMProvider) clazz.getConstructors()[0].newInstance(provider,flag, info, fromInfo, toInfo);
 		} catch (Exception e) {
@@ -772,7 +766,7 @@ public class BeancpInfoASMTool implements Opcodes
 			String key=e.getKey();
 			BeancpFieldInfo fieldInfo=e.getValue();
 			if(!fieldInfo.getGetterList().isEmpty()) {
-				//都没有  add  存在没有的  add  都有：field中有key的 add   field中有我反方向一样的 那就bu add  都没有 如果我是非is的  add   
+				//If there is no add, there is no add. If there is a key in the field, there is an add in the field that is the same as mine in the opposite direction, then there is no add. If I am a non is add, there is no add
 				boolean hasNormalMode=false;
 				for(BeancpGetInfo getInfo:fieldInfo.getGetterList()) {
 					if(!getInfo.isMode()) {
@@ -797,7 +791,7 @@ public class BeancpInfoASMTool implements Opcodes
 			}
 			
 			if(!fieldInfo.getSetterList().isEmpty()) {
-				//都没有  add  存在没有的  add  都有：field中有key的 add   field中有我反方向一样的 那就bu add  都没有 如果我是非is的  add   
+				//If there is no add, there is no add. If there is a key in the field, there is an add in the field that is the same as mine in the opposite direction, then there is no add. If I am a non is add, there is no add
 				boolean hasNormalMode=false;
 				for(BeancpSetInfo setInfo:fieldInfo.getSetterList()) {
 					if(!setInfo.isMode()) {
@@ -961,7 +955,7 @@ public class BeancpInfoASMTool implements Opcodes
             		methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
             		boolean isSetPrim=setInfo.getInfo().isPrimitive;
             		
-            		//非null赋值 永远new
+            		//Non null assignment always new
             		if(isGetPrim&&isSetPrim&&clazz==setInfo.getInfo().getBClass()) {
             			methodVisitor.visitVarInsn(ALOAD, 1);
             			methodVisitor.visitTypeInsn(CHECKCAST, getClassName(info.getFinalPublicClass()));
@@ -1698,9 +1692,6 @@ public class BeancpInfoASMTool implements Opcodes
             return "[" + desc(clazz.getComponentType());
         }
         String str = clazz.getName().replace('.', '/');
-        if("org/kepe/Test$TInner".equals(str)) {
-        	System.out.println("发给:"+str);
-        }
         return str;
     }
     public static String desc(Class<?> clazz) {
