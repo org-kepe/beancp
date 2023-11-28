@@ -23,6 +23,10 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.kepe.beancp.info.BeancpInfo;
+import org.kepe.beancp.info.BeancpTypeInfo;
 
 
 public class BeancpBeanTool {
@@ -60,6 +64,12 @@ public class BeancpBeanTool {
     	}
     	
     }
+    //private static final Map<Class,BeancpInfo> C_MAP=new ConcurrentHashMap<>();
+    public static Type type(Class clazz,Type... typeArguments) {
+    	return BeancpTypeInfo.of(clazz).ofTypeArguments(typeArguments).getType();
+    }
+    
+    
     public static int getAccess(Class clazz) {
     	int mod=clazz.getModifiers();
     	if(Modifier.isPublic(mod)) {

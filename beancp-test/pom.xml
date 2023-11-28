@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.github.org-kepe</groupId>
+    <artifactId>beancp-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>beancp-test</artifactId>
+  <name>beancp-test</name>
+  <dependencies>
+	  <dependency>
+			<groupId>io.github.org-kepe</groupId>
+			<artifactId>beancp</artifactId>
+			<version>2.0.3</version>
+		</dependency>
+	   
+	  <dependency>
+			<groupId>io.dropwizard.metrics</groupId>
+			<artifactId>metrics-core</artifactId>
+			<version>4.1.7</version>
+			<scope>provided</scope>
+		</dependency> 
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+		</dependency>
+  </dependencies>
+</project>

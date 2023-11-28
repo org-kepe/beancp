@@ -6,6 +6,7 @@
   <packaging>pom</packaging>
   <modules>
         <module>beancp</module>
+        <module>beancp-test</module>
     </modules>
     <scm>
 		<connection>https://github.com/org-kepe/beancp.git</connection>

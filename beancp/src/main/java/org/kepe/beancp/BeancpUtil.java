@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.ct.convert.BeancpContextImp;
+import org.kepe.beancp.tool.BeancpBeanTool;
 import org.kepe.beancp.tool.BeancpTool;
 
 /**
@@ -63,6 +64,10 @@ public class BeancpUtil
     }
     public static void configRemove(BeancpFeature feature) {
     	BeancpTool.configRemove(feature);
+    }
+    
+    public static Type type(Class<?> clazz,Type... typeArguments) {
+    	return BeancpBeanTool.type(clazz,typeArguments);
     }
     
     public static BeancpContext newContext() {

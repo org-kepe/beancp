@@ -164,6 +164,8 @@ public class BeancpTool {
 		return false;
 	}
 	
+	
+	
 	public static BeancpCustomConverter create(int dinstance,BeancpOOConverter ooConverter) {
     	return new BeancpCustomConverter() {
     		@Override
@@ -178,5 +180,7 @@ public class BeancpTool {
     		
     	};
     }
+	
+	
 	
 }

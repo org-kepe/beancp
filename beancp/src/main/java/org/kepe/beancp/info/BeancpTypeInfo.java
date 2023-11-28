@@ -7,12 +7,14 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.kepe.beancp.tool.BeancpBeanTool;
 import org.kepe.beancp.tool.vo.Tuple2;
 
 public class BeancpTypeInfo {
@@ -37,6 +39,22 @@ public class BeancpTypeInfo {
     }
     public Type getType() {
     	return type;
+    }
+    
+    public BeancpTypeInfo ofTypeArguments(Type... typeArguments) {
+    	if(actualTypeArguments==null||actualTypeArguments.length==0) {
+    		return this;
+    	}
+    	int len=actualTypeArguments.length;
+    	if(len<typeArguments.length) {
+    		typeArguments=Arrays.copyOf(typeArguments, len);
+    	}else if(len>typeArguments.length) {
+    		typeArguments=Arrays.copyOf(typeArguments, len);
+    		for(int i=typeArguments.length;i<len;i++) {
+    			typeArguments[i]=actualTypeArguments[i].type;
+    		}
+    	}
+    	return of(BeancpBeanTool.newParameterizedTypeWithOwner(null, rawClass, typeArguments));
     }
     
     public boolean instanceOf(BeancpTypeInfo info){

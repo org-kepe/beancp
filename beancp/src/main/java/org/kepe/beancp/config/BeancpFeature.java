@@ -12,13 +12,13 @@ import org.kepe.beancp.config.BeancpFeature;
 public class BeancpFeature
 {
     private final static Map<Long,BeancpFeature> FLAGCACHE_MAP=new ConcurrentHashMap<>();
-    //When converting a Javabean to a map, prioritize using a sliding line 
+    //When converting a Javabean to a map, the key of the map is in lowercase underlined form(userName->user_name)
     public final static BeancpFeature BEAN2MAP_UNDERLINE = getFlag(1);
-    //Assign even if the source attribute is empty
+    //If the original value is null,will not set value
     public final static BeancpFeature SETVALUE_WHENNOTNULL = getFlag(1<<1);
-    //Assign a new object even if it is of the same type as the original object
+    //Copy a new object instead of the source object when assigning values
     public final static BeancpFeature ALLWAYS_NEW = getFlag(1<<2);
-    //Assign values only when the types are completely consistent
+    //Only when the type is consistent will value be set without type conversion
     public final static BeancpFeature SETVALUE_TYPEEQUALS = getFlag(1<<3);
     //Including protected attributes and default permission attributes
     public final static BeancpFeature ACCESS_PROTECTED = getFlag(1<<4);
@@ -26,6 +26,7 @@ public class BeancpFeature
     public final static BeancpFeature ACCESS_PRIVATE = getFlag(1<<5);
     //Whether to throw an exception when encountering it
     public final static BeancpFeature THROW_EXCEPTION = getFlag(1<<6);
+    //When converting a Javabean to a map, the key of the map is in upper underlined form(userName->USER_NAME)
     public final static BeancpFeature BEAN2MAP_UNDERLINE_UPPER = getFlag(1<<7);
     private final long flag;
     private final static BeancpFeature FEATURE0=getFlag(0);
