@@ -1,5 +1,13 @@
 # beancp
 The basic function is to copy beans (copy from bean to bean), and other common types of conversions can also be implemented.
+## Maven
+```xml
+<dependency>
+    <groupId>io.github.org-kepe</groupId>
+    <artifactId>beancp</artifactId>
+    <version>2.0.3</version>
+</dependency>
+```
 ## Basic examples
 
 ~~~Java
