@@ -1,5 +1,5 @@
 # beancp
-The basic function is to copy beans (copy from bean to bean), and other common types of conversions can also be implemented.
+The basic function is to copy beans (copy from bean to bean), and and others also support converting beans to Maps, lists to lists, strings to dates...
 ## Maven
 ```xml
 <dependency>
