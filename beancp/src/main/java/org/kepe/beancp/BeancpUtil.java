@@ -14,7 +14,11 @@ import org.kepe.beancp.tool.BeancpTool;
  */
 public class BeancpUtil
 {
-    
+    /**
+     * Assign properties of one object to another object
+     * @param fromObj
+     * @param toObj
+     */
     public static void copy(Object fromObj,Object toObj){
         if(toObj==null){
             return;
@@ -59,13 +63,26 @@ public class BeancpUtil
     public static BeancpFeature getDefaultFeature() {
     	return BeancpTool.getDefaultFeature();
     }
+    /**
+     * Global feature addition
+     * @param feature 
+     */
     public static void configAdd(BeancpFeature feature) {
     	BeancpTool.configAdd(feature);
     }
+    /**
+     * Global feature deletion
+     * @param feature
+     */
     public static void configRemove(BeancpFeature feature) {
     	BeancpTool.configRemove(feature);
     }
-    
+    /**
+     * Obtain generic types, such as List<String> HashMap<String,Long> ...
+     * @param clazz the class of generic type
+     * @param typeArguments Describing generic parameters in order
+     * @return
+     */
     public static Type type(Class<?> clazz,Type... typeArguments) {
     	return BeancpBeanTool.type(clazz,typeArguments);
     }

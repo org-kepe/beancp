@@ -28,5 +28,18 @@ public class DemoCase2 {
 		Assert.assertEquals(user.getSalary(), consumer.getSalary().doubleValue(),0.001);
 	}
 	
+	@Test
+	public void test2() {
+		BeancpUtil.configAdd(BeancpFeature.SETVALUE_WHENNOTNULL);
+		DemoUser user=new DemoUser();
+		user.setId("a1");
+		user.setAge(1);
+		user.setLive(true);
+		user.setSalary(100.01);
+		DemoConsumer consumer=BeancpUtil.copy(user, DemoConsumer.class);
+		
+		Assert.assertEquals(user.getId(), consumer.getId());
+		Assert.assertEquals(user.getSalary(), consumer.getSalary().doubleValue(),0.001);
+	}
 	
 }

@@ -52,8 +52,13 @@ DemoConsumer consumer = BeancpUtil.copy(user, DemoConsumer.class,BeancpFeature.S
 | ACCESS_PROTECTED  | Including protected attributes and default permission attributes |
 | ACCESS_PRIVATE  | Including protected default and private permission attributes |
 | THROW_EXCEPTION  | Throw an exception when encountering an exception |
+
+It can also be configured through global features with configAdd and configRemove
+~~~Java
+BeancpUtil.configAdd(BeancpFeature.SETVALUE_WHENNOTNULL);
+~~~
 ### context
 ~~~Java
-
+BeancpUtil.configAdd(BeancpFeature.SETVALUE_WHENNOTNULL);
 ~~~
 ### ...
