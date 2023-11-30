@@ -5,7 +5,7 @@ The basic function is to copy beans (copy from bean to bean), and and others als
 <dependency>
     <groupId>io.github.org-kepe</groupId>
     <artifactId>beancp</artifactId>
-    <version>2.0.3</version>
+    <version>2.0.4</version>
 </dependency>
 ```
 ## Basic examples

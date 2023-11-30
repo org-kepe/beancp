@@ -16,8 +16,8 @@ public class BeancpUtil
 {
     /**
      * Assign properties of one object to another object
-     * @param fromObj
-     * @param toObj
+     * @param fromObj fromObj
+     * @param toObj toObj
      */
     public static void copy(Object fromObj,Object toObj){
         if(toObj==null){
@@ -68,14 +68,14 @@ public class BeancpUtil
     }
     /**
      * Global feature addition
-     * @param feature 
+     * @param feature feature
      */
     public static void configAdd(BeancpFeature feature) {
     	BeancpTool.configAdd(feature);
     }
     /**
      * Global feature deletion
-     * @param feature
+     * @param feature feature
      */
     public static void configRemove(BeancpFeature feature) {
     	BeancpTool.configRemove(feature);

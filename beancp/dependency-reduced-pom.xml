@@ -4,7 +4,7 @@
   <groupId>io.github.org-kepe</groupId>
   <artifactId>beancp</artifactId>
   <name>beancp</name>
-  <version>2.0.3</version>
+  <version>2.0.4</version>
   <description>beancp project</description>
   <url>https://github.com/org-kepe/beancp</url>
   <developers>
@@ -115,8 +115,24 @@
                 <goals>
                   <goal>jar</goal>
                 </goals>
+                <configuration>
+                  <encoding>UTF-8</encoding>
+                  <charset>UTF-8</charset>
+                  <docencoding>UTF-8</docencoding>
+                  <additionalJOptions>
+                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                  </additionalJOptions>
+                </configuration>
               </execution>
             </executions>
+            <configuration>
+              <encoding>UTF-8</encoding>
+              <charset>UTF-8</charset>
+              <docencoding>UTF-8</docencoding>
+              <additionalJOptions>
+                <additionalJOption>-Xdoclint:none</additionalJOption>
+              </additionalJOptions>
+            </configuration>
           </plugin>
           <plugin>
             <artifactId>maven-gpg-plugin</artifactId>
