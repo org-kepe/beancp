@@ -26,7 +26,11 @@ public class DemoConsumer {
 		return userName;
 	}
 	public void setUserName(String userName) {
-		this.userName = userName;
+		if(userName==null) {
+			this.userName="error";
+		}else {
+			this.userName = userName;
+		}
 	}
 	public BigDecimal getSalary() {
 		return salary;

@@ -19,12 +19,12 @@ public class BeancpConvertProviderTool {
 		int state=context1.keyState(clazz, key);
 		return state>=0;
 	}
-	protected static boolean isAllowSet(BeancpContext context,Object obj,String key) {
+	public static boolean isAllowSet(BeancpContext context,Object obj,String key) {
 		BeancpContextImp context1=(BeancpContextImp)context;
 		int state=context1.keyState(obj, key);
 		return state>=0;
 	}
-	protected static boolean isAllowSet(BeancpContext context,Object obj,String key1,String key2) {
+	public static boolean isAllowSet(BeancpContext context,Object obj,String key1,String key2) {
 		BeancpContextImp context1=(BeancpContextImp)context;
 		int state1=context1.keyState(obj, key1);
 		if(state1<0) {
@@ -39,11 +39,11 @@ public class BeancpConvertProviderTool {
 //	protected static <T> T filterValue(BeancpContext context,Object obj,String key,T value) {
 //		return value;
 //	}
-	protected static BeancpValueFilter getValueFilter(BeancpContext context,Object obj,String key) {
+	public static BeancpValueFilter getValueFilter(BeancpContext context,Object obj,String key) {
 		BeancpContextImp context1=(BeancpContextImp)context;
 		return context1.getValueFilter(obj, key);
 	}
-	protected static BeancpValueFilter getValueFilter(BeancpContext context,Object obj,String key1,String key2) {
+	public static BeancpValueFilter getValueFilter(BeancpContext context,Object obj,String key1,String key2) {
 		BeancpContextImp context1=(BeancpContextImp)context;
 		BeancpValueFilter filter=context1.getValueFilter(obj, key1);
 		if(filter==null) {
@@ -51,11 +51,11 @@ public class BeancpConvertProviderTool {
 		}
 		return filter;
 	}
-	protected static BeancpValueFilter getValueFilter(BeancpContext context,Class clazz,String key) {
+	public static BeancpValueFilter getValueFilter(BeancpContext context,Class clazz,String key) {
 		BeancpContextImp context1=(BeancpContextImp)context;
 		return context1.getValueFilter(clazz, key);
 	}
-	protected static BeancpValueFilter getValueFilter(BeancpContext context,Class clazz,String key1,String key2) {
+	public static BeancpValueFilter getValueFilter(BeancpContext context,Class clazz,String key1,String key2) {
 		BeancpContextImp context1=(BeancpContextImp)context;
 		BeancpValueFilter filter=context1.getValueFilter(clazz, key1);
 		if(filter==null) {
@@ -63,19 +63,19 @@ public class BeancpConvertProviderTool {
 		}
 		return filter;
 	}
-	protected static BeancpValueFilter getValueFilter(BeancpContext context,Object obj,String[] keys) {
+	public static BeancpValueFilter getValueFilter(BeancpContext context,Object obj,String[] keys) {
 		if(keys.length==1) {
 			return getValueFilter(context,obj,keys[0]);
 		}
 		return getValueFilter(context,obj,keys[0],keys[1]);
 	}
-	protected static <T> T filterValue(BeancpValueFilter filter,Object obj,String[] key,T value) {
+	public static <T> T filterValue(BeancpValueFilter filter,Object obj,String[] key,T value) {
 		return filter.filterValue(obj, key[0], value);
 	}
-	protected static <T> T filterValue(BeancpValueFilter filter,Object obj,String key,T value) {
+	public static <T> T filterValue(BeancpValueFilter filter,Object obj,String key,T value) {
 		return filter.filterValue(obj, key, value);
 	}
-	protected static <T> T filterValue(BeancpValueFilter filter,Object obj,String key1,String key2,T value) {
+	public static <T> T filterValue(BeancpValueFilter filter,Object obj,String key1,String key2,T value) {
 		return filter.filterValue(obj, key1, value);
 	}
 //	protected static boolean hasSetValueValid(BeancpContext context,Object obj,String key) {
@@ -95,7 +95,7 @@ public class BeancpConvertProviderTool {
 //		return value;
 //	}
 	
-	protected static void log(String message) {
+	public static void log(String message) {
 		System.out.println(message);
 	}
 	public static void log(Throwable e) {
@@ -213,7 +213,15 @@ public class BeancpConvertProviderTool {
 		}
 	}
 	
-	protected static void handleException(Object provider,BeancpFeature feature,BeancpContext context,String key,int handle,Exception e) {
+	public static void handleException(Object provider,BeancpFeature feature,BeancpContext context,String key,int handle,Exception e) {
+		boolean isBE=e instanceof BeancpException;
+		BeancpException em=null;
+		if(isBE) {
+			em=(BeancpException)e;
+		}
+		if(isBE&&em.isIgnore()) {
+			return;
+		}
 		if(context!=null) {
 			BeancpContextImp context1=(BeancpContextImp)context;
 			BeancpExceptionFilter filter=context1.getExceptionFilter();
@@ -228,24 +236,35 @@ public class BeancpConvertProviderTool {
 				
 				if(isThrowException==null) {
 					if(feature.is(BeancpFeature.THROW_EXCEPTION)) {
+						if(isBE) {
+							throw em;
+						}
 						throw new BeancpException(e.getMessage(),e);
 					}
 				}else {
 					if(isThrowException) {
+						if(isBE) {
+							throw em;
+						}
 						throw new BeancpException(e.getMessage(),e);
 					}
 				}
 			}else {
 				if(feature.is(BeancpFeature.THROW_EXCEPTION)) {
+					if(isBE) {
+						throw em;
+					}
 					throw new BeancpException(e.getMessage(),e);
 				}
 			}
 		}else {
 			if(feature.is(BeancpFeature.THROW_EXCEPTION)) {
+				if(isBE) {
+					throw em;
+				}
 				throw new BeancpException(e.getMessage(),e);
 			}
 		}
-		
-		e.printStackTrace();
+		//log(e);
 	}
 }

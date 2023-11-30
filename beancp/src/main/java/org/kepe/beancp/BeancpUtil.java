@@ -9,7 +9,7 @@ import org.kepe.beancp.tool.BeancpBeanTool;
 import org.kepe.beancp.tool.BeancpTool;
 
 /**
- * Hello world!
+ * Basic API
  *
  */
 public class BeancpUtil
@@ -59,6 +59,9 @@ public class BeancpUtil
     public static <T> T copy(Object fromObj,Type toType,BeancpFeature feature){
     	return copy(fromObj,null,toType,null,feature,null);
     }
+    public static <T> T copy(Object fromObj,Type toType,BeancpContext context){
+    	return copy(fromObj,null,toType,null,null,context);
+    }
     
     public static BeancpFeature getDefaultFeature() {
     	return BeancpTool.getDefaultFeature();
@@ -86,7 +89,9 @@ public class BeancpUtil
     public static Type type(Class<?> clazz,Type... typeArguments) {
     	return BeancpBeanTool.type(clazz,typeArguments);
     }
-    
+    /**
+     * new context
+     */
     public static BeancpContext newContext() {
     	return new BeancpContextImp();
     }

@@ -558,8 +558,9 @@ public class BeancpInfo
     	if(ftype==null) {
     		ftype=this.type;
     	}
-    	this.ftype=ftype;
         this.fclazz=fclazz;
+        this.ftype=BeancpTypeInfo.of(this.fclazz).getFinalType(type);
+        
     }
     
     private Class defaultAbClass(Class clazz) {

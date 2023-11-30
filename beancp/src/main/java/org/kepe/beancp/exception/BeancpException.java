@@ -28,6 +28,9 @@ public class BeancpException
     public EType getEType(){
     	return this.etype;
     }
+    public boolean isIgnore() {
+    	return this.etype==EType.IGNORE;
+    }
     
     public static enum EType{
     	NORMAL,IGNORE

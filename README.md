@@ -59,6 +59,16 @@ BeancpUtil.configAdd(BeancpFeature.SETVALUE_WHENNOTNULL);
 ~~~
 ### context
 ~~~Java
-BeancpUtil.configAdd(BeancpFeature.SETVALUE_WHENNOTNULL);
+//The 'id' property of the DemoConsumer class is not assigned a value
+DemoUser user = ...;
+DemoConsumer consumer = BeancpUtil.copy(user, DemoConsumer.class,BeancpUtil.newContext().disallowKey(DemoConsumer.class, "id"));
 ~~~
+|  api   | description  |
+|  :----  | :----  |
+| disallowKey  | Disallow the assignment of certain attributes in a class |
+| allowOnly  | Only the assignment of certain attributes in the class |
+| addValueFilter  | add a value filter when set value for attribute |
+| setExceptionFilter  | set exception filter |
+### annotation
+
 ### ...

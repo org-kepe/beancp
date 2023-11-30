@@ -41,20 +41,88 @@ public class BeancpTypeInfo {
     	return type;
     }
     
+    public Type getFinalType(Type superType) {
+    	Class rawClass1=getClassByType(superType);
+    	if(this.rawClass==rawClass1) {
+    		return superType;
+    	}
+    	if(this.rawClass.isArray()) {
+    		BeancpTypeInfo superInfo=of(superType);
+    		for(Tuple2<Class<?>,TypeVariable<?>[]> tuple2:this.genericSuperInfo) {
+    			if(tuple2.r1==superInfo.componentType.rawClass) {
+    				Type[] typeArguments=new Type[typeVariables.length];
+    				for(int i=0;i<typeArguments.length;i++) {
+    					typeArguments[i]=actualTypeArguments[i].getType();
+    					for(int j=0;j<tuple2.r2.length;j++) {
+    						TypeVariable<?> tv2=tuple2.r2[j];
+    						if(tv2!=null) {
+    							if(Objects.equals(typeVariables[i].getName(), tv2.getName())) {
+    								typeArguments[i]=superInfo.actualTypeArguments[j].getType();
+    								break;
+    							}
+    						}
+    					}
+    				}
+    				return ofTypeArguments(typeArguments).getType();
+    			}
+        	}
+    	}else {
+    		BeancpTypeInfo superInfo=of(superType);
+    		for(Tuple2<Class<?>,TypeVariable<?>[]> tuple2:this.genericSuperInfo) {
+    			if(tuple2.r1==superInfo.rawClass) {
+    				Type[] typeArguments=new Type[typeVariables.length];
+    				for(int i=0;i<typeArguments.length;i++) {
+    					typeArguments[i]=actualTypeArguments[i].getType();
+    					for(int j=0;j<tuple2.r2.length;j++) {
+    						TypeVariable<?> tv2=tuple2.r2[j];
+    						if(tv2!=null) {
+    							if(Objects.equals(typeVariables[i].getName(), tv2.getName())) {
+    								typeArguments[i]=superInfo.actualTypeArguments[j].getType();
+    								break;
+    							}
+    						}
+    					}
+    				}
+    				return ofTypeArguments(typeArguments).getType();
+    			}
+        	}
+    	}
+    	
+    	return superType;
+    }
+    
     public BeancpTypeInfo ofTypeArguments(Type... typeArguments) {
     	if(actualTypeArguments==null||actualTypeArguments.length==0) {
     		return this;
     	}
-    	int len=actualTypeArguments.length;
-    	if(len<typeArguments.length) {
-    		typeArguments=Arrays.copyOf(typeArguments, len);
-    	}else if(len>typeArguments.length) {
-    		typeArguments=Arrays.copyOf(typeArguments, len);
-    		for(int i=typeArguments.length;i<len;i++) {
-    			typeArguments[i]=actualTypeArguments[i].type;
-    		}
+    	if(this.rawClass.isArray()) {
+    		int len=actualTypeArguments.length;
+        	if(len<typeArguments.length) {
+        		typeArguments=Arrays.copyOf(typeArguments, len);
+        	}else if(len>typeArguments.length) {
+        		typeArguments=Arrays.copyOf(typeArguments, len);
+        		for(int i=typeArguments.length;i<len;i++) {
+        			typeArguments[i]=actualTypeArguments[i].type;
+        		}
+        	}
+        	Type rtype=BeancpBeanTool.newParameterizedTypeWithOwner(null, componentType.getRawClass(), typeArguments);
+        	for(int i=0;i<arrayCount;i++) {
+        		rtype=BeancpBeanTool.arrayOf(rtype);
+        	}
+        	return of(rtype);
+    	}else {
+    		int len=actualTypeArguments.length;
+        	if(len<typeArguments.length) {
+        		typeArguments=Arrays.copyOf(typeArguments, len);
+        	}else if(len>typeArguments.length) {
+        		typeArguments=Arrays.copyOf(typeArguments, len);
+        		for(int i=typeArguments.length;i<len;i++) {
+        			typeArguments[i]=actualTypeArguments[i].type;
+        		}
+        	}
+        	return of(BeancpBeanTool.newParameterizedTypeWithOwner(null, rawClass, typeArguments));
     	}
-    	return of(BeancpBeanTool.newParameterizedTypeWithOwner(null, rawClass, typeArguments));
+    	
     }
     
     public boolean instanceOf(BeancpTypeInfo info){
