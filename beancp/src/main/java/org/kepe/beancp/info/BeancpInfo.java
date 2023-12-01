@@ -116,6 +116,8 @@ public class BeancpInfo
     private boolean isFAbstract;
     private boolean hasType;
     public Map<String,BeancpFieldInfo> fields;
+    private Set<String> simpleGetterKeys;
+    private Set<String> simpleSetterKeys;
     public List<BeancpInitInfo> inits;
     private BeancpInfo[] genericInfo;
     public BeancpCloneInfo cloneInfo;
@@ -251,18 +253,11 @@ public class BeancpInfo
     private static BeancpInfo trans(BeancpTypeInfo typeInfo,Class clazz) {
     	Type type=typeInfo.getType();
     	BeancpInfo infoff= C_MAP.computeIfAbsent(clazz, key->new ConcurrentHashMap<>()).computeIfAbsent(type, key->{
-    		Type ftype=type;
-        	Class fclazz=clazz;
         	BeancpInfo info=new BeancpInfo();
             info.id=INDEX.incrementAndGet();
             info.typeInfo=typeInfo;
             info.clazz=clazz;
             info.type=type;
-//            int mod=clazz.getModifiers();
-//            clazz.getSuperclass().getModifiers()
-//            if(Modifier.isPublic(clazz.getSuperclass().getModifiers())) {
-//            	
-//            }
             info.transFinalType();
             if(!(info.type instanceof Class)) {
             	info.hasType=true;
@@ -316,24 +311,14 @@ public class BeancpInfo
             }
             if(info.isBean) {
             	
-//            	List<Executable> inits=new ArrayList<>();
-//            	for(Constructor<?> constructor:info.fclazz.getDeclaredConstructors()) {
-//            		if(!Modifier.isPrivate(constructor.getModifiers())) {
-//            			if(Modifier.isPublic(constructor.getModifiers())) {
-//            				inits.add(constructor);
-//            			}else {
-//            				hasProxyOpClass=true;
-//            				inits.add(constructor);
-//            			}
-//            			
-//            		}
-//            	}
-            	//inits.addAll(info.fclazz.getDeclaredConstructors());
             	Map<String,Field> fields=new HashMap<>();
             	Map<String,Method> methods=new HashMap<>();
             	Set<String> notAllowField=new HashSet<>();
             	Class mclazz=info.fclazz;
             	while(mclazz!=Object.class) {
+            		if(BeancpBeanTool.isProxy(mclazz)) {
+            			continue;
+            		}
             		Field[] fields1=mclazz.getDeclaredFields();
             		
             		for(Field field:fields1) {
@@ -342,7 +327,7 @@ public class BeancpInfo
             				continue;
             			}
             			if(!fields.containsKey(keyname)) {
-            				if(!BeancpTool.isAllowField(field)) {
+            				if(!BeancpBeanTool.isAllowField(field)) {
                     			notAllowField.add(keyname);
                     		}
             				fields.put(keyname, field);
@@ -350,16 +335,16 @@ public class BeancpInfo
             		}
             		mclazz=mclazz.getSuperclass();
             	}
-            	for(String name:notAllowField) {
-            		fields.remove(name);
-            	}
             	
             	mclazz=info.fclazz;
             	while(mclazz!=Object.class) {
+            		if(BeancpBeanTool.isProxy(mclazz)) {
+            			continue;
+            		}
             		Method[] methods1=mclazz.getDeclaredMethods();
             		for(Method method:methods1) {
             			String methodName=method.getName();
-            			if(!methodName.equals("getClass")&&((methodName.startsWith("get")&&methodName.length()>3&&method.getParameterCount()==0&&method.getReturnType()!=Void.TYPE)||(methodName.startsWith("is")&&methodName.length()>2&&method.getParameterCount()==0&&method.getReturnType()==boolean.class)||(methodName.startsWith("set")&&methodName.length()>3&&method.getParameterCount()==1)||(methodName.startsWith("is")&&methodName.length()>2&&method.getParameterCount()==1&&method.getParameterTypes()[0]==boolean.class))) {
+            			if(BeancpBeanTool.isPossMethod(method)) {
             				Class<?>[] types=method.getParameterTypes();
             				StringBuffer sb=new StringBuffer();
             				sb.append(methodName).append(":");
@@ -396,12 +381,66 @@ public class BeancpInfo
             		methods.remove(name);
             	}
             	Map<String,BeancpFieldInfo> fieldInfoMap=new HashMap<>();
-            	
+            	Map<Method,Field> mfs=new HashMap<>();
+            	for(Method method:methods.values()) {
+        			String methodName=method.getName();
+        			if((methodName.startsWith("is")||methodName.startsWith("get"))&&method.getReturnType()==boolean.class&&BeancpBeanTool.isGetterMethod(method)){
+    					if(methodName.startsWith("is")) {
+    						String fname=methodName.substring(2,3).toLowerCase()+methodName.substring(3);
+    						if(fields.containsKey(fname)) {
+    							mfs.put(method, fields.get(fname));
+    						}else if(fields.containsKey(methodName)){
+    							mfs.put(method, fields.get(methodName));
+    						}
+    					}else {
+    						String fname=methodName.substring(3,4).toLowerCase()+methodName.substring(4);
+    						if(fields.containsKey(fname)) {
+    							mfs.put(method, fields.get(fname));
+    						}else {
+    							fname="is"+methodName.substring(3,4).toLowerCase()+methodName.substring(4);
+    							if(fields.containsKey(fname)) {
+    								mfs.put(method, fields.get(methodName));
+    							}
+    						}
+    					}
+    				}
+        			if((methodName.startsWith("is")||methodName.startsWith("set"))&&method.getParameterTypes()[0]==boolean.class&&BeancpBeanTool.isSetterMethod(method)){
+    					if(methodName.startsWith("is")) {
+    						String fname=methodName.substring(2,3).toLowerCase()+methodName.substring(3);
+    						if(fields.containsKey(fname)) {
+    							mfs.put(method, fields.get(fname));
+    						}else if(fields.containsKey(methodName)){
+    							mfs.put(method, fields.get(methodName));
+    						}
+    					}else {
+    						String fname=methodName.substring(3,4).toLowerCase()+methodName.substring(4);
+    						if(fields.containsKey(fname)) {
+    							mfs.put(method, fields.get(fname));
+    						}else {
+    							fname="is"+methodName.substring(3,4).toLowerCase()+methodName.substring(4);
+    							if(fields.containsKey(fname)) {
+    								mfs.put(method, fields.get(methodName));
+    							}
+    						}
+    					}
+    				}
+        		}
+            	for(String name:notAllowField) {
+            		fields.remove(name);
+            	}
             	for(Field field:fields.values()) {
             		String name=field.getName();
+            		Method relGetMethod=null;
+            		Method relSetMethod=null;
+            		
+            		
             		BeancpFieldInfo fieldInfo=fieldInfoMap.computeIfAbsent(name, key1->new BeancpFieldInfo(name,info));
-            		fieldInfo.addGetInfo(new BeancpGetInfo(name,info,field));
+            		if
+            		BeancpGetInfo getInfo=new BeancpGetInfo(name,info,field);
+            		
+            		fieldInfo.addGetInfo(getInfo);
             		fieldInfo.addSetInfo(new BeancpSetInfo(name,info,field));
+            		//info.simpleGetterKeys.add(name)
             	}
             	
             	for(Method method:methods.values()) {

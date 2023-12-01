@@ -6,6 +6,7 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Member;
@@ -25,6 +26,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.kepe.beancp.config.BeancpIgnore;
+import org.kepe.beancp.config.BeancpProperty;
 import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.info.BeancpTypeInfo;
 
@@ -871,8 +874,117 @@ public class BeancpBeanTool {
             throw new IllegalArgumentException();
         }
     }
-
+    public static boolean isPossMethod(Method method) {
+    	BeancpProperty bp=method.getAnnotation(BeancpProperty.class);
+    	if(bp==null) {
+    		String methodName=method.getName();
+    		if(methodName.equals("getClass")) {
+    			return false;
+    		}
+    		if(methodName.startsWith("is")&&methodName.length()>2&&boolean.class==method.getReturnType()&&method.getParameterCount()==0) {
+    			return true;
+    		}
+    		if(methodName.startsWith("is")&&methodName.length()>2&&boolean.class==method.getGenericParameterTypes()[0]&&method.getParameterCount()==1) {
+    			return true;
+    		}
+    		if(methodName.startsWith("get")&&methodName.length()>3&&method.getParameterCount()==0&&method.getReturnType()!=Void.TYPE) {
+    			return true;
+    		}
+    		if(methodName.startsWith("set")&&methodName.length()>3&&method.getParameterCount()==1) {
+    			return true;
+    		}
+    		return false;
+    	}
+    	if(method.getParameterCount()==0&&method.getReturnType()!=Void.TYPE) {
+    		return true;
+    	}
+    	if(method.getParameterCount()==1) {
+    		return true;
+    	}
+    	return true;
+    }
+    public static boolean isSetterMethod(Method method) {
+    	BeancpIgnore bi=method.getAnnotation(BeancpIgnore.class);
+    	if(bi!=null) {
+    		return false;
+    	}
+    	BeancpProperty bp=method.getAnnotation(BeancpProperty.class);
+    	if(bp==null) {
+    		String methodName=method.getName();
+    		if(methodName.startsWith("is")&&methodName.length()>2&&boolean.class==method.getGenericParameterTypes()[0]&&method.getParameterCount()==1) {
+    			return true;
+    		}
+    		if(methodName.startsWith("set")&&methodName.length()>3&&method.getParameterCount()==1) {
+    			return true;
+    		}
+    		return false;
+    	}
+    	if(bp.value().length==0) {
+    		return false;
+    	}
+    	if(method.getParameterCount()==1) {
+    		return true;
+    	}
+    	return false;
+    }
+    public static boolean isGetterMethod(Method method) {
+    	BeancpIgnore bi=method.getAnnotation(BeancpIgnore.class);
+    	if(bi!=null) {
+    		return false;
+    	}
+    	BeancpProperty bp=method.getAnnotation(BeancpProperty.class);
+    	if(bp==null) {
+    		String methodName=method.getName();
+    		if(methodName.startsWith("is")&&methodName.length()>2&&boolean.class==method.getReturnType()&&method.getParameterCount()==0) {
+    			return true;
+    		}
+    		if(methodName.startsWith("get")&&methodName.length()>3&&method.getParameterCount()==0&&method.getReturnType()!=Void.TYPE) {
+    			return true;
+    		}
+    		return false;
+    	}
+    	if(bp.value().length==0) {
+    		return false;
+    	}
+    	if(method.getParameterCount()==0&&method.getReturnType()!=Void.TYPE) {
+    		return true;
+    	}
+    	return false;
+    }
     
+    public static boolean isAllowField(Field field) {
+    	BeancpIgnore bi=field.getAnnotation(BeancpIgnore.class);
+		if(bi!=null) {
+			return false;
+		}
+		BeancpProperty bp=field.getAnnotation(BeancpProperty.class);
+		if(bp!=null) {
+			return true;
+		}
+		int mod=field.getModifiers();
+		if(Modifier.isTransient(mod)) {
+			return false;
+		}
+		return true;
+	}
+    public static boolean isProxy(Class<?> clazz) {
+        for (Class<?> item : clazz.getInterfaces()) {
+            String interfaceName = item.getName();
+            switch (interfaceName) {
+                case "org.springframework.cglib.proxy.Factory":
+                case "javassist.util.proxy.ProxyObject":
+                case "org.apache.ibatis.javassist.util.proxy.ProxyObject":
+                case "org.hibernate.proxy.HibernateProxy":
+                case "org.springframework.context.annotation.ConfigurationClassEnhancer$EnhancedConfiguration":
+                case "org.mockito.cglib.proxy.Factory":
+                case "net.sf.cglib.proxy.Factory":
+                    return true;
+                default:
+                    break;
+            }
+        }
+        return false;
+    }
 
     
 

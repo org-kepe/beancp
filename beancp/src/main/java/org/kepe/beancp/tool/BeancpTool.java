@@ -137,13 +137,7 @@ public class BeancpTool {
         BeancpConvertProvider.register(BeancpConverterInfo.of(BeancpInfoMatcherTool.createExtendsMatcher(fromInfo), BeancpInfoMatcherTool.createExtendsMatcher(toInfo), converter, priority));
     }
     
-    public static boolean isAllowField(Field field) {
-		int mod=field.getModifiers();
-		if(Modifier.isTransient(mod)) {
-			return false;
-		}
-		return true;
-	}
+    
 	
 	public static boolean isUsefulField(Field field) {
 		int mod=field.getModifiers();
@@ -151,9 +145,6 @@ public class BeancpTool {
 			return true;
 		}
 		return false;
-	}
-	public static boolean isAllowMethod(Method method) {
-		return true;
 	}
 	
 	public static boolean isUsefulMethod(Method method) {
