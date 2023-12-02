@@ -68,16 +68,7 @@ public abstract class BeancpConvertMapper {
 	public static BeancpConvertMapper of(BeancpInfo info,BeancpFeature feature) {
 		return C_MAP.computeIfAbsent(info, key->new ConcurrentHashMap<>()).computeIfAbsent(feature, key->BeancpInfoASMTool.generateASMMapper(info, feature));
 	}
-	private boolean hasFieldNameBy(String name) {
-		for(BeancpFieldInfo fieldInfo: this.info.fields.values()) {
-			for(BeancpGetInfo getInfo:fieldInfo.getGetterList()) {
-				if(name.equals(getInfo.getFieldName())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	
 	public Object newInstance(BeancpContext context,Object... args) {
 		int initsLength=this.inits.size();
 		if(initsLength==0) {

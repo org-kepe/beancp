@@ -50,11 +50,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.kepe.beancp.config.BeancpFeature;
+import org.kepe.beancp.config.BeancpProperty;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.asm.BeancpInfoASMTool;
 import org.kepe.beancp.ct.convert.BeancpConvertMapper;
 import org.kepe.beancp.tool.BeancpBeanTool;
+import org.kepe.beancp.tool.BeancpStringTool;
 import org.kepe.beancp.tool.BeancpTool;
+import org.kepe.beancp.tool.vo.Tuple2;
 
 /**
  * Hello world!
@@ -310,7 +313,6 @@ public class BeancpInfo
             	info.isBean=true; 
             }
             if(info.isBean) {
-            	
             	Map<String,Field> fields=new HashMap<>();
             	Map<String,Method> methods=new HashMap<>();
             	Set<String> notAllowField=new HashSet<>();
@@ -362,17 +364,23 @@ public class BeancpInfo
             	Set<String> notAllowMethod=new HashSet<>();
             	for(Map.Entry<String, Method> e:methods.entrySet()) {
             		Method method=e.getValue();
-            		if(!BeancpTool.isAllowMethod(method)){
-            			notAllowMethod.add(e.getKey());
+            		String methodName=method.getName();
+            		BeancpProperty bp=method.getAnnotation(BeancpProperty.class);
+            		if(bp!=null) {
             			continue;
             		}
-            		String methodName=method.getName();
         			if(methodName.startsWith("is")) {
     					if(notAllowField.contains(methodName)||notAllowField.contains(methodName.substring(2,3).toLowerCase()+methodName.substring(3))) {
     						notAllowMethod.add(e.getKey());
     					}
     				}else {
-    					if(notAllowField.contains(methodName.substring(3,4).toLowerCase()+methodName.substring(4))) {
+    					if((methodName.startsWith("get")&&method.getReturnType()==boolean.class)||(methodName.startsWith("set")&&method.getParameterTypes()[0]==boolean.class)) {
+    						if(notAllowField.contains(methodName.substring(3,4).toLowerCase()+methodName.substring(4))) {
+    							notAllowMethod.add(e.getKey());
+    						}else if(notAllowField.contains("is"+methodName.substring(3))) {
+    							notAllowMethod.add(e.getKey());
+    						}
+    					}else if(notAllowField.contains(methodName.substring(3,4).toLowerCase()+methodName.substring(4))) {
     						notAllowMethod.add(e.getKey());
     					}
     				}
@@ -404,7 +412,7 @@ public class BeancpInfo
     						}
     					}
     				}
-        			if((methodName.startsWith("is")||methodName.startsWith("set"))&&method.getParameterTypes()[0]==boolean.class&&BeancpBeanTool.isSetterMethod(method)){
+        			if((methodName.startsWith("is")||methodName.startsWith("set"))&&BeancpBeanTool.isSetterMethod(method)&&method.getParameterTypes()[0]==boolean.class){
     					if(methodName.startsWith("is")) {
     						String fname=methodName.substring(2,3).toLowerCase()+methodName.substring(3);
     						if(fields.containsKey(fname)) {
@@ -429,74 +437,54 @@ public class BeancpInfo
             		fields.remove(name);
             	}
             	for(Field field:fields.values()) {
-            		String name=field.getName();
-            		Method relGetMethod=null;
-            		Method relSetMethod=null;
-            		
-            		
-            		BeancpFieldInfo fieldInfo=fieldInfoMap.computeIfAbsent(name, key1->new BeancpFieldInfo(name,info));
-            		if
-            		BeancpGetInfo getInfo=new BeancpGetInfo(name,info,field);
-            		
-            		fieldInfo.addGetInfo(getInfo);
-            		fieldInfo.addSetInfo(new BeancpSetInfo(name,info,field));
-            		//info.simpleGetterKeys.add(name)
-            	}
-            	
-            	for(Method method:methods.values()) {
-            		String name=method.getName();
-            		if(name.startsWith("get")&&name.length()>3&&method.getParameterCount()==0) {
-            			String fname=name.substring(3,4).toLowerCase()+name.substring(4);
-            			BeancpFieldInfo fieldInfo=fieldInfoMap.computeIfAbsent(fname, key1->new BeancpFieldInfo(fname,info));
-                		fieldInfo.addFirstGetInfo(new BeancpGetInfo(fname,info,method));
-            		}else if(name.startsWith("is")&&name.length()>2&&method.getParameterCount()==0&&method.getReturnType()==boolean.class) {
-            			String fname=name.substring(2,3).toLowerCase()+name.substring(3);
-            			{
+            		Set<String> sets = BeancpBeanTool.getProperties(field);
+            		if(sets!=null) {
+            			for(String fname:sets) {
             				BeancpFieldInfo fieldInfo=fieldInfoMap.computeIfAbsent(fname, key1->new BeancpFieldInfo(fname,info));
-            				BeancpGetInfo getInfo=new BeancpGetInfo(fname,info,method);
-                    		fieldInfo.addFirstGetInfo(getInfo);
-                    		getInfo.setPossName(name);
-            			}
-            			{
-            				BeancpFieldInfo fieldInfo=fieldInfoMap.computeIfAbsent(name, key1->new BeancpFieldInfo(name,info));
-            				BeancpGetInfo getInfo=new BeancpGetInfo(name,info,method);
-                    		fieldInfo.addFirstGetInfo(getInfo);
-                    		getInfo.setPossName(fname);
+            				BeancpGetInfo getInfo=new BeancpGetInfo(fname,info,field);
+                    		fieldInfo.addGetInfo(getInfo);
+                    		fieldInfo.addSetInfo(new BeancpSetInfo(fname,info,field));
             			}
             		}
             	}
+            	
             	for(Method method:methods.values()) {
-            		String name=method.getName();
-            		if(name.startsWith("set")&&name.length()>3&&method.getParameterCount()==1) {
-            			String fname=name.substring(3,4).toLowerCase()+name.substring(4);
-        				BeancpFieldInfo fieldInfo=fieldInfoMap.computeIfAbsent(fname, key1->new BeancpFieldInfo(fname,info));
-        				BeancpSetInfo setInfo=new BeancpSetInfo(fname,info,method);
-                		fieldInfo.addFirstSetInfo(setInfo);
-                		if(setInfo.isMode()) {
-                			String fname1="is"+name.substring(3);
-                			setInfo.setPossName(fname1);
-                			fieldInfo=fieldInfoMap.computeIfAbsent(fname1, key1->new BeancpFieldInfo(fname,info));
-                			setInfo=new BeancpSetInfo(fname1,info,method);
-                    		fieldInfo.addFirstSetInfo(setInfo);
-                    		setInfo.setPossName(fname);
-                		}
-            		}else if(name.startsWith("is")&&name.length()>2&&method.getParameterCount()==1&&method.getParameterTypes()[0]==boolean.class) {
-            			String fname=name.substring(2,3).toLowerCase()+name.substring(3);
-            			{
-            				BeancpFieldInfo fieldInfo=fieldInfoMap.computeIfAbsent(fname, key1->new BeancpFieldInfo(fname,info));
-            				BeancpSetInfo setInfo=new BeancpSetInfo(fname,info,method);
-            				fieldInfo.addFirstSetInfo(setInfo);
-            				setInfo.setPossName(name);
-                		}
-            			{
-            				BeancpFieldInfo fieldInfo=fieldInfoMap.computeIfAbsent(name, key1->new BeancpFieldInfo(name,info));
-            				BeancpSetInfo setInfo=new BeancpSetInfo(name,info,method);
-            				fieldInfo.addFirstSetInfo(setInfo);
-            				setInfo.setPossName(fname);
-                		}
+            		if(BeancpBeanTool.isGetterMethod(method)) {
+            			Tuple2<Set<String>,String> tuple2=BeancpBeanTool.getProperties(method, mfs.get(method));
+            			if(tuple2!=null) {
+            				for(String fname:tuple2.r1) {
+            					BeancpFieldInfo fieldInfo=fieldInfoMap.computeIfAbsent(fname, key1->new BeancpFieldInfo(fname,info));
+            					BeancpGetInfo getInfo=new BeancpGetInfo(fname,info,method);
+                        		fieldInfo.addFirstGetInfo(getInfo);
+                        		if(!BeancpStringTool.isEmpty(tuple2.r2)) {
+                        			getInfo.setPossName(tuple2.r2);
+                        			fieldInfo=fieldInfoMap.computeIfAbsent(tuple2.r2, key1->new BeancpFieldInfo(tuple2.r2,info));
+                					getInfo=new BeancpGetInfo(tuple2.r2,info,method);
+                					getInfo.setPossName(fname);
+                					getInfo.setFake(true);
+                            		fieldInfo.addFirstGetInfo(getInfo);
+                        		}
+            				}
+            			}
+            		}else if(BeancpBeanTool.isSetterMethod(method)) {
+            			Tuple2<Set<String>,String> tuple2=BeancpBeanTool.getProperties(method, mfs.get(method));
+            			if(tuple2!=null) {
+            				for(String fname:tuple2.r1) {
+            					BeancpFieldInfo fieldInfo=fieldInfoMap.computeIfAbsent(fname, key1->new BeancpFieldInfo(fname,info));
+            					BeancpSetInfo setInfo=new BeancpSetInfo(fname,info,method);
+                        		fieldInfo.addFirstSetInfo(setInfo);
+                        		if(!BeancpStringTool.isEmpty(tuple2.r2)) {
+                        			setInfo.setPossName(tuple2.r2);
+                        			fieldInfo=fieldInfoMap.computeIfAbsent(tuple2.r2, key1->new BeancpFieldInfo(tuple2.r2,info));
+                        			setInfo=new BeancpSetInfo(tuple2.r2,info,method);
+                        			setInfo.setPossName(fname);
+                        			setInfo.setFake(true);
+                            		fieldInfo.addFirstSetInfo(setInfo);
+                        		}
+            				}
+            			}
             		}
             	}
-            	
             	info.fields=fieldInfoMap;
             	
             	

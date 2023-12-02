@@ -5,6 +5,8 @@ import java.lang.reflect.Type;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.ct.convert.BeancpContextImp;
+import org.kepe.beancp.exception.BeancpException;
+import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpBeanTool;
 import org.kepe.beancp.tool.BeancpTool;
 
@@ -81,7 +83,7 @@ public class BeancpUtil
     	BeancpTool.configRemove(feature);
     }
     /**
-     * Obtain generic types, such as List<String> HashMap<String,Long> ...
+     * Obtain generic types, such as {@code List<String>} {@code HashMap<String,Long>}  ...
      * @param clazz the class of generic type
      * @param typeArguments Describing generic parameters in order
      * @return
@@ -95,4 +97,108 @@ public class BeancpUtil
     public static BeancpContext newContext() {
     	return new BeancpContextImp();
     }
+    /**
+     * clone object
+     * @param <T> 
+     * @param obj
+     * @return
+     */
+    public static <T> T clone(T obj) {
+    	return clone(obj,null);
+    }
+    /**
+     * clone object 
+     * @param <T>
+     * @param obj
+     * @param type object type
+     * @return
+     */
+    public static <T> T clone(T obj,Type type) {
+    	return BeancpTool.clone(obj, type);
+    }
+    /**
+     * Setting Property Value for Javabeans
+     * @param obj
+     * @param key
+     * @param value
+     */
+    public static void setProperty(Object obj,String key,Object value) {
+    	BeancpTool.setProperty(null, obj, key, value);
+	}
+    /**
+     * Setting Property Value for Javabeans
+     * @param type the type of object
+     * @param obj
+     * @param key
+     * @param value
+     */
+    public static void setProperty(Type type,Object obj,String key,Object value) {
+    	BeancpTool.setProperty(type, obj, key, value);
+	}
+    /**
+     * Obtain Javabean property value
+     * @param obj
+     * @param key
+     * @return
+     */
+    public static Object getProperty(Object obj,String key) {
+    	return BeancpTool.getProperty(null, obj, key, null);
+	}
+    /**
+     * Obtain Javabean property value
+     * @param obj
+     * @param key
+     * @param valueType
+     * @return
+     */
+    public static Object getProperty(Object obj,String key,Type valueType) {
+    	return BeancpTool.getProperty(null, obj, key, valueType);
+	}
+    /**
+     * Obtain Javabean property value
+     * @param <T>
+     * @param obj
+     * @param key
+     * @param valueType
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+	public static <T> T getProperty(Object obj,String key,Class<T> valueType) {
+    	return (T) BeancpTool.getProperty(null, obj, key, valueType);
+	}
+    /**
+     * Obtain Javabean property value
+     * @param type
+     * @param obj
+     * @param key
+     * @return
+     */
+    public static Object getProperty(Type type,Object obj,String key) {
+    	return BeancpTool.getProperty(type, obj, key, null);
+	}
+    /**
+     * Obtain Javabean property value
+     * @param type
+     * @param obj
+     * @param key
+     * @param valueType
+     * @return
+     */
+	public static Object getProperty(Type type,Object obj,String key,Type valueType) {
+		return BeancpTool.getProperty(type, obj, key, valueType);
+	}
+	/**
+	 * Obtain Javabean property value
+	 * @param <T>
+	 * @param type
+	 * @param obj
+	 * @param key
+	 * @param valueType
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getProperty(Type type,Object obj,String key,Class<T> valueType) {
+		return (T) BeancpTool.getProperty(type, obj, key, valueType);
+	}
+    
 }

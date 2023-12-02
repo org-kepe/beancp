@@ -16,9 +16,9 @@ public class BeancpGetInfo {
 	private BeancpInfo info;
 	private int access;
 	private boolean isSameType;
-	private boolean isMode;
 	private boolean isField;
 	private String[] possNames;
+	private boolean fake;
 	
 	public BeancpGetInfo(String name,BeancpInfo parentInfo,Field field) {
 		this.name=BeancpName.of(name);
@@ -36,7 +36,6 @@ public class BeancpGetInfo {
 		this.method=method;
 		this.access=Math.max(BeancpBeanTool.getAccess(method), BeancpBeanTool.getAccess(method.getDeclaringClass()));
 		this.access=Math.max(this.access, BeancpBeanTool.getAccess(method.getReturnType()));
-		this.isMode=method.getName().startsWith("is");
 		this.possNames=new String[] {this.name.name};
 		init();
 	}
@@ -48,16 +47,7 @@ public class BeancpGetInfo {
 	public String[] getPossNames() {
 		return possNames;
 	}
-	public String getFieldName() {
-		if(this.isField) {
-			if(this.field!=null) {
-				return this.field.getName();
-			}else {
-				return this.omember.getName();
-			}
-		}
-		return null;
-	}
+	
 	
 	public int getAccess() {
 		return this.access;
@@ -115,10 +105,13 @@ public class BeancpGetInfo {
 	public Method getMethod() {
 		return this.method;
 	}
-	public boolean isMode() {
-		return isMode;
-	}
 	public boolean isField() {
 		return isField;
+	}
+	public boolean isFake() {
+		return fake;
+	}
+	public void setFake(boolean fake) {
+		this.fake = fake;
 	}
 }

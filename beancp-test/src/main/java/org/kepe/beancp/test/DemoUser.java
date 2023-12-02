@@ -1,11 +1,17 @@
 package org.kepe.beancp.test;
 
+import org.kepe.beancp.config.BeancpIgnore;
+import org.kepe.beancp.config.BeancpProperty;
+
 public class DemoUser {
 	private String id;
 	private int age;
 	private String userName;
 	private double salary;
 	private boolean live;
+	@BeancpIgnore
+	private String firstName;
+	private String lastName;
 	
 	public String getId() {
 		return id;
@@ -36,5 +42,18 @@ public class DemoUser {
 	}
 	public void setLive(boolean live) {
 		this.live = live;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	@BeancpProperty("familyName")
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 }

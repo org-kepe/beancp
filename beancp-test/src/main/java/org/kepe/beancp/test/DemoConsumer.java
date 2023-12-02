@@ -9,6 +9,7 @@ public class DemoConsumer {
 	private BigDecimal salary;
 	private boolean live;
 	private String firstName;
+	private String familyName;
 	
 	public String getId() {
 		return id;
@@ -49,6 +50,12 @@ public class DemoConsumer {
 	}
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+	public String getFamilyName() {
+		return familyName;
+	}
+	public void setFamilyName(String familyName) {
+		this.familyName = familyName;
 	}
 	
 }

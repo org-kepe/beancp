@@ -30,6 +30,7 @@ import org.kepe.beancp.config.BeancpIgnore;
 import org.kepe.beancp.config.BeancpProperty;
 import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.info.BeancpTypeInfo;
+import org.kepe.beancp.tool.vo.Tuple2;
 
 
 public class BeancpBeanTool {
@@ -874,6 +875,81 @@ public class BeancpBeanTool {
             throw new IllegalArgumentException();
         }
     }
+    public static Set<String> getProperties(Field field){
+    	BeancpIgnore bi=field.getAnnotation(BeancpIgnore.class);
+		if(bi!=null) {
+			return null;
+		}
+		BeancpProperty bp=field.getAnnotation(BeancpProperty.class);
+		if(bp!=null) {
+			String[] values= bp.value();
+			Set<String> sets=new HashSet<>();
+			for(String str:values) {
+				if(!BeancpStringTool.isEmpty(str)) {
+					sets.add(str);
+				}
+			}
+			return sets;
+		}
+		Set<String> sets=new HashSet<>();
+		sets.add(field.getName());
+		return sets;
+    }
+    public static Tuple2<Set<String>,String> getProperties(Method method,Field field){
+    	BeancpIgnore bi=method.getAnnotation(BeancpIgnore.class);
+		if(bi!=null) {
+			return null;
+		}
+		BeancpProperty bp=method.getAnnotation(BeancpProperty.class);
+		if(bp!=null) {
+			String[] values= bp.value();
+			Set<String> sets=new HashSet<>();
+			for(String str:values) {
+				if(!BeancpStringTool.isEmpty(str)) {
+					sets.add(str);
+				}
+			}
+			return new Tuple2<>(sets,null);
+		}
+		String possName=null;
+		Set<String> sets=new HashSet<>();
+		String methodName=method.getName();
+		
+		if(field!=null) {
+			String name=field.getName();
+			sets.add(name);
+			if((method.getParameterCount()==0&&method.getReturnType()==boolean.class)||(method.getParameterCount()==1&&method.getParameterTypes()[0]==boolean.class)) {
+				String fname=null;
+				if(methodName.startsWith("is")) {
+					fname=methodName;
+				}else {
+					fname="is"+methodName.substring(3);
+				}
+				if(name.equals(fname)) {
+					possName=fname.substring(2,3).toLowerCase()+fname.substring(3);
+				}else {
+					possName=fname;
+				}
+			}
+		}else {
+			if(methodName.startsWith("is")) {
+				sets.add(methodName.substring(2,3).toLowerCase()+methodName.substring(3));
+			}else {
+				sets.add(methodName.substring(3,4).toLowerCase()+methodName.substring(4));
+			}
+			if((method.getParameterCount()==0&&method.getReturnType()==boolean.class)||(method.getParameterCount()==1&&method.getParameterTypes()[0]==boolean.class)) {
+				String fname=null;
+				if(methodName.startsWith("is")) {
+					fname=methodName;
+				}else {
+					fname="is"+methodName.substring(3);
+				}
+				possName=fname;
+			}
+		}
+		return new Tuple2<>(sets,possName);
+    }
+    
     public static boolean isPossMethod(Method method) {
     	BeancpProperty bp=method.getAnnotation(BeancpProperty.class);
     	if(bp==null) {
@@ -911,7 +987,7 @@ public class BeancpBeanTool {
     	BeancpProperty bp=method.getAnnotation(BeancpProperty.class);
     	if(bp==null) {
     		String methodName=method.getName();
-    		if(methodName.startsWith("is")&&methodName.length()>2&&boolean.class==method.getGenericParameterTypes()[0]&&method.getParameterCount()==1) {
+    		if(methodName.startsWith("is")&&methodName.length()>2&&method.getParameterCount()==1&&boolean.class==method.getGenericParameterTypes()[0]) {
     			return true;
     		}
     		if(methodName.startsWith("set")&&methodName.length()>3&&method.getParameterCount()==1) {

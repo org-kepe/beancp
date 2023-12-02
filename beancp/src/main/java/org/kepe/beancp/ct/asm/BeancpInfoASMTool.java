@@ -717,16 +717,7 @@ public class BeancpInfoASMTool implements Opcodes
 		//return loadClassByClassLoader(info.getFClass().getClassLoader(),className,code);
 	}
 	
-	private static boolean hasFieldNameBy(String name,BeancpInfo info) {
-		for(BeancpFieldInfo fieldInfo: info.fields.values()) {
-			for(BeancpGetInfo getInfo:fieldInfo.getGetterList()) {
-				if(name.equals(getInfo.getFieldName())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	
 	public static BeancpConvertMapper generateASMMapper(BeancpInfo info,BeancpFeature feature){
 		Map<String,BeancpFieldInfo> fields1=new HashMap<>();
 		if(info.fields!=null) {
@@ -767,50 +758,18 @@ public class BeancpInfoASMTool implements Opcodes
 			BeancpFieldInfo fieldInfo=e.getValue();
 			if(!fieldInfo.getGetterList().isEmpty()) {
 				//If there is no add, there is no add. If there is a key in the field, there is an add in the field that is the same as mine in the opposite direction, then there is no add. If I am a non is add, there is no add
-				boolean hasNormalMode=false;
 				for(BeancpGetInfo getInfo:fieldInfo.getGetterList()) {
-					if(!getInfo.isMode()) {
-						hasNormalMode=true;
-						break;
-					}
-				}
-				if(hasNormalMode) {
-					getKeys.add(key);
-				}else {
-					if(hasFieldNameBy(key,info)) {
+					if(!getInfo.isFake()) {
 						getKeys.add(key);
-					}else {
-						String key1=fieldInfo.getGetterList().get(0).getPossNames()[1];
-						if(!hasFieldNameBy(key1,info)) {
-							if(key.length()<key1.length()) {
-								getKeys.add(key);
-							}
-						}
 					}
 				}
 			}
 			
 			if(!fieldInfo.getSetterList().isEmpty()) {
 				//If there is no add, there is no add. If there is a key in the field, there is an add in the field that is the same as mine in the opposite direction, then there is no add. If I am a non is add, there is no add
-				boolean hasNormalMode=false;
 				for(BeancpSetInfo setInfo:fieldInfo.getSetterList()) {
-					if(!setInfo.isMode()) {
-						hasNormalMode=true;
-						break;
-					}
-				}
-				if(hasNormalMode) {
-					setKeys.add(key);
-				}else {
-					if(hasFieldNameBy(key,info)) {
+					if(!setInfo.isFake()) {
 						setKeys.add(key);
-					}else {
-						String key1=fieldInfo.getSetterList().get(0).getPossNames()[1];
-						if(!hasFieldNameBy(key1,info)) {
-							if(key.length()<key1.length()) {
-								setKeys.add(key);
-							}
-						}
 					}
 				}
 			}

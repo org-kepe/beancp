@@ -5,7 +5,7 @@ The basic function is to copy beans (copy from bean to bean), and and others als
 <dependency>
     <groupId>io.github.org-kepe</groupId>
     <artifactId>beancp</artifactId>
-    <version>2.0.4</version>
+    <version>2.0.5</version>
 </dependency>
 ```
 ## Basic examples
@@ -35,6 +35,8 @@ Map<String,Object> map = BeancpUtil.copy(user, Map.class);
 * Powerful performance, generated using bytecode
 * By default, it supports the conversion of public attributes, but it can also support the conversion of protected and private attributes through feature parameters
 * Provide APIs and annotations to support custom type conversions
+* Support clone for any Object
+* Support get or set properties for JavaBeans
 ## Examples
 ### Features
 ~~~Java
@@ -70,5 +72,36 @@ DemoConsumer consumer = BeancpUtil.copy(user, DemoConsumer.class,BeancpUtil.newC
 | addValueFilter  | add a value filter when set value for attribute |
 | setExceptionFilter  | set exception filter |
 ### annotation
+~~~Java
+	@BeancpIgnore
+	private String firstName;
+	
+	@BeancpProperty("familyName")
+	public String getLastName() {
+		return lastName;
+	}
+~~~
+|  annotation   | description  |
+|  :----  | :----  |
+| @BeancpIgnore  | ignore this method or field |
+| @BeancpProperty  | It can be placed on the parameters of methods, fields, and constructors, and set one or more other names. It can also be placed on a non get set method, and the beancp framework will automatically parse it as a get set method |
+### other api
+~~~Java
+//clone object
+DemoUser user = ...
+DemoUser user2 = BeancpUtil.clone(user);
 
+//Obtain Javabean property value
+String id = BeancpUtil.getProperty(user,"id",String.class);
+String age = BeancpUtil.getProperty(user,"age",String.class);
+
+//Setting Property Value for Javabeans
+BeancpUtil.setProperty(user, "id", "a");
+BeancpUtil.setProperty(user, "live", true);
+~~~
+|  api   | description  |
+|  :----  | :----  |
+| clone  | clone object |
+| getProperty  | Obtain Javabean property value |
+| setProperty  | Setting Property Value for Javabeans |
 ### ...

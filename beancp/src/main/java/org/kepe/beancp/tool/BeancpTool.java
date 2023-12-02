@@ -28,6 +28,7 @@ import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
 import org.kepe.beancp.ct.itf.BeancpSimpleCustomConverter;
 import org.kepe.beancp.ct.reg.BeancpRegisters;
+import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.info.BeancpInfo;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -155,7 +156,25 @@ public class BeancpTool {
 		return false;
 	}
 	
+	public static  <T> T clone(T obj,Type type) {
+		if(obj==null) {
+			return null;
+		}
+		return (T) BeancpInfo.of(type, null, obj).getDefaultMapper().clone(null, obj);
+	}
 	
+	public static void setProperty(Type type,Object obj,String key,Object value) {
+		BeancpInfo.of(type, null, obj).getDefaultMapper().put(obj, key, value, null, null);
+	}
+	public static Object getProperty(Type type,Object obj,String key,Type valueType) {
+		try {
+			return BeancpInfo.of(type, null, obj).getDefaultMapper().get(obj, key, null, BeancpInfo.of(valueType),null );
+		} catch (BeancpException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new BeancpException(e);
+		}
+	}
 	
 	public static BeancpCustomConverter create(int dinstance,BeancpOOConverter ooConverter) {
     	return new BeancpCustomConverter() {

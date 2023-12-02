@@ -17,6 +17,7 @@ public class BeancpSetInfo {
 	private int access;
 	private String[] possNames;
 	private boolean isMode;
+	private boolean fake;
 	
 	public BeancpSetInfo(String name,BeancpInfo parentInfo,Field field) {
 		this.name=BeancpName.of(name);
@@ -100,5 +101,11 @@ public class BeancpSetInfo {
 	}
 	public boolean isMode() {
 		return isMode;
+	}
+	public boolean isFake() {
+		return fake;
+	}
+	public void setFake(boolean fake) {
+		this.fake = fake;
 	}
 }

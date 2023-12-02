@@ -11,8 +11,10 @@ import java.util.Map;
 
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
+import org.kepe.beancp.config.BeancpProperty;
 import org.kepe.beancp.ct.convert.BeancpConvertProviderTool;
 import org.kepe.beancp.tool.BeancpBeanTool;
+import org.kepe.beancp.tool.BeancpStringTool;
 import org.kepe.beancp.tool.vo.Tuple2;
 
 public class BeancpInitInfo {
@@ -37,6 +39,13 @@ public class BeancpInitInfo {
 		if(this.params==null) {
 			LinkedHashMap<String,BeancpInfo> params=new LinkedHashMap<>();
 			for(Parameter parameter:constructor.getParameters()) {
+				String name=parameter.getName();
+				BeancpProperty bp=parameter.getAnnotation(BeancpProperty.class);
+				if(bp!=null&&bp.value().length>0) {
+					if(!BeancpStringTool.isEmpty(bp.value()[0])) {
+						name=bp.value()[0];
+					}
+				}
 				params.put(parameter.getName(), BeancpInfo.of(BeancpBeanTool.getParamType(parentInfo.getFtype(), parentInfo.getFClass(),this.getConstructor().getDeclaringClass(), parameter, parameter.getParameterizedType())));
 			}
 			this.params=params;
