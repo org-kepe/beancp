@@ -38,7 +38,7 @@ Map<String,Object> map = BeancpUtil.copy(user, Map.class);
 * Support clone for any Object
 * Support get or set properties for JavaBeans
 ## Examples
-### Features
+### Feature
 ~~~Java
 //If the original value is null,will not set value
 DemoUser user = ...;
