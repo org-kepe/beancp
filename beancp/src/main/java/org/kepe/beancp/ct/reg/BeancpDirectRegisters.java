@@ -57,7 +57,7 @@ public class BeancpDirectRegisters implements BeancpRegister {
 					return invocation.proceed(context, fromObj, toObj);
 				}
 			}
-		},10);
+		},PRIORITY10);
 		registerChild(new BeancpDirectCustomConverter() {
 			@Override
 			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {

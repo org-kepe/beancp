@@ -338,21 +338,47 @@ public abstract class BeancpConvertProvider
                 return key1.getPriority()-key2.getPriority();
             });
         }
+    	for(Map<BeancpInfo,Map<BeancpFeature,BeancpConvertProvider>> map:C_MAP.values()) {
+    		for(Map<BeancpFeature,BeancpConvertProvider> map1:map.values()) {
+    			for(BeancpConvertProvider provider:map1.values()) {
+    				((BeancpConvertProviderProxy)provider).flush();
+    			}
+    		}
+    	}
     }
-    private static BeancpConvertProvider generateProvider(BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
+    protected static BeancpConvertProvider generateProvider(BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
         int length=converterList.size();
         BeancpConvertProvider provider=new BeancpConvertNonProvider(null,flag,fromInfo,toInfo);;
-        for(int i=length-1;i>=0;i--){
+        int reaches=0;
+        for(int i=0;i<length;i++){
             BeancpConverterInfo info=converterList.get(i);
             if(info.matches(fromInfo,toInfo)){
                 if(info.getConverter() instanceof BeancpCustomConverter){
+                	reaches++;
                 	provider = new BeancpConvertCustomProvider(provider,flag,info,fromInfo,toInfo);
                 }else if(info.getConverter() instanceof BeancpASMConverter){
+                	reaches++;
                 	provider = BeancpInfoASMTool.generateASMProvider(provider,info,flag,fromInfo,toInfo);
                 }
             }
         }
-        return BeancpConvertProviderProxy.createProxy(provider);
+        return BeancpConvertProviderProxy.createProxy(reaches,provider);
+    }
+    
+    protected static int getProviderReaches(BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
+        int length=converterList.size();
+        int reaches=0;
+        for(int i=0;i<length;i++){
+            BeancpConverterInfo info=converterList.get(i);
+            if(info.matches(fromInfo,toInfo)){
+                if(info.getConverter() instanceof BeancpCustomConverter){
+                	reaches++;
+                }else if(info.getConverter() instanceof BeancpASMConverter){
+                	reaches++;
+                }
+            }
+        }
+        return reaches;
     }
 	
 }

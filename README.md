@@ -1,5 +1,5 @@
 # beancp
-The basic function is to copy beans (copy from bean to bean), and and others also support converting beans to Maps, lists to lists, strings to dates...
+Provide some processing APIs for Java objects, such as object copying(include bean copy,beans to Maps, lists to lists, strings to dates...), object cloning, getting or setting the values of Javabeans, etc
 ## Maven
 ```xml
 <dependency>
@@ -85,15 +85,19 @@ DemoConsumer consumer = BeancpUtil.copy(user, DemoConsumer.class,BeancpUtil.newC
 |  :----  | :----  |
 | @BeancpIgnore  | ignore this method or field |
 | @BeancpProperty  | It can be placed on the parameters of methods, fields, and constructors, and set one or more other names. It can also be placed on a non get set method, and the beancp framework will automatically parse it as a get set method |
-### other api
+### clone
 ~~~Java
 //clone object
 DemoUser user = ...
 DemoUser user2 = BeancpUtil.clone(user);
-
+~~~
+### get and set property
+~~~Java
 //Obtain Javabean property value
-String id = BeancpUtil.getProperty(user,"id",String.class);
-String age = BeancpUtil.getProperty(user,"age",String.class);
+String age=BeancpUtil.getProperty(user,"age",String.class);
+String userName = BeancpUtil.getProperty(user,"userName",String.class);
+//By default, the underline format is also supported.The same goes for setProperty
+String userName1 = BeancpUtil.getProperty(user,"user_name",String.class);
 
 //Setting Property Value for Javabeans
 BeancpUtil.setProperty(user, "id", "a");
@@ -101,7 +105,19 @@ BeancpUtil.setProperty(user, "live", true);
 ~~~
 |  api   | description  |
 |  :----  | :----  |
-| clone  | clone object |
 | getProperty  | Obtain Javabean property value |
 | setProperty  | Setting Property Value for Javabeans |
+### Custom Type Conversion
+~~~Java
+//register Custom Type Conversion
+BeancpUtil.registerTypeConversion(DemoUser.class, DemoConsumer.class, (invocation,context,fromObj,toObj)->{
+	DemoUser user=(DemoUser)fromObj;
+	DemoConsumer consumer=(DemoConsumer)toObj;
+	if(consumer==null) {
+		consumer=new DemoConsumer();
+	}
+	consumer.setFamilyName(user.getLastName());
+	return consumer;
+}, 1);
+~~~
 ### ...

@@ -19,15 +19,17 @@ import org.kepe.beancp.exception.BeancpException.EType;
 import org.kepe.beancp.info.BeancpInfo;
 
 public class BeancpConvertProviderProxy extends BeancpConvertProvider implements BeancpConvertByObject{
-	protected static BeancpConvertProvider createProxy(BeancpConvertProvider provider) {
-		return new BeancpConvertProviderProxy(provider);
+	protected static BeancpConvertProvider createProxy(int reaches,BeancpConvertProvider provider) {
+		return new BeancpConvertProviderProxy(reaches,provider);
 	}
 
-	private BeancpConvertProvider provider;
+	private volatile BeancpConvertProvider provider;
 	private BeancpConvertByObject bo;
-	private BeancpConvertProviderProxy(BeancpConvertProvider provider) {
+	private volatile int reaches;
+	private BeancpConvertProviderProxy(int reaches,BeancpConvertProvider provider) {
 		this(null,provider.flag,provider.info,provider.fromInfo,provider.toInfo);
 		this.provider=provider;
+		this.reaches=reaches;
 		Type fromtype=this.fromInfo.getBType();
 		Type totype=this.toInfo.getBType();
 		if(!this.fromInfo.isPrimitive) {
@@ -217,6 +219,15 @@ public class BeancpConvertProviderProxy extends BeancpConvertProvider implements
 			BeancpInfo fromInfo, BeancpInfo toInfo) {
 		super(parent, flag, info, fromInfo, toInfo);
 	}
+	
+	public void flush() {
+		if (this.reaches!= getProviderReaches(provider.flag,provider.fromInfo,provider.toInfo)) {
+			BeancpConvertProviderProxy proxy=(BeancpConvertProviderProxy) generateProvider(provider.flag,provider.fromInfo,provider.toInfo);
+			this.reaches=proxy.reaches;
+			this.provider=proxy.provider;
+		}
+	}
+	
 	@Override
 	public Object convertByObject(BeancpContext context,Object fromObj,Object toObj) {
 		return bo.convertByObject(context, fromObj, toObj);
@@ -644,6 +655,7 @@ public class BeancpConvertProviderProxy extends BeancpConvertProvider implements
 	protected BeancpInvocationImp getInvocation() {
 		return this.provider.getInvocation();
 	}
+	
 	
 
 }

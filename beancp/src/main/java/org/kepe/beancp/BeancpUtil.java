@@ -4,9 +4,11 @@ import java.lang.reflect.Type;
 
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
+import org.kepe.beancp.config.BeancpOOConverter;
+import org.kepe.beancp.config.BeancpTypeConverter;
+import org.kepe.beancp.config.BeancpTypeMatcher;
+import org.kepe.beancp.config.BeancpTypeRelMatcher;
 import org.kepe.beancp.ct.convert.BeancpContextImp;
-import org.kepe.beancp.exception.BeancpException;
-import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpBeanTool;
 import org.kepe.beancp.tool.BeancpTool;
 
@@ -83,10 +85,10 @@ public class BeancpUtil
     	BeancpTool.configRemove(feature);
     }
     /**
-     * Obtain generic types, such as {@code List<String>} {@code HashMap<String,Long>}  ...
+     * Obtain generic types, such as {@code List<String>} is {@code BeancpUtil.type(List.class,String.class)} , {@code HashMap<String,Long>} is {@code BeancpUtil.type(HashMap.class,String.class,Long.class)} ...
      * @param clazz the class of generic type
      * @param typeArguments Describing generic parameters in order
-     * @return
+     * @return type
      */
     public static Type type(Class<?> clazz,Type... typeArguments) {
     	return BeancpBeanTool.type(clazz,typeArguments);
@@ -99,7 +101,6 @@ public class BeancpUtil
     }
     /**
      * clone object
-     * @param <T> 
      * @param obj
      * @return
      */
@@ -189,7 +190,6 @@ public class BeancpUtil
 	}
 	/**
 	 * Obtain Javabean property value
-	 * @param <T>
 	 * @param type
 	 * @param obj
 	 * @param key
@@ -201,4 +201,84 @@ public class BeancpUtil
 		return (T) BeancpTool.getProperty(type, obj, key, valueType);
 	}
     
+	/**
+	 * register a type converter
+	 * @param <T>
+	 * @param <R>
+	 * @param fromType from object type
+	 * @param toType to object type
+	 * @param converter custom converter
+	 * @param priority The priority of this converter should be greater than zero if there are no special requirements
+	 */
+	public static <T,R> void registerTypeConversion(Type fromType,Type toType,BeancpTypeConverter<T,R> converter,int priority) {
+		BeancpTool.registerTypeConversion(fromType, toType, converter, priority);
+	}
+    /**
+     * register a type converter
+     * @param <T>
+     * @param <R>
+     * @param fromType from object type
+     * @param toType to object type
+     * @param distance The distance from fromType to toType. Closer distances will be prioritized for conversion, negative numbers indicate inability to convert
+     * @param oconverter custom converter
+     * @param priority The priority of this converter should be greater than zero if there are no special requirements
+     */
+    public static <T,R> void registerTypeConversion(Type fromType,Type toType,int distance, BeancpOOConverter<T,R> oconverter,int priority) {
+		BeancpTool.registerTypeConversion(fromType, toType, distance, oconverter, priority);
+
+	}
+    /**
+     * register a type converter
+     * @param <T>
+     * @param <R>
+     * @param fromTypeMatcher
+     * @param toTypeMatcher
+     * @param converter
+     * @param priority The priority of this converter should be greater than zero if there are no special requirements
+     */
+    public static <T,R> void registerTypeConversion(BeancpTypeMatcher fromTypeMatcher,BeancpTypeMatcher toTypeMatcher,BeancpTypeConverter<T,R> converter,int priority) {
+		BeancpTool.registerTypeConversion(fromTypeMatcher, toTypeMatcher, converter, priority);
+	}
+    /**
+     * register a type converter
+     * @param <T>
+     * @param <R>
+     * @param fromTypeMatcher
+     * @param toTypeMatcher
+     * @param distance The distance from fromType to toType. Closer distances will be prioritized for conversion, negative numbers indicate inability to convert
+     * @param oconverter
+     * @param priority The priority of this converter should be greater than zero if there are no special requirements
+     */
+    public static <T,R> void registerTypeConversion(BeancpTypeMatcher fromTypeMatcher,BeancpTypeMatcher toTypeMatcher,int distance, BeancpOOConverter<T,R> oconverter,int priority) {
+		BeancpTool.registerTypeConversion(fromTypeMatcher, toTypeMatcher, distance, oconverter, priority);
+	}
+    /**
+     * register a type converter
+     * @param <T>
+     * @param <R>
+     * @param fromTypeMatcher
+     * @param toTypeMatcher
+     * @param typeRelMatcher
+     * @param converter
+     * @param priority The priority of this converter should be greater than zero if there are no special requirements
+     */
+    public static <T,R> void registerTypeConversion(BeancpTypeMatcher fromTypeMatcher,BeancpTypeMatcher toTypeMatcher,BeancpTypeRelMatcher typeRelMatcher, BeancpTypeConverter<T,R> converter,int priority) {
+		BeancpTool.registerTypeConversion(fromTypeMatcher, toTypeMatcher, typeRelMatcher, converter, priority);
+	}
+    /**
+     * register a type converter
+     * @param <T>
+     * @param <R>
+     * @param fromTypeMatcher
+     * @param toTypeMatcher
+     * @param typeRelMatcher
+     * @param distance The distance from fromType to toType. Closer distances will be prioritized for conversion, negative numbers indicate inability to convert
+     * @param oconverter
+     * @param priority The priority of this converter should be greater than zero if there are no special requirements
+     */
+    public static <T,R> void registerTypeConversion(BeancpTypeMatcher fromTypeMatcher,BeancpTypeMatcher toTypeMatcher,BeancpTypeRelMatcher typeRelMatcher,int distance, BeancpOOConverter<T,R> oconverter,int priority) {
+		BeancpTool.registerTypeConversion(fromTypeMatcher, toTypeMatcher, typeRelMatcher, distance, oconverter, priority);
+	}
+	
+	
 }

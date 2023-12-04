@@ -1,15 +1,9 @@
 package org.kepe.beancp.tool;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.kepe.beancp.config.BeancpFeature;
-import org.kepe.beancp.ct.convert.BeancpConvertCustomProvider;
-import org.kepe.beancp.ct.converter.BeancpConverterInfo;
-import org.kepe.beancp.ct.itf.BeancpCustomConverter;
+import org.kepe.beancp.config.BeancpTypeMatcher;
+import org.kepe.beancp.config.BeancpTypeRelMatcher;
 import org.kepe.beancp.ct.itf.BeancpInfoMatcher;
+import org.kepe.beancp.ct.itf.BeancpInfoRelMatcher;
 import org.kepe.beancp.info.BeancpInfo;
 
 /**
@@ -18,10 +12,21 @@ import org.kepe.beancp.info.BeancpInfo;
  */
 public class BeancpInfoMatcherTool
 {
-
+	
+	public static BeancpInfoRelMatcher createRelMatcher(BeancpTypeRelMatcher typeRelMatcher){
+        return (fromInfo,toInfo)->{
+            return typeRelMatcher.matches(fromInfo.getBType(), fromInfo.getBClass(),toInfo.getBType(), toInfo.getBClass());
+        };
+    }
+	public static BeancpInfoMatcher createMatcher(BeancpTypeMatcher typeMatcher){
+        return info1->{
+            return typeMatcher.matches(info1.getBType(), info1.getBClass());
+        };
+    }
+	
     public static BeancpInfoMatcher createEqualMatcher(BeancpInfo info){
         return info1->{
-            return info1.equals(info);
+            return info1.equals(info)||info1.getBType().equals(info.getBType());
         };
     }
 

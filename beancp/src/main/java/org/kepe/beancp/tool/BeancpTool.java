@@ -18,6 +18,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.config.BeancpOOConverter;
+import org.kepe.beancp.config.BeancpTypeConverter;
+import org.kepe.beancp.config.BeancpTypeMatcher;
+import org.kepe.beancp.config.BeancpTypeRelMatcher;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.asm.MethodASMContext;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
@@ -138,7 +141,39 @@ public class BeancpTool {
         BeancpConvertProvider.register(BeancpConverterInfo.of(BeancpInfoMatcherTool.createExtendsMatcher(fromInfo), BeancpInfoMatcherTool.createExtendsMatcher(toInfo), converter, priority));
     }
     
+    public static <T,R> void registerTypeConversion(Type fromType,Type toType,BeancpTypeConverter<T,R> converter,int priority) {
+		if(fromType!=null&&toType!=null&&converter!=null) {
+	        BeancpConvertProvider.register(BeancpConverterInfo.of(BeancpInfoMatcherTool.createEqualMatcher(BeancpInfo.of(fromType)), BeancpInfoMatcherTool.createEqualMatcher(BeancpInfo.of(toType)), converter, priority));
+		}
+	}
     
+    public static <T,R> void registerTypeConversion(Type fromType,Type toType,int distance, BeancpOOConverter<T,R> oconverter,int priority) {
+		if(fromType!=null&&toType!=null&&oconverter!=null) {
+	        BeancpConvertProvider.register(BeancpConverterInfo.of(BeancpInfoMatcherTool.createEqualMatcher(BeancpInfo.of(fromType)), BeancpInfoMatcherTool.createEqualMatcher(BeancpInfo.of(toType)), create(distance, oconverter), priority));
+		}
+	}
+    public static <T,R> void registerTypeConversion(BeancpTypeMatcher fromTypeMatcher,BeancpTypeMatcher toTypeMatcher,BeancpTypeConverter<T,R> converter,int priority) {
+		if(fromTypeMatcher!=null&&toTypeMatcher!=null&&converter!=null) {
+	        BeancpConvertProvider.register(BeancpConverterInfo.of(BeancpInfoMatcherTool.createMatcher(fromTypeMatcher), BeancpInfoMatcherTool.createMatcher(toTypeMatcher), converter, priority));
+		}
+	}
+    
+    public static <T,R> void registerTypeConversion(BeancpTypeMatcher fromTypeMatcher,BeancpTypeMatcher toTypeMatcher,int distance, BeancpOOConverter<T,R> oconverter,int priority) {
+		if(fromTypeMatcher!=null&&toTypeMatcher!=null&&oconverter!=null) {
+	        BeancpConvertProvider.register(BeancpConverterInfo.of(BeancpInfoMatcherTool.createMatcher(fromTypeMatcher), BeancpInfoMatcherTool.createMatcher(toTypeMatcher), create(distance, oconverter), priority));
+		}
+	}
+    public static <T,R> void registerTypeConversion(BeancpTypeMatcher fromTypeMatcher,BeancpTypeMatcher toTypeMatcher,BeancpTypeRelMatcher typeRelMatcher, BeancpTypeConverter<T,R> converter,int priority) {
+		if(fromTypeMatcher!=null&&toTypeMatcher!=null&&typeRelMatcher!=null&&converter!=null) {
+	        BeancpConvertProvider.register(BeancpConverterInfo.of(BeancpInfoMatcherTool.createMatcher(fromTypeMatcher), BeancpInfoMatcherTool.createMatcher(toTypeMatcher),BeancpInfoMatcherTool.createRelMatcher(typeRelMatcher) , converter, priority));
+		}
+	}
+    
+    public static <T,R> void registerTypeConversion(BeancpTypeMatcher fromTypeMatcher,BeancpTypeMatcher toTypeMatcher,BeancpTypeRelMatcher typeRelMatcher,int distance, BeancpOOConverter<T,R> oconverter,int priority) {
+		if(fromTypeMatcher!=null&&toTypeMatcher!=null&&typeRelMatcher!=null&&oconverter!=null) {
+	        BeancpConvertProvider.register(BeancpConverterInfo.of(BeancpInfoMatcherTool.createMatcher(fromTypeMatcher), BeancpInfoMatcherTool.createMatcher(toTypeMatcher),BeancpInfoMatcherTool.createRelMatcher(typeRelMatcher), create(distance, oconverter), priority));
+		}
+	}
 	
 	public static boolean isUsefulField(Field field) {
 		int mod=field.getModifiers();
