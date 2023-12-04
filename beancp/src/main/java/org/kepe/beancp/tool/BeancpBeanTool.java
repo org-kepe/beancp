@@ -24,11 +24,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.kepe.beancp.config.BeancpIgnore;
 import org.kepe.beancp.config.BeancpProperty;
-import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.info.BeancpTypeInfo;
 import org.kepe.beancp.tool.vo.Tuple2;
 
@@ -69,9 +67,11 @@ public class BeancpBeanTool {
     	
     }
     //private static final Map<Class,BeancpInfo> C_MAP=new ConcurrentHashMap<>();
-    public static Type type(Class clazz,Type... typeArguments) {
+    public static Type type(Class<?> clazz,Type... typeArguments) {
     	return BeancpTypeInfo.of(clazz).ofTypeArguments(typeArguments).getType();
     }
+    
+    
     
     
     public static int getAccess(Class clazz) {
