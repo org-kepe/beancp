@@ -101,11 +101,12 @@ public class BeancpUtil
     }
     /**
      * clone object
+     * @param <T>
      * @param obj
      * @return
      */
     public static <T> T clone(T obj) {
-    	return clone(obj,null);
+    	return BeancpTool.clone(obj, null, null, null);
     }
     /**
      * clone object 
@@ -115,7 +116,28 @@ public class BeancpUtil
      * @return
      */
     public static <T> T clone(T obj,Type type) {
-    	return BeancpTool.clone(obj, type);
+    	return BeancpTool.clone(obj, type, null, null);
+    }
+    /**
+     * clone object 
+     * @param <T>
+     * @param obj
+     * @param feature
+     * @return
+     */
+    public static <T> T clone(T obj,BeancpFeature feature) {
+    	return BeancpTool.clone(obj, null, feature, null);
+    }
+    /**
+     * clone object 
+     * @param <T>
+     * @param obj
+     * @param type
+     * @param feature
+     * @return
+     */
+    public static <T> T clone(T obj,Type type,BeancpFeature feature) {
+    	return BeancpTool.clone(obj, type, feature, null);
     }
     /**
      * Setting Property Value for Javabeans
@@ -124,7 +146,17 @@ public class BeancpUtil
      * @param value
      */
     public static void setProperty(Object obj,String key,Object value) {
-    	BeancpTool.setProperty(null, obj, key, value);
+    	BeancpTool.setProperty(null, obj, key, value,null,null);
+	}
+    /**
+     * Setting Property Value for Javabeans
+     * @param obj
+     * @param key
+     * @param value
+     * @param feature
+     */
+    public static void setProperty(Object obj,String key,Object value,BeancpFeature feature) {
+    	BeancpTool.setProperty(null, obj, key, value,feature,null);
 	}
     /**
      * Setting Property Value for Javabeans
@@ -134,7 +166,18 @@ public class BeancpUtil
      * @param value
      */
     public static void setProperty(Type type,Object obj,String key,Object value) {
-    	BeancpTool.setProperty(type, obj, key, value);
+    	BeancpTool.setProperty(type, obj, key, value,null,null);
+	}
+    /**
+     * Setting Property Value for Javabeans
+     * @param type
+     * @param obj
+     * @param key
+     * @param value
+     * @param feature
+     */
+    public static void setProperty(Type type,Object obj,String key,Object value,BeancpFeature feature) {
+    	BeancpTool.setProperty(type, obj, key, value,feature,null);
 	}
     /**
      * Obtain Javabean property value
@@ -143,7 +186,17 @@ public class BeancpUtil
      * @return
      */
     public static Object getProperty(Object obj,String key) {
-    	return BeancpTool.getProperty(null, obj, key, null);
+    	return BeancpTool.getProperty(null, obj, key, null,null,null);
+	}
+    /**
+     * Obtain Javabean property value
+     * @param obj
+     * @param key
+     * @param feature
+     * @return
+     */
+    public static Object getProperty(Object obj,String key,BeancpFeature feature) {
+    	return BeancpTool.getProperty(null, obj, key, null,feature,null);
 	}
     /**
      * Obtain Javabean property value
@@ -153,7 +206,18 @@ public class BeancpUtil
      * @return
      */
     public static Object getProperty(Object obj,String key,Type valueType) {
-    	return BeancpTool.getProperty(null, obj, key, valueType);
+    	return BeancpTool.getProperty(null, obj, key, valueType,null,null);
+	}
+    /**
+     * Obtain Javabean property value
+     * @param obj
+     * @param key
+     * @param valueType
+     * @param feature
+     * @return
+     */
+    public static Object getProperty(Object obj,String key,Type valueType,BeancpFeature feature) {
+    	return BeancpTool.getProperty(null, obj, key, valueType,feature,null);
 	}
     /**
      * Obtain Javabean property value
@@ -165,7 +229,7 @@ public class BeancpUtil
      */
     @SuppressWarnings("unchecked")
 	public static <T> T getProperty(Object obj,String key,Class<T> valueType) {
-    	return (T) BeancpTool.getProperty(null, obj, key, valueType);
+    	return (T) BeancpTool.getProperty(null, obj, key, valueType,null,null);
 	}
     /**
      * Obtain Javabean property value
@@ -175,7 +239,18 @@ public class BeancpUtil
      * @return
      */
     public static Object getProperty(Type type,Object obj,String key) {
-    	return BeancpTool.getProperty(type, obj, key, null);
+    	return BeancpTool.getProperty(type, obj, key, null,null,null);
+	}
+    /**
+     * Obtain Javabean property value
+     * @param type
+     * @param obj
+     * @param key
+     * @param feature
+     * @return
+     */
+    public static Object getProperty(Type type,Object obj,String key,BeancpFeature feature) {
+    	return BeancpTool.getProperty(type, obj, key, null,feature,null);
 	}
     /**
      * Obtain Javabean property value
@@ -186,7 +261,19 @@ public class BeancpUtil
      * @return
      */
 	public static Object getProperty(Type type,Object obj,String key,Type valueType) {
-		return BeancpTool.getProperty(type, obj, key, valueType);
+		return BeancpTool.getProperty(type, obj, key, valueType,null,null);
+	}
+	/**
+	 * Obtain Javabean property value
+	 * @param type
+	 * @param obj
+	 * @param key
+	 * @param valueType
+	 * @param feature
+	 * @return
+	 */
+	public static Object getProperty(Type type,Object obj,String key,Type valueType,BeancpFeature feature) {
+		return BeancpTool.getProperty(type, obj, key, valueType,feature,null);
 	}
 	/**
 	 * Obtain Javabean property value
@@ -198,7 +285,7 @@ public class BeancpUtil
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getProperty(Type type,Object obj,String key,Class<T> valueType) {
-		return (T) BeancpTool.getProperty(type, obj, key, valueType);
+		return (T) BeancpTool.getProperty(type, obj, key, valueType,null,null);
 	}
     
 	/**

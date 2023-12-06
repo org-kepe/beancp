@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
+import org.kepe.beancp.config.BeancpValueFilter;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.asm.BeancpInfoASMTool;
 import org.kepe.beancp.ct.asm.MethodASMContext;
@@ -40,14 +41,15 @@ import org.kepe.beancp.info.BeancpInitInfo;
 import org.kepe.beancp.info.BeancpSetInfo;
 import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 import org.kepe.beancp.tool.vo.Tuple2;
+import static org.kepe.beancp.ct.asm.BeancpInfoASMTool.desc;
+import static org.kepe.beancp.ct.asm.BeancpInfoASMTool.getClassName;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-public class BeancpBeanRegisters {
+public class BeancpBeanRegisters implements BeancpRegister{
 	public static void registers() {
 		registerBean2Bean(new BeancpASMConverter() {
 			//BeancpInitInfo initInfo=null;
@@ -158,7 +160,7 @@ public class BeancpBeanRegisters {
 						isDirectTrans=gsetList.get(i).r1.getInfo().instanceOf(gsetList.get(i).r2.getInfo());
 					}
 					if(!isDirectTrans) {
-						fieldVisitor = classWriter.visitField(ACC_PRIVATE, "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;", null, null);
+						fieldVisitor = classWriter.visitField(ACC_PRIVATE, "provider"+i, desc(BeancpConvertProvider.class), null, null);
 						fieldVisitor.visitEnd();
 					}
 				}
@@ -190,13 +192,13 @@ public class BeancpBeanRegisters {
                 	methodVisitor.visitLineNumber(asmContext.getNextLine(), label1);//--
                 	methodVisitor.visitVarInsn(ALOAD, 0);
                 	methodVisitor.visitVarInsn(ALOAD, 0);
-                	methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", "Lorg/kepe/beancp/config/BeancpFeature;");
+                	methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", desc(BeancpFeature.class));
                 	methodVisitor.visitIntInsn(BIPUSH, gsetList.get(i).r1.getInfo().getId());
-                	methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
+                	methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpInfo.class), "getInfoById", "(I)"+desc(BeancpInfo.class), false);
                 	methodVisitor.visitIntInsn(BIPUSH, gsetList.get(i).r2.getInfo().getId());
-                	methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
-                	methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
-                	methodVisitor.visitFieldInsn(PUTFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+                	methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpInfo.class), "getInfoById", "(I)"+desc(BeancpInfo.class), false);
+                	methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpConvertProvider.class), "of", "("+desc(BeancpFeature.class)+desc(BeancpInfo.class)+desc(BeancpInfo.class)+")"+desc(BeancpConvertProvider.class), false);
+                	methodVisitor.visitFieldInsn(PUTFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
             	}
             	if(!initGetList.isEmpty()) {
             		Label label2 = new Label();
@@ -205,8 +207,8 @@ public class BeancpBeanRegisters {
             		methodVisitor.visitVarInsn(ALOAD, 0);
             		methodVisitor.visitVarInsn(ALOAD, 4);
             		methodVisitor.visitVarInsn(ALOAD, 0);
-            		methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", "Lorg/kepe/beancp/config/BeancpFeature;");
-            		methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertMapper.class), "of", "(Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/config/BeancpFeature;)"+BeancpInfoASMTool.desc(BeancpConvertMapper.class), false);
+            		methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", desc(BeancpFeature.class));
+            		methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertMapper.class), "of", "("+desc(BeancpInfo.class)+desc(BeancpFeature.class)+")"+BeancpInfoASMTool.desc(BeancpConvertMapper.class), false);
             		methodVisitor.visitFieldInsn(PUTFIELD, asmContext.getClassPath(), "toMapper", BeancpInfoASMTool.desc(BeancpConvertMapper.class));
             	}
             	
@@ -239,8 +241,8 @@ public class BeancpBeanRegisters {
 					methodVisitor.visitLabel(label40);
 					methodVisitor.visitLineNumber(asmContext.getNextLine(), label40);
 					methodVisitor.visitVarInsn(ALOAD, 0);
-					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "toInfo", "Lorg/kepe/beancp/info/BeancpInfo;");
-					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "defaultInstance", "()Ljava/lang/Object;", false);
+					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "toInfo", desc(BeancpInfo.class));
+					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "defaultInstance", "()Ljava/lang/Object;", false);
 					methodVisitor.visitInsn(ARETURN);
 					return;
 				}
@@ -307,8 +309,8 @@ public class BeancpBeanRegisters {
 					methodVisitor.visitVarInsn(ALOAD, 1);
 					methodVisitor.visitVarInsn(ALOAD, 2);
 					methodVisitor.visitVarInsn(ALOAD, 0);
-					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "fromInfo", "Lorg/kepe/beancp/info/BeancpInfo;");
-					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, BeancpInfoASMTool.getClassName(BeancpConvertMapper.class), "newInstance", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;Lorg/kepe/beancp/info/BeancpInfo;)Ljava/lang/Object;", false);
+					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "fromInfo", desc(BeancpInfo.class));
+					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, BeancpInfoASMTool.getClassName(BeancpConvertMapper.class), "newInstance", "("+desc(BeancpContext.class)+"Ljava/lang/Object;"+desc(BeancpInfo.class)+")Ljava/lang/Object;", false);
 					methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()));
 				}
 				
@@ -388,13 +390,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label56);
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -402,13 +404,13 @@ public class BeancpBeanRegisters {
 					}else if((isSetValueWhenNull&&!isDirectTrans&&isGetPrim)||(!isSetValueWhenNull&&!isDirectTrans&&isGetPrim&&isSetPrim)) {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						//methodVisitor.visitInsn(POP);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -426,13 +428,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label80);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label80);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -450,12 +452,12 @@ public class BeancpBeanRegisters {
 						BeancpInfoASMTool.visitSetInfo(methodVisitor, setInfo);
 					}else if(!isSetValueWhenNull&&!isDirectTrans&&isGetPrim&&!isSetPrim) {
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -485,13 +487,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label86);
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -505,7 +507,7 @@ public class BeancpBeanRegisters {
 					if(i>0) {
 						methodVisitor.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
 					}else {
-						methodVisitor.visitFrame(Opcodes.F_FULL, 5, new Object[] {asmContext.getClassPath(), "org/kepe/beancp/config/BeancpContext", "java/lang/Object", BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass())}, 1, new Object[] {"java/lang/Exception"});
+						methodVisitor.visitFrame(Opcodes.F_FULL, 5, new Object[] {asmContext.getClassPath(), getClassName(BeancpContext.class), "java/lang/Object", BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass())}, 1, new Object[] {"java/lang/Exception"});
 					}
 					methodVisitor.visitVarInsn(ASTORE, varTemp1);
 					Label label88 = new Label();
@@ -513,12 +515,12 @@ public class BeancpBeanRegisters {
 					methodVisitor.visitLineNumber(asmContext.getNextLine(), label88);
 					methodVisitor.visitVarInsn(ALOAD, 0);
 					methodVisitor.visitVarInsn(ALOAD, 0);
-					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", "Lorg/kepe/beancp/config/BeancpFeature;");
+					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", desc(BeancpFeature.class));
 					methodVisitor.visitVarInsn(ALOAD, varContext);
 					methodVisitor.visitLdcInsn(setInfo.getName().name);
 					methodVisitor.visitInsn(ICONST_1);
 					methodVisitor.visitVarInsn(ALOAD, varTemp1);
-					methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "(Lorg/kepe/beancp/ct/BeancpConvertProvider;Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/String;ILjava/lang/Exception;)V", false);				
+					methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "("+desc(BeancpConvertProvider.class)+desc(BeancpFeature.class)+desc(BeancpContext.class)+"Ljava/lang/String;ILjava/lang/Exception;)V", false);				
 				}
 				
 				methodVisitor.visitLabel(returnLabel);
@@ -537,7 +539,7 @@ public class BeancpBeanRegisters {
 				}else {
 					methodVisitor.visitFrame(Opcodes.F_CHOP,2, null, 0, null);
 				}
-				//methodVisitor.visitFrame(Opcodes.F_FULL, 3, new Object[] {"org/kepe/beancp/ct/convert/BeancpConvertDemoProvider", "org/kepe/beancp/config/BeancpContext", "java/lang/Object"}, 0, new Object[] {});
+				//methodVisitor.visitFrame(Opcodes.F_FULL, 3, new Object[] {"org/kepe/beancp/ct/convert/BeancpConvertDemoProvider", getClassName(BeancpContext.class), "java/lang/Object"}, 0, new Object[] {});
 				methodVisitor.visitVarInsn(ALOAD, varOriFromObj);
 				methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()));
 				methodVisitor.visitVarInsn(ASTORE, varFromObj);
@@ -567,24 +569,24 @@ public class BeancpBeanRegisters {
 				};
 				Consumer<BeancpSetInfo> visitIsAllowSet=(sinfo)->{
 					if(sinfo.getPossNames().length==2) {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "isAllowSet", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)Z", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "isAllowSet", "("+desc(BeancpContext.class)+"Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)Z", false);
 					}else {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "isAllowSet", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;Ljava/lang/String;)Z", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "isAllowSet", "("+desc(BeancpContext.class)+"Ljava/lang/Object;Ljava/lang/String;)Z", false);
 					}
 				};
 				
 				Consumer<BeancpSetInfo> visitGetValueFilter=(sinfo)->{
 					if(sinfo.getPossNames().length==2) {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "getValueFilter", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)Lorg/kepe/beancp/config/BeancpValueFilter;", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "getValueFilter", "("+desc(BeancpContext.class)+"Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)"+desc(BeancpValueFilter.class), false);
 					}else {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "getValueFilter", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;Ljava/lang/String;)Lorg/kepe/beancp/config/BeancpValueFilter;", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "getValueFilter", "("+desc(BeancpContext.class)+"Ljava/lang/Object;Ljava/lang/String;)"+desc(BeancpValueFilter.class), false);
 					}
 				};
 				Consumer<BeancpSetInfo> visitFilterValue=(sinfo)->{
 					if(sinfo.getPossNames().length==2) {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "filterValue", "(Lorg/kepe/beancp/config/BeancpValueFilter;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "filterValue", "("+desc(BeancpValueFilter.class)+"Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;", false);
 					}else {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "filterValue", "(Lorg/kepe/beancp/config/BeancpValueFilter;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "filterValue", "("+desc(BeancpValueFilter.class)+"Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;", false);
 					}
 				};
 				for(int i=0;i<gsetList.size();i++){
@@ -653,9 +655,9 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label105);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label105);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 
 						}
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
@@ -714,9 +716,9 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label134);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label134);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 
 						}
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
@@ -770,13 +772,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(setInfo.getInfo().isPrimitive) {
 							BeancpInfoASMTool.visitPrimCastObj(methodVisitor, setInfo.getInfo());
 						}else {
@@ -792,18 +794,18 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label143);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label143);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 						}
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -836,12 +838,12 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(setInfo.getInfo().isPrimitive) {
 							//BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
 							BeancpInfoASMTool.visitPrimCastObj(methodVisitor, setInfo.getInfo());
@@ -858,18 +860,18 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label160);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label160);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 						}
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
 						}
@@ -906,13 +908,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo(),true,false);
 						visitFilterValue.accept(setInfo);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
@@ -935,9 +937,9 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label165);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label165);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 						}
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
@@ -951,13 +953,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label172);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label172);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
 						methodVisitor.visitVarInsn(ASTORE, varTemp3);
 						Label label173 = new Label();
@@ -997,12 +999,12 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo(),true,false);
 						visitFilterValue.accept(setInfo);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
@@ -1025,17 +1027,17 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label177);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label177);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 						}
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
 						methodVisitor.visitVarInsn(ASTORE, varTemp2);
 						Label label182 = new Label();
@@ -1081,13 +1083,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						BeancpInfoASMTool.visitPrimCastObj(methodVisitor, setInfo.getInfo());
 						visitFilterValue.accept(setInfo);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
@@ -1099,9 +1101,9 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label187);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label187);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 						}
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
@@ -1116,13 +1118,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label192);
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
 						}
@@ -1141,7 +1143,7 @@ public class BeancpBeanRegisters {
 					if(i<0) {
 						methodVisitor.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
 					}else {
-						methodVisitor.visitFrame(Opcodes.F_FULL, 5, new Object[] {asmContext.getClassPath(), "org/kepe/beancp/config/BeancpContext", "java/lang/Object", BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass())}, 1, new Object[] {"java/lang/Exception"});
+						methodVisitor.visitFrame(Opcodes.F_FULL, 5, new Object[] {asmContext.getClassPath(), getClassName(BeancpContext.class), "java/lang/Object", BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass())}, 1, new Object[] {"java/lang/Exception"});
 					}
 					methodVisitor.visitVarInsn(ASTORE, varTemp1);
 					Label label88 = new Label();
@@ -1149,12 +1151,12 @@ public class BeancpBeanRegisters {
 					methodVisitor.visitLineNumber(asmContext.getNextLine(), label88);
 					methodVisitor.visitVarInsn(ALOAD, 0);
 					methodVisitor.visitVarInsn(ALOAD, 0);
-					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", "Lorg/kepe/beancp/config/BeancpFeature;");
+					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", desc(BeancpFeature.class));
 					methodVisitor.visitVarInsn(ALOAD, varContext);
 					methodVisitor.visitLdcInsn(setInfo.getName().name);
 					methodVisitor.visitInsn(ICONST_1);
 					methodVisitor.visitVarInsn(ALOAD, varTemp1);
-					methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "(Lorg/kepe/beancp/ct/BeancpConvertProvider;Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/String;ILjava/lang/Exception;)V", false);
+					methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "("+desc(BeancpConvertProvider.class)+desc(BeancpFeature.class)+desc(BeancpContext.class)+"Ljava/lang/String;ILjava/lang/Exception;)V", false);
 				}
 				methodVisitor.visitLabel(returnLabel);
 				methodVisitor.visitLineNumber(asmContext.getNextLine(), returnLabel);
@@ -1171,7 +1173,7 @@ public class BeancpBeanRegisters {
 				if(gsetList.isEmpty()) {
 					methodVisitor.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
 				}else {
-					methodVisitor.visitFrame(Opcodes.F_FULL, 3, new Object[] {asmContext.getClassPath(), "org/kepe/beancp/config/BeancpContext", "java/lang/Object"}, 1, new Object[] {"java/lang/Exception"});
+					methodVisitor.visitFrame(Opcodes.F_FULL, 3, new Object[] {asmContext.getClassPath(), getClassName(BeancpContext.class), "java/lang/Object"}, 1, new Object[] {"java/lang/Exception"});
 				}
 				methodVisitor.visitVarInsn(ASTORE, 3);
 				Label label188 = new Label();
@@ -1179,18 +1181,18 @@ public class BeancpBeanRegisters {
 				methodVisitor.visitLineNumber(asmContext.getNextLine(), label188);
 				methodVisitor.visitVarInsn(ALOAD, 0);
 				methodVisitor.visitVarInsn(ALOAD, 0);
-				methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", "Lorg/kepe/beancp/config/BeancpFeature;");
+				methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", desc(BeancpFeature.class));
 				methodVisitor.visitVarInsn(ALOAD, 1);
 				methodVisitor.visitLdcInsn("");
 				methodVisitor.visitInsn(ICONST_0);
 				methodVisitor.visitVarInsn(ALOAD, 3);
-				methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "(Lorg/kepe/beancp/ct/BeancpConvertProvider;Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/String;ILjava/lang/Exception;)V", false);
+				methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "("+desc(BeancpConvertProvider.class)+desc(BeancpFeature.class)+desc(BeancpContext.class)+"Ljava/lang/String;ILjava/lang/Exception;)V", false);
 				Label label74 = new Label();
 				methodVisitor.visitLabel(label74);
 				methodVisitor.visitLineNumber(asmContext.getNextLine(), label74);
 				methodVisitor.visitVarInsn(ALOAD, 0);
-				methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "toInfo", "Lorg/kepe/beancp/info/BeancpInfo;");
-				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "defaultInstance", "()Ljava/lang/Object;", false);
+				methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "toInfo", desc(BeancpInfo.class));
+				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "defaultInstance", "()Ljava/lang/Object;", false);
 				methodVisitor.visitInsn(ARETURN);
 			}
 
@@ -1205,25 +1207,14 @@ public class BeancpBeanRegisters {
 				final int varOriToObj=3;
 				BeancpInfo fromInfo=BeancpInfo.of(fromType,fromClass);
 				BeancpInfo toInfo=BeancpInfo.of(toType,toClass); 
-				if(!flag.is(BeancpFeature.ALLWAYS_NEW)&&fromInfo.instanceOf(toInfo)) {
-					Label label40 = new Label();
-					methodVisitor.visitLabel(label40);
-					methodVisitor.visitLineNumber(asmContext.getNextLine(), label40);
-					methodVisitor.visitVarInsn(ALOAD, varOriFromObj);
-					methodVisitor.visitInsn(ARETURN);
-					return;
-//					methodVisitor.visitLabel(label69);
-//					methodVisitor.visitLineNumber(31, label69);
-//					methodVisitor.visitLdcInsn("\u738b\u8c6a");
-//					methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "log", "(Ljava/lang/String;)V", false);
-				}
+				
 				if(initInfo==null||initGetList==null) {
 					Label label40 = new Label();
 					methodVisitor.visitLabel(label40);
 					methodVisitor.visitLineNumber(asmContext.getNextLine(), label40);
 					methodVisitor.visitVarInsn(ALOAD, 0);
-					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "toInfo", "Lorg/kepe/beancp/info/BeancpInfo;");
-					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "defaultInstance", "()Ljava/lang/Object;", false);
+					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "toInfo", desc(BeancpInfo.class));
+					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "defaultInstance", "()Ljava/lang/Object;", false);
 					methodVisitor.visitInsn(ARETURN);
 					return;
 				}
@@ -1348,13 +1339,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label56);
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -1362,13 +1353,13 @@ public class BeancpBeanRegisters {
 					}else if((isSetValueWhenNull&&!isDirectTrans&&isGetPrim)||(!isSetValueWhenNull&&!isDirectTrans&&isGetPrim&&isSetPrim)) {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						//methodVisitor.visitInsn(POP);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -1386,13 +1377,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label80);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label80);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -1410,12 +1401,12 @@ public class BeancpBeanRegisters {
 						BeancpInfoASMTool.visitSetInfo(methodVisitor, setInfo);
 					}else if(!isSetValueWhenNull&&!isDirectTrans&&isGetPrim&&!isSetPrim) {
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -1445,13 +1436,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label86);
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp1);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -1465,7 +1456,7 @@ public class BeancpBeanRegisters {
 					if(i>0) {
 						methodVisitor.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
 					}else {
-						methodVisitor.visitFrame(Opcodes.F_FULL, 6, new Object[] {asmContext.getClassPath(), "org/kepe/beancp/config/BeancpContext", "java/lang/Object", "java/lang/Object", BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass())}, 1, new Object[] {"java/lang/Exception"});
+						methodVisitor.visitFrame(Opcodes.F_FULL, 6, new Object[] {asmContext.getClassPath(), getClassName(BeancpContext.class), "java/lang/Object", "java/lang/Object", BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass())}, 1, new Object[] {"java/lang/Exception"});
 					}
 					methodVisitor.visitVarInsn(ASTORE, varTemp1);
 					Label label88 = new Label();
@@ -1473,12 +1464,12 @@ public class BeancpBeanRegisters {
 					methodVisitor.visitLineNumber(asmContext.getNextLine(), label88);
 					methodVisitor.visitVarInsn(ALOAD, 0);
 					methodVisitor.visitVarInsn(ALOAD, 0);
-					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", "Lorg/kepe/beancp/config/BeancpFeature;");
+					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", desc(BeancpFeature.class));
 					methodVisitor.visitVarInsn(ALOAD, varContext);
 					methodVisitor.visitLdcInsn(setInfo.getName().name);
 					methodVisitor.visitInsn(ICONST_1);
 					methodVisitor.visitVarInsn(ALOAD, varTemp1);
-					methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "(Lorg/kepe/beancp/ct/BeancpConvertProvider;Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/String;ILjava/lang/Exception;)V", false);				
+					methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "("+desc(BeancpConvertProvider.class)+desc(BeancpFeature.class)+desc(BeancpContext.class)+"Ljava/lang/String;ILjava/lang/Exception;)V", false);				
 				}
 				
 				methodVisitor.visitLabel(returnLabel);
@@ -1497,7 +1488,7 @@ public class BeancpBeanRegisters {
 				}else {
 					methodVisitor.visitFrame(Opcodes.F_CHOP,2, null, 0, null);
 				}
-				//methodVisitor.visitFrame(Opcodes.F_FULL, 3, new Object[] {"org/kepe/beancp/ct/convert/BeancpConvertDemoProvider", "org/kepe/beancp/config/BeancpContext", "java/lang/Object"}, 0, new Object[] {});
+				//methodVisitor.visitFrame(Opcodes.F_FULL, 3, new Object[] {"org/kepe/beancp/ct/convert/BeancpConvertDemoProvider", getClassName(BeancpContext.class), "java/lang/Object"}, 0, new Object[] {});
 				methodVisitor.visitVarInsn(ALOAD, varOriFromObj);
 				methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()));
 				methodVisitor.visitVarInsn(ASTORE, varFromObj);
@@ -1527,23 +1518,23 @@ public class BeancpBeanRegisters {
 				};
 				Consumer<BeancpSetInfo> visitIsAllowSet=(sinfo)->{
 					if(sinfo.getPossNames().length==2) {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "isAllowSet", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)Z", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "isAllowSet", "("+desc(BeancpContext.class)+"Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)Z", false);
 					}else {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "isAllowSet", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;Ljava/lang/String;)Z", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "isAllowSet", "("+desc(BeancpContext.class)+"Ljava/lang/Object;Ljava/lang/String;)Z", false);
 					}
 				};
 				Consumer<BeancpSetInfo> visitGetValueFilter=(sinfo)->{
 					if(sinfo.getPossNames().length==2) {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "getValueFilter", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)Lorg/kepe/beancp/config/BeancpValueFilter;", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "getValueFilter", "("+desc(BeancpContext.class)+"Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)"+desc(BeancpValueFilter.class), false);
 					}else {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "getValueFilter", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;Ljava/lang/String;)Lorg/kepe/beancp/config/BeancpValueFilter;", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "getValueFilter", "("+desc(BeancpContext.class)+"Ljava/lang/Object;Ljava/lang/String;)"+desc(BeancpValueFilter.class), false);
 					}
 				};
 				Consumer<BeancpSetInfo> visitFilterValue=(sinfo)->{
 					if(sinfo.getPossNames().length==2) {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "filterValue", "(Lorg/kepe/beancp/config/BeancpValueFilter;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "filterValue", "("+desc(BeancpValueFilter.class)+"Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;", false);
 					}else {
-						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "filterValue", "(Lorg/kepe/beancp/config/BeancpValueFilter;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;", false);
+						methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "filterValue", "("+desc(BeancpValueFilter.class)+"Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;", false);
 					}
 				};
 				for(int i=0;i<gsetList.size();i++){
@@ -1612,9 +1603,9 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label105);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label105);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 
 						}
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
@@ -1673,9 +1664,9 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label134);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label134);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 
 						}
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
@@ -1729,13 +1720,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(setInfo.getInfo().isPrimitive) {
 							BeancpInfoASMTool.visitPrimCastObj(methodVisitor, setInfo.getInfo());
 						}else {
@@ -1751,18 +1742,18 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label143);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label143);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 						}
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -1795,12 +1786,12 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(setInfo.getInfo().isPrimitive) {
 							BeancpInfoASMTool.visitPrimCastObj(methodVisitor, setInfo.getInfo());
 						}else {
@@ -1816,18 +1807,18 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label160);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label160);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 						}
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
 						}
@@ -1864,13 +1855,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo(),true,false);
 						visitFilterValue.accept(setInfo);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
@@ -1893,9 +1884,9 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label165);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label165);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 						}
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
@@ -1909,13 +1900,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label172);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label172);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
 						methodVisitor.visitVarInsn(ASTORE, varTemp3);
 						Label label173 = new Label();
@@ -1955,12 +1946,12 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo(),true,false);
 						visitFilterValue.accept(setInfo);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
@@ -1983,17 +1974,17 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label177);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label177);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 						}
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
 						methodVisitor.visitVarInsn(ASTORE, varTemp2);
 						Label label182 = new Label();
@@ -2039,13 +2030,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						visitLdc.accept(setInfo);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						BeancpInfoASMTool.visitPrimCastObj(methodVisitor, setInfo.getInfo());
 						visitFilterValue.accept(setInfo);
 						BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
@@ -2057,9 +2048,9 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLabel(label187);
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label187);
 						if(i==0) {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), "org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,3, new Object[] {BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass()), getClassName(BeancpValueFilter.class)}, 0, null);
 						}else {
-							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {"org/kepe/beancp/config/BeancpValueFilter"}, 0, null);
+							methodVisitor.visitFrame(Opcodes.F_APPEND,1, new Object[] {getClassName(BeancpValueFilter.class)}, 0, null);
 						}
 						methodVisitor.visitVarInsn(ALOAD, varFromObj);
 						BeancpInfoASMTool.visitGetInfo(methodVisitor, getInfo);
@@ -2074,13 +2065,13 @@ public class BeancpBeanRegisters {
 						methodVisitor.visitLineNumber(asmContext.getNextLine(), label192);
 						methodVisitor.visitVarInsn(ALOAD, varToObj);
 						methodVisitor.visitVarInsn(ALOAD, 0);
-						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, "Lorg/kepe/beancp/ct/BeancpConvertProvider;");
+						methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "provider"+i, desc(BeancpConvertProvider.class));
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Ljava/lang/Object;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "of", "(Ljava/lang/Object;)"+desc(BeancpConvertProvider.class), false);
 						methodVisitor.visitVarInsn(ALOAD, varContext);
 						methodVisitor.visitVarInsn(ALOAD, varTemp2);
 						methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 						if(!isSetPrim) {
 							BeancpInfoASMTool.visitCast(methodVisitor, setInfo.getInfo());
 						}
@@ -2099,7 +2090,7 @@ public class BeancpBeanRegisters {
 					if(i<0) {
 						methodVisitor.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
 					}else {
-						methodVisitor.visitFrame(Opcodes.F_FULL, 6, new Object[] {asmContext.getClassPath(), "org/kepe/beancp/config/BeancpContext", "java/lang/Object", "java/lang/Object", BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass())}, 1, new Object[] {"java/lang/Exception"});
+						methodVisitor.visitFrame(Opcodes.F_FULL, 6, new Object[] {asmContext.getClassPath(), getClassName(BeancpContext.class), "java/lang/Object", "java/lang/Object", BeancpInfoASMTool.getClassName(fromInfo.getFinalPublicClass()), BeancpInfoASMTool.getClassName(toInfo.getFinalPublicClass())}, 1, new Object[] {"java/lang/Exception"});
 					}
 					methodVisitor.visitVarInsn(ASTORE, varTemp1);
 					Label label88 = new Label();
@@ -2107,12 +2098,12 @@ public class BeancpBeanRegisters {
 					methodVisitor.visitLineNumber(asmContext.getNextLine(), label88);
 					methodVisitor.visitVarInsn(ALOAD, 0);
 					methodVisitor.visitVarInsn(ALOAD, 0);
-					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", "Lorg/kepe/beancp/config/BeancpFeature;");
+					methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", desc(BeancpFeature.class));
 					methodVisitor.visitVarInsn(ALOAD, varContext);
 					methodVisitor.visitLdcInsn(setInfo.getName().name);
 					methodVisitor.visitInsn(ICONST_1);
 					methodVisitor.visitVarInsn(ALOAD, varTemp1);
-					methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "(Lorg/kepe/beancp/ct/BeancpConvertProvider;Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/String;ILjava/lang/Exception;)V", false);
+					methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "("+desc(BeancpConvertProvider.class)+desc(BeancpFeature.class)+desc(BeancpContext.class)+"Ljava/lang/String;ILjava/lang/Exception;)V", false);
 				}
 				methodVisitor.visitLabel(returnLabel);
 				methodVisitor.visitLineNumber(asmContext.getNextLine(), returnLabel);
@@ -2128,7 +2119,7 @@ public class BeancpBeanRegisters {
 				if(gsetList.isEmpty()) {
 					methodVisitor.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] {"java/lang/Exception"});
 				}else {
-					methodVisitor.visitFrame(Opcodes.F_FULL, 4, new Object[] {asmContext.getClassPath(), "org/kepe/beancp/config/BeancpContext", "java/lang/Object", "java/lang/Object"}, 1, new Object[] {"java/lang/Exception"});
+					methodVisitor.visitFrame(Opcodes.F_FULL, 4, new Object[] {asmContext.getClassPath(), getClassName(BeancpContext.class), "java/lang/Object", "java/lang/Object"}, 1, new Object[] {"java/lang/Exception"});
 				}
 				methodVisitor.visitVarInsn(ASTORE, varFromObj);
 				Label label188 = new Label();
@@ -2136,24 +2127,24 @@ public class BeancpBeanRegisters {
 				methodVisitor.visitLineNumber(asmContext.getNextLine(), label188);
 				methodVisitor.visitVarInsn(ALOAD, 0);
 				methodVisitor.visitVarInsn(ALOAD, 0);
-				methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", "Lorg/kepe/beancp/config/BeancpFeature;");
+				methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "flag", desc(BeancpFeature.class));
 				methodVisitor.visitVarInsn(ALOAD, 1);
 				methodVisitor.visitLdcInsn("");
 				methodVisitor.visitInsn(ICONST_0);
 				methodVisitor.visitVarInsn(ALOAD, 4);
-				methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "(Lorg/kepe/beancp/ct/BeancpConvertProvider;Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/String;ILjava/lang/Exception;)V", false);
+				methodVisitor.visitMethodInsn(INVOKESTATIC, BeancpInfoASMTool.getClassName(BeancpConvertProviderTool.class), "handleException", "("+desc(BeancpConvertProvider.class)+desc(BeancpFeature.class)+desc(BeancpContext.class)+"Ljava/lang/String;ILjava/lang/Exception;)V", false);
 				Label label74 = new Label();
 				methodVisitor.visitLabel(label74);
 				methodVisitor.visitLineNumber(asmContext.getNextLine(), label74);
 				methodVisitor.visitVarInsn(ALOAD, 0);
-				methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "toInfo", "Lorg/kepe/beancp/info/BeancpInfo;");
-				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "defaultInstance", "()Ljava/lang/Object;", false);
+				methodVisitor.visitFieldInsn(GETFIELD, asmContext.getClassPath(), "toInfo", desc(BeancpInfo.class));
+				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "defaultInstance", "()Ljava/lang/Object;", false);
 				methodVisitor.visitInsn(ARETURN);
 				
 			}
 
 			
-        },0);
+        },PRIORITY7);
 		registerMap2Bean(new BeancpCustomConverter() {
 
 			@Override
@@ -2161,7 +2152,7 @@ public class BeancpBeanRegisters {
 				return BeancpConvertMapper.of( ((BeancpInvocationImp)invocation).getToInfo(), invocation.getFeature()).putAll(toObj, (Map)fromObj, ((BeancpInvocationImp)invocation).getFromInfo(), context);
 			}
 			
-		},1);
+		},PRIORITY8);
 		registerBean2Map(new BeancpCustomConverter() {
 
 			@Override
@@ -2169,7 +2160,7 @@ public class BeancpBeanRegisters {
 				return BeancpConvertMapper.of(((BeancpInvocationImp)invocation).getFromInfo(), invocation.getFeature()).toMap(fromObj, (Map)toObj, ((BeancpInvocationImp)invocation).getToInfo(), context);
 			}
 			
-		},1);
+		},PRIORITY8);
 	}
 	
 	private static void registerBean2Bean(BeancpConverter converter,int priority) {

@@ -23,6 +23,7 @@ import org.kepe.beancp.config.BeancpTypeMatcher;
 import org.kepe.beancp.config.BeancpTypeRelMatcher;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.asm.MethodASMContext;
+import org.kepe.beancp.ct.convert.BeancpConvertMapper;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
 import org.kepe.beancp.ct.itf.BeancpASMConverter;
@@ -191,19 +192,40 @@ public class BeancpTool {
 		return false;
 	}
 	
-	public static  <T> T clone(T obj,Type type) {
+	@SuppressWarnings("unchecked")
+	public static  <T> T clone(T obj,Type type,BeancpFeature feature,BeancpContext context) {
 		if(obj==null) {
 			return null;
 		}
-		return (T) BeancpInfo.of(type, null, obj).getDefaultMapper().clone(null, obj);
+		if(feature==null) {
+			feature=BeancpTool.DEFAULT_FEATURE;
+		}
+		if(BeancpFeature.DEFAULT_FEATURE.equals(feature)) {
+			return (T) BeancpInfo.of(type, null, obj).getDefaultMapper().clone(context, obj); 
+		}
+		return (T)BeancpConvertMapper.of(BeancpInfo.of(type, null, obj), feature).clone(context, obj);
 	}
 	
-	public static void setProperty(Type type,Object obj,String key,Object value) {
-		BeancpInfo.of(type, null, obj).getDefaultMapper().put(obj, key, value, null, null);
+	public static void setProperty(Type type,Object obj,String key,Object value,BeancpFeature feature,BeancpContext context) {
+		if(feature==null) {
+			feature=BeancpTool.DEFAULT_FEATURE;
+		}
+		if(BeancpFeature.DEFAULT_FEATURE.equals(feature)) {
+			BeancpInfo.of(type, null, obj).getDefaultMapper().put(obj, key, value, null, context);
+		}else {
+			BeancpConvertMapper.of(BeancpInfo.of(type, null, obj), feature).put(obj, key, value, null, context);
+		}
 	}
-	public static Object getProperty(Type type,Object obj,String key,Type valueType) {
+	public static Object getProperty(Type type,Object obj,String key,Type valueType,BeancpFeature feature,BeancpContext context) {
+		if(feature==null) {
+			feature=BeancpTool.DEFAULT_FEATURE;
+		}
 		try {
-			return BeancpInfo.of(type, null, obj).getDefaultMapper().get(obj, key, null, BeancpInfo.of(valueType),null );
+			if(BeancpFeature.DEFAULT_FEATURE.equals(feature)) {
+				return BeancpInfo.of(type, null, obj).getDefaultMapper().get(obj, key, null, BeancpInfo.of(valueType), context);
+			}else {
+				return BeancpConvertMapper.of(BeancpInfo.of(type, null, obj), feature).get(obj, key, null, BeancpInfo.of(valueType), context);
+			}
 		} catch (BeancpException e) {
 			throw e;
 		} catch (Exception e) {

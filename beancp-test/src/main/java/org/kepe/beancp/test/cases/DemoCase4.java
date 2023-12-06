@@ -22,6 +22,7 @@ public class DemoCase4 {
 		
 		Assert.assertEquals(user.getId(), user2.getId());
 		Assert.assertTrue(user2.isLive());
+		Assert.assertFalse(user==user2);
 	}
 	@Test
 	public void test2() {

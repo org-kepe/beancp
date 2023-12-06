@@ -87,7 +87,8 @@ DemoConsumer consumer = BeancpUtil.copy(user, DemoConsumer.class,BeancpUtil.newC
 | @BeancpProperty  | It can be placed on the parameters of methods, fields, and constructors, and set one or more other names. It can also be placed on a non get set method, and the beancp framework will automatically parse it as a get set method |
 ### clone
 ~~~Java
-//clone object
+//clone object 
+//If the object is cloneable, the clone method will be called, and if not, it will be copied by property.
 DemoUser user = ...
 DemoUser user2 = BeancpUtil.clone(user);
 ~~~

@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.ct.convert.BeancpConvertASMProvider;
 import org.kepe.beancp.ct.convert.BeancpConvertMapper;
@@ -118,7 +119,7 @@ public class BeancpInfoASMTool implements Opcodes
 			asmContext.getNextLine();
 		}
 		{
-			methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "(Lorg/kepe/beancp/ct/BeancpConvertProvider;Lorg/kepe/beancp/config/BeancpFeature;"+BeancpInfoASMTool.desc(BeancpConverterInfo.class)+"Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)V", null, null);
+			methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "("+desc(BeancpConvertProvider.class)+desc(BeancpFeature.class)+desc(BeancpConverterInfo.class)+desc(BeancpInfo.class)+desc(BeancpInfo.class)+")V", null, null);
 			methodVisitor.visitParameter("parent", 0);
 			methodVisitor.visitParameter("feature", 0);
 			methodVisitor.visitParameter("info", 0);
@@ -134,7 +135,7 @@ public class BeancpInfoASMTool implements Opcodes
 			methodVisitor.visitVarInsn(ALOAD, 3);
 			methodVisitor.visitVarInsn(ALOAD, 4);
 			methodVisitor.visitVarInsn(ALOAD, 5);
-			methodVisitor.visitMethodInsn(INVOKESPECIAL, BeancpInfoASMTool.getClassName(BeancpConvertASMProvider.class), "<init>", "(Lorg/kepe/beancp/ct/BeancpConvertProvider;Lorg/kepe/beancp/config/BeancpFeature;"+BeancpInfoASMTool.desc(BeancpConverterInfo.class)+"Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)V", false);
+			methodVisitor.visitMethodInsn(INVOKESPECIAL, BeancpInfoASMTool.getClassName(BeancpConvertASMProvider.class), "<init>", "("+desc(BeancpConvertProvider.class)+desc(BeancpFeature.class)+desc(BeancpConverterInfo.class)+desc(BeancpInfo.class)+desc(BeancpInfo.class)+")V", false);
 			asmContext.setMethodVisitor(methodVisitor);
 			asmConverter.init(asmContext, flag, fromInfo.getBType(),fromInfo.getBClass(),toInfo.getBType(),toInfo.getBClass());
 			
@@ -155,7 +156,7 @@ public class BeancpInfoASMTool implements Opcodes
 		}
 		
 		{
-			methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "convert0", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;)Ljava/lang/Object;", "<T:Ljava/lang/Object;R:Ljava/lang/Object;>(Lorg/kepe/beancp/config/BeancpContext;TT;)TR;", null);
+			methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "convert0", "("+desc(BeancpContext.class)+"Ljava/lang/Object;)Ljava/lang/Object;", "<T:Ljava/lang/Object;R:Ljava/lang/Object;>("+desc(BeancpContext.class)+"TT;)TR;", null);
 			methodVisitor.visitParameter("context", 0);
 			methodVisitor.visitParameter("fromObj", 0);
 			methodVisitor.visitCode();
@@ -169,7 +170,7 @@ public class BeancpInfoASMTool implements Opcodes
 			asmContext.getNextLine();
 		}
 		{
-			methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "convert0", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", "<T:Ljava/lang/Object;R:Ljava/lang/Object;>(Lorg/kepe/beancp/config/BeancpContext;TT;TR;)TR;", null);
+			methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "convert0", "("+desc(BeancpContext.class)+"Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", "<T:Ljava/lang/Object;R:Ljava/lang/Object;>("+desc(BeancpContext.class)+"TT;TR;)TR;", null);
 			methodVisitor.visitParameter("context", 0);
 			methodVisitor.visitParameter("fromObj", 0);
 			methodVisitor.visitParameter("toObj", 0);
@@ -357,9 +358,9 @@ public class BeancpInfoASMTool implements Opcodes
 				methodVisitor.visitLabel(label0);
 				methodVisitor.visitLineNumber(asmContext.getNextLine(), label0);
 				visitInt(methodVisitor,info.getId());
-				methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
+				methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpInfo.class), "getInfoById", "(I)"+desc(BeancpInfo.class), false);
 				visitInt(methodVisitor, info.inits.indexOf(initInfo));
-				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "getInitMethod", "(I)Ljava/lang/reflect/Constructor;", false);
+				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "getInitMethod", "(I)Ljava/lang/reflect/Constructor;", false);
 				methodVisitor.visitFieldInsn(PUTSTATIC, classpath, "constructorInit"+i, "Ljava/lang/reflect/Constructor;");
 			}
 			for(int i=0;i<proxyOpList2.size();i++){
@@ -369,20 +370,20 @@ public class BeancpInfoASMTool implements Opcodes
 					methodVisitor.visitLabel(label2);
 					methodVisitor.visitLineNumber(asmContext.getNextLine(), label2);
 					visitInt(methodVisitor, info.getId());
-					methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
+					methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpInfo.class), "getInfoById", "(I)"+desc(BeancpInfo.class), false);
 					methodVisitor.visitLdcInsn(getInfo.getName().name);
 					visitInt(methodVisitor, info.fields.get(getInfo.getName().name).getGetterList().indexOf(getInfo),true);
-					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "getGetMethod", "(Ljava/lang/String;I)Ljava/lang/reflect/Method;", false);
+					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "getGetMethod", "(Ljava/lang/String;I)Ljava/lang/reflect/Method;", false);
 					methodVisitor.visitFieldInsn(PUTSTATIC, classpath, "methodGet"+i, "Ljava/lang/reflect/Method;");
 				}else {
 					Label label3 = new Label();
 					methodVisitor.visitLabel(label3);
 					methodVisitor.visitLineNumber(asmContext.getNextLine(), label3);
 					visitInt(methodVisitor, info.getId());
-					methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
+					methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpInfo.class), "getInfoById", "(I)"+desc(BeancpInfo.class), false);
 					methodVisitor.visitLdcInsn(getInfo.getName().name);
 					visitInt(methodVisitor, info.fields.get(getInfo.getName().name).getGetterList().indexOf(getInfo),true);
-					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "getGetField", "(Ljava/lang/String;I)Ljava/lang/reflect/Field;", false);
+					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "getGetField", "(Ljava/lang/String;I)Ljava/lang/reflect/Field;", false);
 					methodVisitor.visitFieldInsn(PUTSTATIC, classpath, "fieldGet"+i, "Ljava/lang/reflect/Field;");
 				}
 			}
@@ -393,20 +394,20 @@ public class BeancpInfoASMTool implements Opcodes
 					methodVisitor.visitLabel(label4);
 					methodVisitor.visitLineNumber(asmContext.getNextLine(), label4);
 					visitInt(methodVisitor, info.getId());
-					methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
+					methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpInfo.class), "getInfoById", "(I)"+desc(BeancpInfo.class), false);
 					methodVisitor.visitLdcInsn(setInfo.getName().name);
 					visitInt(methodVisitor, info.fields.get(setInfo.getName().name).getSetterList().indexOf(setInfo),true);
-					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "getSetMethod", "(Ljava/lang/String;I)Ljava/lang/reflect/Method;", false);
+					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "getSetMethod", "(Ljava/lang/String;I)Ljava/lang/reflect/Method;", false);
 					methodVisitor.visitFieldInsn(PUTSTATIC, classpath, "methodSet"+i, "Ljava/lang/reflect/Method;");
 				}else {
 					Label label5 = new Label();
 					methodVisitor.visitLabel(label5);
 					methodVisitor.visitLineNumber(asmContext.getNextLine(), label5);
 					visitInt(methodVisitor, info.getId());
-					methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
+					methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpInfo.class), "getInfoById", "(I)"+desc(BeancpInfo.class), false);
 					methodVisitor.visitLdcInsn(setInfo.getName().name);
 					visitInt(methodVisitor, info.fields.get(setInfo.getName().name).getSetterList().indexOf(setInfo),true);
-					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "getSetField", "(Ljava/lang/String;I)Ljava/lang/reflect/Field;", false);
+					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "getSetField", "(Ljava/lang/String;I)Ljava/lang/reflect/Field;", false);
 					methodVisitor.visitFieldInsn(PUTSTATIC, classpath, "fieldSet"+i, "Ljava/lang/reflect/Field;");
 				}
 			}
@@ -415,9 +416,9 @@ public class BeancpInfoASMTool implements Opcodes
 				methodVisitor.visitLabel(label2);
 				methodVisitor.visitLineNumber(asmContext.getNextLine(), label2);
 				visitInt(methodVisitor, info.getId());
-				methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
-				methodVisitor.visitFieldInsn(GETFIELD, "org/kepe/beancp/info/BeancpInfo", "cloneInfo", "Lorg/kepe/beancp/info/BeancpCloneInfo;");
-				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpCloneInfo", "getMethod", "()Ljava/lang/reflect/Method;", false);
+				methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpInfo.class), "getInfoById", "(I)"+desc(BeancpInfo.class), false);
+				methodVisitor.visitFieldInsn(GETFIELD, getClassName(BeancpInfo.class), "cloneInfo", desc(BeancpCloneInfo.class));
+				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpCloneInfo.class), "getMethod", "()Ljava/lang/reflect/Method;", false);
 				methodVisitor.visitFieldInsn(PUTSTATIC, classpath, "methodClone", "Ljava/lang/reflect/Method;");
 			}
 			methodVisitor.visitInsn(RETURN);
@@ -434,9 +435,6 @@ public class BeancpInfoASMTool implements Opcodes
 			methodVisitor.visitVarInsn(ALOAD, 0);
 			methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
 			methodVisitor.visitInsn(RETURN);
-			//Label label1 = new Label();
-			//methodVisitor.visitLabel(label1);
-			//methodVisitor.visitLocalVariable("this", "Lorg/kepe/test/BeancpProxy1;", null, label0, label1, 0);
 			methodVisitor.visitMaxs(1, 1);
 			methodVisitor.visitEnd();
 		}
@@ -825,7 +823,7 @@ public class BeancpInfoASMTool implements Opcodes
 		MethodASMContext asmContext=new MethodASMContext(classpath,classWriter, null, 1);
 		asmContext.getNextLine(20);
     	{
-    		methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "(Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/config/BeancpFeature;Ljava/util/Set;Ljava/util/Set;Ljava/util/Map;Ljava/util/List;Ljava/util/List;)V", "(Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/config/BeancpFeature;Ljava/util/Set<Ljava/lang/String;>;Ljava/util/Set<Ljava/lang/String;>;Ljava/util/Map<Ljava/lang/String;Lorg/kepe/beancp/tool/vo/Tuple2<Lorg/kepe/beancp/info/BeancpFieldInfo;Ljava/lang/Integer;>;>;Ljava/util/List<Ljava/lang/String;>;Ljava/util/List<Lorg/kepe/beancp/info/BeancpInitInfo;>;)V", null);
+    		methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "("+desc(BeancpInfo.class)+desc(BeancpFeature.class)+"Ljava/util/Set;Ljava/util/Set;Ljava/util/Map;Ljava/util/List;Ljava/util/List;)V", "("+desc(BeancpInfo.class)+desc(BeancpFeature.class)+"Ljava/util/Set<Ljava/lang/String;>;Ljava/util/Set<Ljava/lang/String;>;Ljava/util/Map<Ljava/lang/String;L"+getClassName(Tuple2.class)+"<"+desc(BeancpFieldInfo.class)+"Ljava/lang/Integer;>;>;Ljava/util/List<Ljava/lang/String;>;Ljava/util/List<"+desc(BeancpInitInfo.class)+">;)V", null);
     		methodVisitor.visitParameter("info", 0);
     		methodVisitor.visitParameter("feature", 0);
     		methodVisitor.visitParameter("getKeys", 0);
@@ -845,7 +843,7 @@ public class BeancpInfoASMTool implements Opcodes
     		methodVisitor.visitVarInsn(ALOAD, 5);
     		methodVisitor.visitVarInsn(ALOAD, 6);
     		methodVisitor.visitVarInsn(ALOAD, 7);
-    		methodVisitor.visitMethodInsn(INVOKESPECIAL, BeancpInfoASMTool.getClassName(BeancpConvertMapper.class), "<init>", "(Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/config/BeancpFeature;Ljava/util/Set;Ljava/util/Set;Ljava/util/Map;Ljava/util/List;Ljava/util/List;)V", false);
+    		methodVisitor.visitMethodInsn(INVOKESPECIAL, BeancpInfoASMTool.getClassName(BeancpConvertMapper.class), "<init>", "("+desc(BeancpInfo.class)+desc(BeancpFeature.class)+"Ljava/util/Set;Ljava/util/Set;Ljava/util/Map;Ljava/util/List;Ljava/util/List;)V", false);
     		Label label1 = new Label();
     		methodVisitor.visitLabel(label1);
     		methodVisitor.visitLineNumber(26, label1);
@@ -863,7 +861,7 @@ public class BeancpInfoASMTool implements Opcodes
     		}
     		boolean isGetPrim=clazz.isPrimitive();
     		BeancpInfo clazzInfo=BeancpInfo.of(clazz);
-    		methodVisitor = classWriter.visitMethod(ACC_PROTECTED, "put", "(Ljava/lang/Object;II"+desc(clazz)+"[Ljava/lang/String;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/config/BeancpContext;)V", null, new String[] { "java/lang/Exception" });
+    		methodVisitor = classWriter.visitMethod(ACC_PROTECTED, "put", "(Ljava/lang/Object;II"+desc(clazz)+"[Ljava/lang/String;"+desc(BeancpInfo.class)+desc(BeancpInfo.class)+desc(BeancpContext.class)+")V", null, new String[] { "java/lang/Exception" });
     		methodVisitor.visitParameter("obj", 0);
     		methodVisitor.visitParameter("idx", 0);
     		methodVisitor.visitParameter("setIdx", 0);
@@ -923,7 +921,7 @@ public class BeancpInfoASMTool implements Opcodes
             			methodVisitor.visitVarInsn(ALOAD, 5+py);
             			visitLoad(methodVisitor, clazzInfo, 4);
             			methodVisitor.visitVarInsn(ALOAD, 8+py);
-            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+"Lorg/kepe/beancp/config/BeancpContext;)"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+desc(BeancpContext.class)+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
             			if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -933,17 +931,17 @@ public class BeancpInfoASMTool implements Opcodes
             			methodVisitor.visitVarInsn(ALOAD, 1);
             			methodVisitor.visitVarInsn(ALOAD, 5+py);
             			methodVisitor.visitVarInsn(ALOAD, 0);
-            			methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", "Lorg/kepe/beancp/config/BeancpFeature;");
+            			methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", desc(BeancpFeature.class));
             			methodVisitor.visitVarInsn(ALOAD, 6+py);
             			methodVisitor.visitVarInsn(ALOAD, 7+py);
-            			methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+            			methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpConvertProvider.class), "of", "("+desc(BeancpFeature.class)+desc(BeancpInfo.class)+desc(BeancpInfo.class)+")"+desc(BeancpConvertProvider.class), false);
             			methodVisitor.visitVarInsn(ALOAD, 8+py);
             			visitLoad(methodVisitor, clazzInfo, 4);
             			methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
 
             			methodVisitor.visitVarInsn(ALOAD, 8+py);
-            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+"Lorg/kepe/beancp/config/BeancpContext;)"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+desc(BeancpContext.class)+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
             			methodVisitor.visitVarInsn(ASTORE, 9+py);
             			Label label8 = new Label();
             			methodVisitor.visitLabel(label8);
@@ -967,16 +965,16 @@ public class BeancpInfoASMTool implements Opcodes
             			methodVisitor.visitVarInsn(ALOAD, 1);
             			methodVisitor.visitVarInsn(ALOAD, 5+py);
             			methodVisitor.visitVarInsn(ALOAD, 0);
-            			methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", "Lorg/kepe/beancp/config/BeancpFeature;");
+            			methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", desc(BeancpFeature.class));
             			methodVisitor.visitVarInsn(ALOAD, 6+py);
             			methodVisitor.visitVarInsn(ALOAD, 7+py);
-            			methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+            			methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpConvertProvider.class), "of", "("+desc(BeancpFeature.class)+desc(BeancpInfo.class)+desc(BeancpInfo.class)+")"+desc(BeancpConvertProvider.class), false);
             			methodVisitor.visitVarInsn(ALOAD, 8+py);
             			visitLoad(methodVisitor, clazzInfo, 4);
             			methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
             			methodVisitor.visitVarInsn(ALOAD, 8+py);
-            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+"Lorg/kepe/beancp/config/BeancpContext;)"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+desc(BeancpContext.class)+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
             			if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -984,7 +982,7 @@ public class BeancpInfoASMTool implements Opcodes
             		}else if(!isSetValueWhenNull&&!isAllwaysNew&&!isGetPrim&&!isSetPrim) {
             			methodVisitor.visitVarInsn(ALOAD, 6+py);
             			methodVisitor.visitVarInsn(ALOAD, 7+py);
-            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "instanceOf", "(Lorg/kepe/beancp/info/BeancpInfo;)Z", false);
+            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "instanceOf", "("+desc(BeancpInfo.class)+")Z", false);
             			Label label14 = new Label();
             			methodVisitor.visitJumpInsn(IFEQ, label14);
             			Label label15 = new Label();
@@ -995,7 +993,7 @@ public class BeancpInfoASMTool implements Opcodes
             			methodVisitor.visitVarInsn(ALOAD, 5+py);
             			visitLoad(methodVisitor, clazzInfo, 4);
             			methodVisitor.visitVarInsn(ALOAD, 8+py);
-            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+"Lorg/kepe/beancp/config/BeancpContext;)"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+desc(BeancpContext.class)+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
             			methodVisitor.visitVarInsn(ASTORE, 9+py);
             			Label label16 = new Label();
             			methodVisitor.visitLabel(label16);
@@ -1023,16 +1021,16 @@ public class BeancpInfoASMTool implements Opcodes
             			methodVisitor.visitVarInsn(ALOAD, 1);
             			methodVisitor.visitVarInsn(ALOAD, 5+py);
             			methodVisitor.visitVarInsn(ALOAD, 0);
-            			methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", "Lorg/kepe/beancp/config/BeancpFeature;");
+            			methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", desc(BeancpFeature.class));
             			methodVisitor.visitVarInsn(ALOAD, 6+py);
             			methodVisitor.visitVarInsn(ALOAD, 7+py);
-            			methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+            			methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpConvertProvider.class), "of", "("+desc(BeancpFeature.class)+desc(BeancpInfo.class)+desc(BeancpInfo.class)+")"+desc(BeancpConvertProvider.class), false);
             			methodVisitor.visitVarInsn(ALOAD, 8+py);
             			visitLoad(methodVisitor, clazzInfo, 4);
             			methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
             			methodVisitor.visitVarInsn(ALOAD, 8+py);
-            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+"Lorg/kepe/beancp/config/BeancpContext;)"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+desc(BeancpContext.class)+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
             			methodVisitor.visitVarInsn(ASTORE, 9+py);
             			Label label19 = new Label();
             			methodVisitor.visitLabel(label19);
@@ -1052,7 +1050,7 @@ public class BeancpInfoASMTool implements Opcodes
             		}else if((isSetValueWhenNull&&!isAllwaysNew&&!isGetPrim&&!isSetPrim)) {
             			methodVisitor.visitVarInsn(ALOAD, 6+py);
             			methodVisitor.visitVarInsn(ALOAD, 7+py);
-            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "instanceOf", "(Lorg/kepe/beancp/info/BeancpInfo;)Z", false);
+            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "instanceOf", "("+desc(BeancpInfo.class)+")Z", false);
             			Label label22 = new Label();
             			methodVisitor.visitJumpInsn(IFEQ, label22);
             			Label label23 = new Label();
@@ -1065,7 +1063,7 @@ public class BeancpInfoASMTool implements Opcodes
             			methodVisitor.visitVarInsn(ALOAD, 5+py);
             			visitLoad(methodVisitor, clazzInfo, 4);
             			methodVisitor.visitVarInsn(ALOAD, 8+py);
-            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+"Lorg/kepe/beancp/config/BeancpContext;)"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+desc(BeancpContext.class)+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
             			if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -1083,16 +1081,16 @@ public class BeancpInfoASMTool implements Opcodes
             			methodVisitor.visitVarInsn(ALOAD, 1);
             			methodVisitor.visitVarInsn(ALOAD, 5+py);
             			methodVisitor.visitVarInsn(ALOAD, 0);
-            			methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", "Lorg/kepe/beancp/config/BeancpFeature;");
+            			methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", desc(BeancpFeature.class));
             			methodVisitor.visitVarInsn(ALOAD, 6+py);
             			methodVisitor.visitVarInsn(ALOAD, 7+py);
-            			methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+            			methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpConvertProvider.class), "of", "("+desc(BeancpFeature.class)+desc(BeancpInfo.class)+desc(BeancpInfo.class)+")"+desc(BeancpConvertProvider.class), false);
             			methodVisitor.visitVarInsn(ALOAD, 8+py);
             			visitLoad(methodVisitor, clazzInfo, 4);
             			methodVisitor.visitInsn(BeancpInfoASMTool.getCONST(setInfo.getInfo()));
-						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+						methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
             			methodVisitor.visitVarInsn(ALOAD, 8+py);
-            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+"Lorg/kepe/beancp/config/BeancpContext;)"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
+            			methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/Object;[Ljava/lang/String;"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;")+desc(BeancpContext.class)+")"+(isSetPrim?BeancpInfoASMTool.desc(setInfo.getInfo().getBClass()):"Ljava/lang/Object;"), false);
             			if(!isSetPrim) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(setInfo.getInfo().getBClass()));
 						}
@@ -1128,7 +1126,7 @@ public class BeancpInfoASMTool implements Opcodes
     			py=1;
     		}
     		BeancpInfo clazzInfo=BeancpInfo.of(clazz);
-    		methodVisitor = classWriter.visitMethod(ACC_PROTECTED, "get", "(Ljava/lang/Object;II"+desc(clazz)+"Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/config/BeancpContext;)"+desc(clazz), null, new String[] { "java/lang/Exception" });
+    		methodVisitor = classWriter.visitMethod(ACC_PROTECTED, "get", "(Ljava/lang/Object;II"+desc(clazz)+desc(BeancpInfo.class)+desc(BeancpInfo.class)+desc(BeancpContext.class)+")"+desc(clazz), null, new String[] { "java/lang/Exception" });
     		methodVisitor.visitParameter("obj", 0);
     		methodVisitor.visitParameter("idx", 0);
     		methodVisitor.visitParameter("getIdx", 0);
@@ -1181,7 +1179,7 @@ public class BeancpInfoASMTool implements Opcodes
             		if((!isGetPrim&&!isSetPrim)) {//||(isGetPrim&&isSetPrim&&getInfo.getInfo().getBClass()!=clazz)
             			methodVisitor.visitVarInsn(ALOAD, 6+py);
                 		methodVisitor.visitVarInsn(ALOAD, 5+py);
-                		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/info/BeancpInfo", "instanceOf", "(Lorg/kepe/beancp/info/BeancpInfo;)Z", false);
+                		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpInfo.class), "instanceOf", "("+desc(BeancpInfo.class)+")Z", false);
                 		Label label7 = new Label();
                 		methodVisitor.visitJumpInsn(IFEQ, label7);
                 		Label label8 = new Label();
@@ -1200,16 +1198,16 @@ public class BeancpInfoASMTool implements Opcodes
                 		methodVisitor.visitLineNumber(asmContext.getNextLine(), label7);
                 		methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
                 		methodVisitor.visitVarInsn(ALOAD, 0);
-                		methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", "Lorg/kepe/beancp/config/BeancpFeature;");
+                		methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", desc(BeancpFeature.class));
                 		methodVisitor.visitVarInsn(ALOAD, 6+py);
                 		methodVisitor.visitVarInsn(ALOAD, 5+py);
-                		methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+                		methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpConvertProvider.class), "of", "("+desc(BeancpFeature.class)+desc(BeancpInfo.class)+desc(BeancpInfo.class)+")"+desc(BeancpConvertProvider.class), false);
                 		methodVisitor.visitVarInsn(ALOAD, 7+py);
                 		methodVisitor.visitVarInsn(ALOAD, 1);
                 		methodVisitor.visitTypeInsn(CHECKCAST, getClassName(info.getFinalPublicClass()));
                 		visitGetInfo(methodVisitor, getInfo);
             			visitLoad(methodVisitor, clazzInfo, 4);
-    					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;"), false);
+    					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;"), false);
     					visitReturn(methodVisitor, clazz);
             		}else if(isGetPrim&&isSetPrim&&getInfo.getInfo().getBClass()==clazz) {
             			methodVisitor.visitVarInsn(ALOAD, 1);
@@ -1218,16 +1216,16 @@ public class BeancpInfoASMTool implements Opcodes
     					visitReturn(methodVisitor, clazz);
             		}else{
             			methodVisitor.visitVarInsn(ALOAD, 0);
-            			methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", "Lorg/kepe/beancp/config/BeancpFeature;");
+            			methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", desc(BeancpFeature.class));
             			methodVisitor.visitVarInsn(ALOAD, 6+py);
             			methodVisitor.visitVarInsn(ALOAD, 5+py);
-            			methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+            			methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpConvertProvider.class), "of", "("+desc(BeancpFeature.class)+desc(BeancpInfo.class)+desc(BeancpInfo.class)+")"+desc(BeancpConvertProvider.class), false);
             			methodVisitor.visitVarInsn(ALOAD, 7+py);
             			methodVisitor.visitVarInsn(ALOAD, 1);
                 		methodVisitor.visitTypeInsn(CHECKCAST, getClassName(info.getFinalPublicClass()));
                 		visitGetInfo(methodVisitor, getInfo);
             			visitLoad(methodVisitor, clazzInfo, 4);
-    					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;"+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;"), false);
+    					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+(isGetPrim?BeancpInfoASMTool.desc(getInfo.getInfo().getBClass()):"Ljava/lang/Object;")+(isSetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;")+")"+(isSetPrim?BeancpInfoASMTool.desc(clazz):"Ljava/lang/Object;"), false);
     					visitReturn(methodVisitor, clazz);
             		}
             		
@@ -1251,7 +1249,7 @@ public class BeancpInfoASMTool implements Opcodes
     		methodVisitor.visitEnd();
     	}
     	{
-    		methodVisitor = classWriter.visitMethod(ACC_PROTECTED, "newInstance", "(I[Ljava/lang/Object;[Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/config/BeancpContext;)Ljava/lang/Object;", null, new String[] { "java/lang/Exception" });
+    		methodVisitor = classWriter.visitMethod(ACC_PROTECTED, "newInstance", "(I[Ljava/lang/Object;["+desc(BeancpInfo.class)+desc(BeancpContext.class)+")Ljava/lang/Object;", null, new String[] { "java/lang/Exception" });
     		methodVisitor.visitParameter("idx", 0);
     		methodVisitor.visitParameter("args", 0);
     		methodVisitor.visitParameter("argInfos", 0);
@@ -1290,23 +1288,23 @@ public class BeancpInfoASMTool implements Opcodes
     					methodVisitor.visitVarInsn(ALOAD, 0);
         				methodVisitor.visitLdcInsn(paramName);
         				methodVisitor.visitVarInsn(ALOAD, 0);
-        				methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", "Lorg/kepe/beancp/config/BeancpFeature;");
+        				methodVisitor.visitFieldInsn(GETFIELD, classpath, "feature", desc(BeancpFeature.class));
         				methodVisitor.visitVarInsn(ALOAD, 3);
         				visitInt(methodVisitor, pi);
         				//methodVisitor.visitInsn(ICONST_0);
         				methodVisitor.visitInsn(AALOAD);
         				//methodVisitor.visitIntInsn(BIPUSH, 123);
         				visitInt(methodVisitor, paramInfo.getId());
-        				methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
-        				methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/ct/BeancpConvertProvider", "of", "(Lorg/kepe/beancp/config/BeancpFeature;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;)Lorg/kepe/beancp/ct/BeancpConvertProvider;", false);
+        				methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpInfo.class), "getInfoById", "(I)"+desc(BeancpInfo.class), false);
+        				methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpConvertProvider.class), "of", "("+desc(BeancpFeature.class)+desc(BeancpInfo.class)+desc(BeancpInfo.class)+")"+desc(BeancpConvertProvider.class), false);
         				methodVisitor.visitVarInsn(ALOAD, 4);
         				methodVisitor.visitVarInsn(ALOAD, 2);
         				visitInt(methodVisitor, pi);
         				methodVisitor.visitInsn(AALOAD);
         				methodVisitor.visitInsn(getCONST(paramInfo));
-    					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, "org/kepe/beancp/ct/BeancpConvertProvider", "convert", "(Lorg/kepe/beancp/config/BeancpContext;Ljava/lang/Object;"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;")+")"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;"), false);
+    					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpConvertProvider.class), "convert", "("+desc(BeancpContext.class)+"Ljava/lang/Object;"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;")+")"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;"), false);
         				methodVisitor.visitVarInsn(ALOAD, 4);
-        				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/String;"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;")+"Lorg/kepe/beancp/config/BeancpContext;)"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;"), false);
+        				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/String;"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;")+desc(BeancpContext.class)+")"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;"), false);
         				if(!paramInfo.isPrimitive) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(paramInfo.getBClass()));
 						}
@@ -1322,11 +1320,11 @@ public class BeancpInfoASMTool implements Opcodes
     					visitInt(methodVisitor, pi);
     					methodVisitor.visitInsn(AALOAD);
     					visitInt(methodVisitor, paramInfo.getId());
-    					methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
+    					methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpInfo.class), "getInfoById", "(I)"+desc(BeancpInfo.class), false);
     					methodVisitor.visitVarInsn(ALOAD, 4);
-    					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "convertValue", "(Ljava/lang/String;Ljava/lang/Object;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/config/BeancpContext;)Ljava/lang/Object;", false);
+    					methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "convertValue", "(Ljava/lang/String;Ljava/lang/Object;"+desc(BeancpInfo.class)+desc(BeancpInfo.class)+desc(BeancpContext.class)+")Ljava/lang/Object;", false);
     					methodVisitor.visitVarInsn(ALOAD, 4);
-        				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/String;"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;")+"Lorg/kepe/beancp/config/BeancpContext;)"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;"), false);
+        				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/String;"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;")+desc(BeancpContext.class)+")"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;"), false);
     					if(!paramInfo.isPrimitive) {
 							methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(paramInfo.getBClass()));
 						}
@@ -1349,7 +1347,7 @@ public class BeancpInfoASMTool implements Opcodes
     		methodVisitor.visitEnd();
     	}
     	{
-    		methodVisitor = classWriter.visitMethod(ACC_PROTECTED, "newInstance", "(ILjava/lang/Object;"+BeancpInfoASMTool.desc(BeancpConvertMapper.class)+"Lorg/kepe/beancp/config/BeancpContext;)Ljava/lang/Object;", null, new String[] { "java/lang/Exception" });
+    		methodVisitor = classWriter.visitMethod(ACC_PROTECTED, "newInstance", "(ILjava/lang/Object;"+BeancpInfoASMTool.desc(BeancpConvertMapper.class)+desc(BeancpContext.class)+")Ljava/lang/Object;", null, new String[] { "java/lang/Exception" });
     		methodVisitor.visitParameter("idx", 0);
     		methodVisitor.visitParameter("bean", 0);
     		methodVisitor.visitParameter("beanmapper", 0);
@@ -1391,11 +1389,11 @@ public class BeancpInfoASMTool implements Opcodes
     				methodVisitor.visitLdcInsn(paramName);
     				methodVisitor.visitInsn(getCONST(paramInfo));
     				visitInt(methodVisitor, paramInfo.getId());
-    				methodVisitor.visitMethodInsn(INVOKESTATIC, "org/kepe/beancp/info/BeancpInfo", "getInfoById", "(I)Lorg/kepe/beancp/info/BeancpInfo;", false);
+    				methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(BeancpInfo.class), "getInfoById", "(I)"+desc(BeancpInfo.class), false);
     				methodVisitor.visitVarInsn(ALOAD, 4);
-    				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, BeancpInfoASMTool.getClassName(BeancpConvertMapper.class), "get", "(Ljava/lang/Object;Ljava/lang/String;"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;")+"Lorg/kepe/beancp/info/BeancpInfo;Lorg/kepe/beancp/config/BeancpContext;)"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;"), false);
+    				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, BeancpInfoASMTool.getClassName(BeancpConvertMapper.class), "get", "(Ljava/lang/Object;Ljava/lang/String;"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;")+desc(BeancpInfo.class)+desc(BeancpContext.class)+")"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;"), false);
     				methodVisitor.visitVarInsn(ALOAD, 4);
-    				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/String;"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;")+"Lorg/kepe/beancp/config/BeancpContext;)"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;"), false);
+    				methodVisitor.visitMethodInsn(INVOKEVIRTUAL, classpath, "filterValue", "(Ljava/lang/String;"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;")+desc(BeancpContext.class)+")"+(paramInfo.isPrimitive?BeancpInfoASMTool.desc(paramInfo.getBClass()):"Ljava/lang/Object;"), false);
     				if(!paramInfo.isPrimitive) {
 						methodVisitor.visitTypeInsn(CHECKCAST, BeancpInfoASMTool.getClassName(paramInfo.getBClass()));
 					}
