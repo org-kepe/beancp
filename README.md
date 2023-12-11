@@ -5,7 +5,7 @@ Provide some processing APIs for Java objects, such as object copying(include be
 <dependency>
     <groupId>io.github.org-kepe</groupId>
     <artifactId>beancp</artifactId>
-    <version>2.0.7</version>
+    <version>2.0.9</version>
 </dependency>
 ```
 ## Basic examples

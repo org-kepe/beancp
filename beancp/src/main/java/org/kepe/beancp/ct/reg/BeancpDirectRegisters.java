@@ -65,9 +65,6 @@ public class BeancpDirectRegisters implements BeancpRegister {
 			}
 			@Override
 			public Object convert(BeancpInvocationOO invocation, BeancpContext context, Object fromObj, Object toObj) {
-				if(fromObj==null) {
-					return toObj;
-				}
 				return invocation.proceed(context, fromObj, toObj);
 			}
 		},PRIORITY10);

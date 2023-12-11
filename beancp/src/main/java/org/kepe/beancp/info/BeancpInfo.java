@@ -142,7 +142,7 @@ public class BeancpInfo
     public boolean instanceOf(BeancpInfo info){
     	return this.typeInfo.instanceOf(info.typeInfo);
     }
-    public boolean instanceOf(Class clazz){
+    public boolean instanceOf(Class<?> clazz){
         if(clazz.isAssignableFrom(this.clazz)){
             return true;
         }
@@ -230,6 +230,7 @@ public class BeancpInfo
         return of(type,null,null);
     }
     public static BeancpInfo of(Type type,Class<?> clazz){
+    	
     	if(type==null&&clazz==null) {
     		type=Object.class;
     		clazz=Object.class;
@@ -241,6 +242,13 @@ public class BeancpInfo
     		type=clazz;
     	}
     	BeancpTypeInfo typeInfo=BeancpTypeInfo.of(type);
+    	if(clazz!=null&&clazz!=Object.class) {
+    		int mode=typeInfo.getMode();
+    		if(mode==2||mode==3) {
+    			type=clazz;
+    			typeInfo=BeancpTypeInfo.of(type);
+    		}
+    	}
     	if(clazz==null){
             clazz=typeInfo.getRawClass();
         }

@@ -3,8 +3,6 @@ package org.kepe.beancp.ct.convert;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.ct.BeancpConvertProvider;
-import org.kepe.beancp.ct.converter.BeancpConverterInfo;
-import org.kepe.beancp.ct.itf.BeancpCustomConverter;
 import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.info.BeancpInfo;
 
@@ -30,9 +28,8 @@ public class BeancpConvertNonProvider extends BeancpConvertProvider
     	if(this.fromInfo==null) {
     		throw new BeancpException("can not convert");
     	}else {
-    		throw new BeancpException("can't convert from "+this.fromInfo.getBType().getTypeName()+" to "+this.toInfo.getBType().getTypeName());
+    		throw new BeancpException(new StringBuffer("can't convert from ").append(this.fromInfo.getBType().getTypeName()).append(" to ").append(this.toInfo.getBType().getTypeName()).toString());
     	}
-    	
     }
     @Override
 	public int getDistance() {

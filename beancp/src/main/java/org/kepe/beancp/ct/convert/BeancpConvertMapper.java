@@ -22,12 +22,14 @@ import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.info.BeancpInitInfo;
 import org.kepe.beancp.info.BeancpName;
 import org.kepe.beancp.info.BeancpSetInfo;
+import org.kepe.beancp.tool.BeancpStringTool;
 import org.kepe.beancp.tool.vo.Tuple2;
 
 public abstract class BeancpConvertMapper {
     private final static Map<BeancpInfo,Map<BeancpFeature,BeancpConvertMapper>> C_MAP=new ConcurrentHashMap<>();
 
 	protected BeancpInfo info;
+	private boolean isMap;
 	protected BeancpFeature feature;
 	protected Set<String> getKeys;
 	protected Set<BeancpName> getKeys2=new HashSet<>();
@@ -43,6 +45,7 @@ public abstract class BeancpConvertMapper {
 	//protected BeancpInfo[] keysInfo;
 	public BeancpConvertMapper(BeancpInfo info,BeancpFeature feature,Set<String> getKeys,Set<String> setKeys,Map<String,Tuple2<BeancpFieldInfo,Integer>> fields,List<String> keys,List<BeancpInitInfo> inits) {
 		this.info=info;
+		this.isMap=info.isMap;
 		this.feature=feature;
 		if(feature.is(BeancpFeature.ACCESS_PRIVATE)||feature.is(BeancpFeature.ACCESS_PROTECTED)) {
 			info.initProxyOpClass();
@@ -284,6 +287,14 @@ public abstract class BeancpConvertMapper {
 	protected abstract Object newInstance(int idx, Object bean,BeancpConvertMapper beanmapper, BeancpContext context) throws Exception;
 	
 	public Object get(Object obj,String key,Object value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		if(this.isMap) {
+			Object keyValue=((Map)obj).get(key);
+			if(value==null&&(valueInfo==null||BeancpInfo.OBJECT_INFO.equals(valueInfo))&&!this.isAllwaysNew) {
+				return keyValue;
+			}
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(info.getGenericInfo(1), BeancpInfo.OBJECT_INFO).of(keyValue) , BeancpStringTool.nvl(valueInfo,BeancpInfo.OBJECT_INFO).of(value));
+			return provider.convert(context, keyValue, value);
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return null;
@@ -309,6 +320,11 @@ public abstract class BeancpConvertMapper {
 	}
 	
 	public int get(Object obj,String key,int value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		if(this.isMap) {
+			Object keyValue=((Map)obj).get(key);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(info.getGenericInfo(1), BeancpInfo.OBJECT_INFO).of(keyValue) , BeancpStringTool.nvl(valueInfo,BeancpInfo.OBJECT_INFO).of(value));
+			return provider.convert(context, keyValue, value);
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return 0;
@@ -328,6 +344,11 @@ public abstract class BeancpConvertMapper {
 	}
 	
 	public long get(Object obj,String key,long value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		if(this.isMap) {
+			Object keyValue=((Map)obj).get(key);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(info.getGenericInfo(1), BeancpInfo.OBJECT_INFO).of(keyValue) , BeancpStringTool.nvl(valueInfo,BeancpInfo.OBJECT_INFO).of(value));
+			return provider.convert(context, keyValue, value);
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return 0;
@@ -346,6 +367,11 @@ public abstract class BeancpConvertMapper {
 		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
 	}
 	public short get(Object obj,String key,short value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		if(this.isMap) {
+			Object keyValue=((Map)obj).get(key);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(info.getGenericInfo(1), BeancpInfo.OBJECT_INFO).of(keyValue) , BeancpStringTool.nvl(valueInfo,BeancpInfo.OBJECT_INFO).of(value));
+			return provider.convert(context, keyValue, value);
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return 0;
@@ -364,6 +390,11 @@ public abstract class BeancpConvertMapper {
 		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
 	}
 	public float get(Object obj,String key,float value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		if(this.isMap) {
+			Object keyValue=((Map)obj).get(key);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(info.getGenericInfo(1), BeancpInfo.OBJECT_INFO).of(keyValue) , BeancpStringTool.nvl(valueInfo,BeancpInfo.OBJECT_INFO).of(value));
+			return provider.convert(context, keyValue, value);
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return 0;
@@ -382,6 +413,11 @@ public abstract class BeancpConvertMapper {
 		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
 	}
 	public double get(Object obj,String key,double value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		if(this.isMap) {
+			Object keyValue=((Map)obj).get(key);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(info.getGenericInfo(1), BeancpInfo.OBJECT_INFO).of(keyValue) , BeancpStringTool.nvl(valueInfo,BeancpInfo.OBJECT_INFO).of(value));
+			return provider.convert(context, keyValue, value);
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return 0;
@@ -400,6 +436,11 @@ public abstract class BeancpConvertMapper {
 		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
 	}
 	public byte get(Object obj,String key,byte value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		if(this.isMap) {
+			Object keyValue=((Map)obj).get(key);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(info.getGenericInfo(1), BeancpInfo.OBJECT_INFO).of(keyValue) , BeancpStringTool.nvl(valueInfo,BeancpInfo.OBJECT_INFO).of(value));
+			return provider.convert(context, keyValue, value);
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return 0;
@@ -418,6 +459,11 @@ public abstract class BeancpConvertMapper {
 		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
 	}
 	public char get(Object obj,String key,char value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		if(this.isMap) {
+			Object keyValue=((Map)obj).get(key);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(info.getGenericInfo(1), BeancpInfo.OBJECT_INFO).of(keyValue) , BeancpStringTool.nvl(valueInfo,BeancpInfo.OBJECT_INFO).of(value));
+			return provider.convert(context, keyValue, value);
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return 0;
@@ -436,6 +482,11 @@ public abstract class BeancpConvertMapper {
 		return this.get(obj, idx, getIdx, value, valueInfo, fromInfo, context);
 	}
 	public boolean get(Object obj,String key,boolean value,BeancpInfo valueInfo,BeancpContext context) throws Exception {
+		if(this.isMap) {
+			Object keyValue=((Map)obj).get(key);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(info.getGenericInfo(1), BeancpInfo.OBJECT_INFO).of(keyValue) , BeancpStringTool.nvl(valueInfo,BeancpInfo.OBJECT_INFO).of(value));
+			return provider.convert(context, keyValue, value);
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return false;
@@ -455,6 +506,17 @@ public abstract class BeancpConvertMapper {
 	}
 	
 	public void put(Object obj,String key,Object value,BeancpInfo valueInfo,BeancpContext context) {
+		if(this.isMap) {
+			Map<Object,Object> map=(Map<Object,Object>)obj;
+			BeancpInfo toInfo=info.getGenericInfo(1);
+			if((toInfo==null||BeancpInfo.OBJECT_INFO.equals(toInfo))&&!this.isAllwaysNew) {
+				map.put(key, value);
+				return;
+			}
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(valueInfo, BeancpInfo.OBJECT_INFO).of(value) , BeancpStringTool.nvl(toInfo,BeancpInfo.OBJECT_INFO));
+			map.put(key, provider.convert(context, value, null));
+			return;
+		}
 		if(context!=null&&!BeancpConvertProviderTool.isAllowSet(context, obj, key)) {
 			return;
 		}
@@ -487,7 +549,13 @@ public abstract class BeancpConvertMapper {
 		}
 	}
 	public void put(Object obj,String key,int value,BeancpInfo valueInfo,BeancpContext context) {
-		
+		if(this.isMap) {
+			Map<Object,Object> map=(Map<Object,Object>)obj;
+			BeancpInfo toInfo=info.getGenericInfo(1);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(valueInfo, BeancpInfo.OBJECT_INFO).of(value) , BeancpStringTool.nvl(toInfo,BeancpInfo.OBJECT_INFO));
+			map.put(key, provider.convert(context, value, null));
+			return;
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return;
@@ -512,7 +580,13 @@ public abstract class BeancpConvertMapper {
 		}
 	}
 	public void put(Object obj,String key,long value,BeancpInfo valueInfo,BeancpContext context) {
-		
+		if(this.isMap) {
+			Map<Object,Object> map=(Map<Object,Object>)obj;
+			BeancpInfo toInfo=info.getGenericInfo(1);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(valueInfo, BeancpInfo.OBJECT_INFO).of(value) , BeancpStringTool.nvl(toInfo,BeancpInfo.OBJECT_INFO));
+			map.put(key, provider.convert(context, value, null));
+			return;
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return;
@@ -537,7 +611,13 @@ public abstract class BeancpConvertMapper {
 		}
 	}
 	public void put(Object obj,String key,float value,BeancpInfo valueInfo,BeancpContext context) {
-		
+		if(this.isMap) {
+			Map<Object,Object> map=(Map<Object,Object>)obj;
+			BeancpInfo toInfo=info.getGenericInfo(1);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(valueInfo, BeancpInfo.OBJECT_INFO).of(value) , BeancpStringTool.nvl(toInfo,BeancpInfo.OBJECT_INFO));
+			map.put(key, provider.convert(context, value, null));
+			return;
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return;
@@ -562,7 +642,13 @@ public abstract class BeancpConvertMapper {
 		}
 	}
 	public void put(Object obj,String key,double value,BeancpInfo valueInfo,BeancpContext context) {
-		
+		if(this.isMap) {
+			Map<Object,Object> map=(Map<Object,Object>)obj;
+			BeancpInfo toInfo=info.getGenericInfo(1);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(valueInfo, BeancpInfo.OBJECT_INFO).of(value) , BeancpStringTool.nvl(toInfo,BeancpInfo.OBJECT_INFO));
+			map.put(key, provider.convert(context, value, null));
+			return;
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return;
@@ -587,7 +673,13 @@ public abstract class BeancpConvertMapper {
 		}
 	}
 	public void put(Object obj,String key,short value,BeancpInfo valueInfo,BeancpContext context) {
-		
+		if(this.isMap) {
+			Map<Object,Object> map=(Map<Object,Object>)obj;
+			BeancpInfo toInfo=info.getGenericInfo(1);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(valueInfo, BeancpInfo.OBJECT_INFO).of(value) , BeancpStringTool.nvl(toInfo,BeancpInfo.OBJECT_INFO));
+			map.put(key, provider.convert(context, value, null));
+			return;
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return;
@@ -612,7 +704,13 @@ public abstract class BeancpConvertMapper {
 		}
 	}
 	public void put(Object obj,String key,boolean value,BeancpInfo valueInfo,BeancpContext context) {
-		
+		if(this.isMap) {
+			Map<Object,Object> map=(Map<Object,Object>)obj;
+			BeancpInfo toInfo=info.getGenericInfo(1);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(valueInfo, BeancpInfo.OBJECT_INFO).of(value) , BeancpStringTool.nvl(toInfo,BeancpInfo.OBJECT_INFO));
+			map.put(key, provider.convert(context, value, null));
+			return;
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return;
@@ -637,7 +735,13 @@ public abstract class BeancpConvertMapper {
 		}
 	}
 	public void put(Object obj,String key,byte value,BeancpInfo valueInfo,BeancpContext context) {
-		
+		if(this.isMap) {
+			Map<Object,Object> map=(Map<Object,Object>)obj;
+			BeancpInfo toInfo=info.getGenericInfo(1);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(valueInfo, BeancpInfo.OBJECT_INFO).of(value) , BeancpStringTool.nvl(toInfo,BeancpInfo.OBJECT_INFO));
+			map.put(key, provider.convert(context, value, null));
+			return;
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return;
@@ -662,7 +766,13 @@ public abstract class BeancpConvertMapper {
 		}
 	}
 	public void put(Object obj,String key,char value,BeancpInfo valueInfo,BeancpContext context) {
-		
+		if(this.isMap) {
+			Map<Object,Object> map=(Map<Object,Object>)obj;
+			BeancpInfo toInfo=info.getGenericInfo(1);
+			BeancpConvertProvider provider=BeancpConvertProvider.of(this.feature, BeancpStringTool.nvl(valueInfo, BeancpInfo.OBJECT_INFO).of(value) , BeancpStringTool.nvl(toInfo,BeancpInfo.OBJECT_INFO));
+			map.put(key, provider.convert(context, value, null));
+			return;
+		}
 		Tuple2<BeancpFieldInfo, Integer> t2=fields.get(key);
 		if(t2==null) {
 			return;
@@ -873,6 +983,9 @@ public abstract class BeancpConvertMapper {
 				e1=e1.getCause();
 			}
 			if(!ignore) {
+				if(e instanceof BeancpException) {
+					throw (BeancpException)e;
+				}
 				throw new BeancpException(e);
 			}
 		}

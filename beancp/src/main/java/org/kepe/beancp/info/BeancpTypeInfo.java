@@ -40,6 +40,9 @@ public class BeancpTypeInfo {
     public Type getType() {
     	return type;
     }
+    protected int getMode() {
+    	return this.mode;
+    }
     
     public Type getFinalType(Type superType) {
     	Class rawClass1=getClassByType(superType);

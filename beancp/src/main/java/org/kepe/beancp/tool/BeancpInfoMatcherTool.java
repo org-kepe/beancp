@@ -26,7 +26,7 @@ public class BeancpInfoMatcherTool
 	
     public static BeancpInfoMatcher createEqualMatcher(BeancpInfo info){
         return info1->{
-            return info1.equals(info)||info1.getBType().equals(info.getBType());
+            return info1.equals(info)||info1.getBClass().equals(info.getBClass());
         };
     }
 

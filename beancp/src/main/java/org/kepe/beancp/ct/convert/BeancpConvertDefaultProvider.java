@@ -3,9 +3,6 @@ package org.kepe.beancp.ct.convert;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.ct.BeancpConvertProvider;
-import org.kepe.beancp.ct.converter.BeancpConverterInfo;
-import org.kepe.beancp.ct.itf.BeancpCustomConverter;
-import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.info.BeancpInfo;
 
 /**

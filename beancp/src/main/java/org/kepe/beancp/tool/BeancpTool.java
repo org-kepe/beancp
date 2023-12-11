@@ -1,19 +1,9 @@
 package org.kepe.beancp.tool;
 
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.ARETURN;
-import static org.objectweb.asm.Opcodes.CHECKCAST;
-import static org.objectweb.asm.Opcodes.DUP;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
-import static org.objectweb.asm.Opcodes.NEW;
-import static org.objectweb.asm.Opcodes.*;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
@@ -22,20 +12,15 @@ import org.kepe.beancp.config.BeancpTypeConverter;
 import org.kepe.beancp.config.BeancpTypeMatcher;
 import org.kepe.beancp.config.BeancpTypeRelMatcher;
 import org.kepe.beancp.ct.BeancpConvertProvider;
-import org.kepe.beancp.ct.asm.MethodASMContext;
 import org.kepe.beancp.ct.convert.BeancpConvertMapper;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
-import org.kepe.beancp.ct.itf.BeancpASMConverter;
 import org.kepe.beancp.ct.itf.BeancpConvertByObject;
 import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
-import org.kepe.beancp.ct.itf.BeancpSimpleCustomConverter;
 import org.kepe.beancp.ct.reg.BeancpRegisters;
 import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.info.BeancpInfo;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
 /**
  * Hello world!
  *

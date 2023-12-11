@@ -1,5 +1,9 @@
 package org.kepe.beancp.test.cases;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.kepe.beancp.BeancpUtil;
@@ -40,6 +44,7 @@ public class DemoCase4 {
 		Assert.assertEquals(userName, user.getUserName());
 		Assert.assertEquals(userName1, user.getUserName());
 		Assert.assertEquals(age, "1");
+		
 	}
 	@Test
 	public void test3() {
@@ -53,6 +58,32 @@ public class DemoCase4 {
 		Assert.assertTrue(user.isLive());
 	}
 	
+	
+	@Test
+	public void test4() {
+		Map<String,Object> map=new HashMap<>();
+		map.put("userName", "a1");
+		map.put("age", 1);
+		String userName=BeancpUtil.getProperty(map,"userName",String.class);
+		BigDecimal age=BeancpUtil.getProperty(map,"age",BigDecimal.class);
+		
+		Assert.assertEquals(userName, map.get("userName"));
+		Assert.assertEquals(age.intValue(), 1);
+		
+	}
+	@Test
+	public void test5() {
+		Map<String,Object> map=new HashMap<>();
+		map.put("userName", "a1");
+		map.put("age", 1);
+		BeancpUtil.setProperty(map, "id", "a");
+		BeancpUtil.setProperty(map, "userName", "b");
+		BeancpUtil.setProperty(map, "age", 2);
+		
+		Assert.assertEquals(map.get("id"), "a");
+		Assert.assertEquals(map.get("userName"), "b");
+		Assert.assertEquals((int)map.get("age"),2);
+	}
 	
 	
 	
