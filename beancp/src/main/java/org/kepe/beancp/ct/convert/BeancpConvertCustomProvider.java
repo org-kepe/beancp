@@ -100,9 +100,8 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 
 	@Override
     public <T,R> R convert(BeancpContext context,T fromObj, R toObj) {
-    	BeancpCustomConverter<T,R> converter=(BeancpCustomConverter<T,R>)info.getConverter();
     	try {
-    		return (R) converter.convert(this.getInvocation(), context,fromObj, toObj);
+    		return (R) ((BeancpCustomConverter)converter).convert(this.getInvocation(), context,fromObj, toObj);
     	}catch(Exception e) {
     		BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
     	}
@@ -112,26 +111,26 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
     
 //    @Override
 //    public <T> int convert(BeancpContext context, T fromObj, int toObj) {
-//    	BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
-//        return converter.convert((BeancpInvocationOI)this.getInvocation(), context,fromObj, toObj);
+//    	;
+//        return ((BeancpCustomConverter)converter).convert((BeancpInvocationOI)this.getInvocation(), context,fromObj, toObj);
 //    }
 //    @Override
 //    public int convert(BeancpContext context, int fromObj, int toObj) {
-//    	BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
-//        return converter.convert((BeancpInvocationII)this.getInvocation(), context,fromObj, toObj);
+//    	;
+//        return ((BeancpCustomConverter)converter).convert((BeancpInvocationII)this.getInvocation(), context,fromObj, toObj);
 //    }
 //    @Override
 //    public <R> R convert(BeancpContext context, int fromObj, R toObj) {
-//    	BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
-//        return (R) converter.convert((BeancpInvocationIO)(BeancpInvocationII)this.getInvocation(), context,fromObj, toObj);
+//    	;
+//        return (R) ((BeancpCustomConverter)converter).convert((BeancpInvocationIO)(BeancpInvocationII)this.getInvocation(), context,fromObj, toObj);
 //    }
     
 	
 	@Override
 	public <T> int convert(BeancpContext context, T fromObj, int toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationOI)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationOI)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -139,9 +138,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <T> float convert(BeancpContext context, T fromObj, float toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationOF)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationOF)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -149,9 +148,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <T> boolean convert(BeancpContext context, T fromObj, boolean toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationOZ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationOZ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -159,9 +158,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <T> char convert(BeancpContext context, T fromObj, char toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationOC)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationOC)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -169,9 +168,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <T> double convert(BeancpContext context, T fromObj, double toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationOD)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationOD)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -179,9 +178,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <T> short convert(BeancpContext context, T fromObj, short toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationOS)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationOS)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -189,9 +188,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <T> byte convert(BeancpContext context, T fromObj, byte toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationOB)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationOB)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -199,9 +198,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <T> long convert(BeancpContext context, T fromObj, long toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationOJ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationOJ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -209,9 +208,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <R> R convert(BeancpContext context, int fromObj, R toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return (R) converter.convert((BeancpInvocationIO)this.getInvocation(), context,fromObj, toObj);
+	    	return (R) ((BeancpCustomConverter)converter).convert((BeancpInvocationIO)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -219,9 +218,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public int convert(BeancpContext context, int fromObj, int toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationII)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationII)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -229,9 +228,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public float convert(BeancpContext context, int fromObj, float toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationIF)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationIF)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -239,9 +238,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public boolean convert(BeancpContext context, int fromObj, boolean toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationIZ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationIZ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -249,9 +248,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public char convert(BeancpContext context, int fromObj, char toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationIC)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationIC)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -259,9 +258,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public double convert(BeancpContext context, int fromObj, double toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationID)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationID)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -269,9 +268,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public short convert(BeancpContext context, int fromObj, short toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationIS)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationIS)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -279,9 +278,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public byte convert(BeancpContext context, int fromObj, byte toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationIB)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationIB)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -289,9 +288,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public long convert(BeancpContext context, int fromObj, long toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationIJ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationIJ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -299,9 +298,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <R> R convert(BeancpContext context, float fromObj, R toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return (R) converter.convert((BeancpInvocationFO)this.getInvocation(), context,fromObj, toObj);
+	    	return (R) ((BeancpCustomConverter)converter).convert((BeancpInvocationFO)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -309,9 +308,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public int convert(BeancpContext context, float fromObj, int toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationFI)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationFI)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -319,9 +318,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public float convert(BeancpContext context, float fromObj, float toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationFF)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationFF)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -329,9 +328,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public boolean convert(BeancpContext context, float fromObj, boolean toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationFZ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationFZ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -339,9 +338,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public char convert(BeancpContext context, float fromObj, char toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationFC)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationFC)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -349,9 +348,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public double convert(BeancpContext context, float fromObj, double toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationFD)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationFD)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -359,9 +358,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public short convert(BeancpContext context, float fromObj, short toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationFS)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationFS)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -369,9 +368,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public byte convert(BeancpContext context, float fromObj, byte toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationFB)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationFB)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -379,9 +378,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public long convert(BeancpContext context, float fromObj, long toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationFJ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationFJ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -389,9 +388,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <R> R convert(BeancpContext context, boolean fromObj, R toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return (R) converter.convert((BeancpInvocationZO)this.getInvocation(), context,fromObj, toObj);
+	    	return (R) ((BeancpCustomConverter)converter).convert((BeancpInvocationZO)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -399,9 +398,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public int convert(BeancpContext context, boolean fromObj, int toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationZI)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationZI)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -409,9 +408,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public float convert(BeancpContext context, boolean fromObj, float toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationZF)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationZF)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -419,9 +418,8 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public boolean convert(BeancpContext context, boolean fromObj, boolean toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
 		try {
-	    	return converter.convert((BeancpInvocationZZ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationZZ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -429,9 +427,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public char convert(BeancpContext context, boolean fromObj, char toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationZC)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationZC)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -439,9 +437,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public double convert(BeancpContext context, boolean fromObj, double toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationZD)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationZD)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -449,9 +447,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public short convert(BeancpContext context, boolean fromObj, short toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationZS)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationZS)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -459,9 +457,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public byte convert(BeancpContext context, boolean fromObj, byte toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationZB)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationZB)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -469,9 +467,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public long convert(BeancpContext context, boolean fromObj, long toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationZJ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationZJ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -479,9 +477,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <R> R convert(BeancpContext context, char fromObj, R toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return (R) converter.convert((BeancpInvocationCO)this.getInvocation(), context,fromObj, toObj);
+	    	return (R) ((BeancpCustomConverter)converter).convert((BeancpInvocationCO)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -489,9 +487,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public int convert(BeancpContext context, char fromObj, int toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationCI)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationCI)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -499,9 +497,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public float convert(BeancpContext context, char fromObj, float toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationCF)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationCF)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -509,9 +507,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public boolean convert(BeancpContext context, char fromObj, boolean toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationCZ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationCZ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -519,9 +517,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public char convert(BeancpContext context, char fromObj, char toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationCC)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationCC)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -529,9 +527,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public double convert(BeancpContext context, char fromObj, double toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationCD)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationCD)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -539,9 +537,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public short convert(BeancpContext context, char fromObj, short toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationCS)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationCS)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -549,9 +547,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public byte convert(BeancpContext context, char fromObj, byte toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationCB)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationCB)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -559,9 +557,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public long convert(BeancpContext context, char fromObj, long toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationCJ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationCJ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -569,9 +567,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <R> R convert(BeancpContext context, double fromObj, R toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return (R) converter.convert((BeancpInvocationDO)this.getInvocation(), context,fromObj, toObj);
+	    	return (R) ((BeancpCustomConverter)converter).convert((BeancpInvocationDO)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -579,9 +577,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public int convert(BeancpContext context, double fromObj, int toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationDI)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationDI)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -589,9 +587,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public float convert(BeancpContext context, double fromObj, float toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationDF)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationDF)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -599,9 +597,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public boolean convert(BeancpContext context, double fromObj, boolean toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationDZ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationDZ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -609,9 +607,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public char convert(BeancpContext context, double fromObj, char toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationDC)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationDC)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -619,9 +617,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public double convert(BeancpContext context, double fromObj, double toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationDD)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationDD)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -629,9 +627,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public short convert(BeancpContext context, double fromObj, short toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationDS)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationDS)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -639,9 +637,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public byte convert(BeancpContext context, double fromObj, byte toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationDB)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationDB)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -649,9 +647,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public long convert(BeancpContext context, double fromObj, long toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationDJ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationDJ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -659,9 +657,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <R> R convert(BeancpContext context, short fromObj, R toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return (R) converter.convert((BeancpInvocationSO)this.getInvocation(), context,fromObj, toObj);
+	    	return (R) ((BeancpCustomConverter)converter).convert((BeancpInvocationSO)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -669,9 +667,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public int convert(BeancpContext context, short fromObj, int toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationSI)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationSI)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -679,9 +677,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public float convert(BeancpContext context, short fromObj, float toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationSF)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationSF)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -689,9 +687,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public boolean convert(BeancpContext context, short fromObj, boolean toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationSZ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationSZ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -699,9 +697,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public char convert(BeancpContext context, short fromObj, char toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationSC)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationSC)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -709,9 +707,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public double convert(BeancpContext context, short fromObj, double toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationSD)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationSD)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -719,9 +717,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public short convert(BeancpContext context, short fromObj, short toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationSS)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationSS)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -729,9 +727,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public byte convert(BeancpContext context, short fromObj, byte toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationSB)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationSB)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -739,9 +737,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public long convert(BeancpContext context, short fromObj, long toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationSJ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationSJ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -749,9 +747,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <R> R convert(BeancpContext context, byte fromObj, R toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return (R) converter.convert((BeancpInvocationBO)this.getInvocation(), context,fromObj, toObj);
+	    	return (R) ((BeancpCustomConverter)converter).convert((BeancpInvocationBO)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -759,9 +757,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public int convert(BeancpContext context, byte fromObj, int toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationBI)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationBI)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -769,9 +767,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public float convert(BeancpContext context, byte fromObj, float toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationBF)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationBF)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -779,9 +777,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public boolean convert(BeancpContext context, byte fromObj, boolean toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationBZ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationBZ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -789,9 +787,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public char convert(BeancpContext context, byte fromObj, char toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationBC)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationBC)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -799,9 +797,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public double convert(BeancpContext context, byte fromObj, double toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationBD)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationBD)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -809,9 +807,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public short convert(BeancpContext context, byte fromObj, short toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationBS)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationBS)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -819,9 +817,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public byte convert(BeancpContext context, byte fromObj, byte toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationBB)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationBB)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -829,9 +827,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public long convert(BeancpContext context, byte fromObj, long toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationBJ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationBJ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -839,9 +837,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public <R> R convert(BeancpContext context, long fromObj, R toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return (R) converter.convert((BeancpInvocationJO)this.getInvocation(), context,fromObj, toObj);
+	    	return (R) ((BeancpCustomConverter)converter).convert((BeancpInvocationJO)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -849,9 +847,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public int convert(BeancpContext context, long fromObj, int toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationJI)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationJI)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -859,9 +857,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public float convert(BeancpContext context, long fromObj, float toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationJF)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationJF)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -869,9 +867,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public boolean convert(BeancpContext context, long fromObj, boolean toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationJZ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationJZ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -879,9 +877,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public char convert(BeancpContext context, long fromObj, char toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationJC)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationJC)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -889,9 +887,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public double convert(BeancpContext context, long fromObj, double toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationJD)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationJD)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -899,9 +897,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public short convert(BeancpContext context, long fromObj, short toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationJS)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationJS)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -909,9 +907,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public byte convert(BeancpContext context, long fromObj, byte toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationJB)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationJB)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}
@@ -919,9 +917,9 @@ public class BeancpConvertCustomProvider extends BeancpConvertProvider
 	}
 	@Override
 	public long convert(BeancpContext context, long fromObj, long toObj) {
-		BeancpCustomConverter converter=(BeancpCustomConverter)info.getConverter();
+		;
 		try {
-	    	return converter.convert((BeancpInvocationJJ)this.getInvocation(), context,fromObj, toObj);
+	    	return ((BeancpCustomConverter)converter).convert((BeancpInvocationJJ)this.getInvocation(), context,fromObj, toObj);
 		}catch(Exception e) {
 			BeancpConvertProviderTool.handleException(this, flag, context, "", 2, e);
 		}

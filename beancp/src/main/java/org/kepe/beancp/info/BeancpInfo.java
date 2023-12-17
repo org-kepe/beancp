@@ -304,7 +304,9 @@ public class BeancpInfo
             if(Map.class.isAssignableFrom(info.clazz)) {
             	info.isMap=true;
             }
-            
+            if(List.class.isAssignableFrom(info.clazz)) {
+            	info.isList=true;
+            }
             if(info.isPrimitive||info.isEnum||String.class.isAssignableFrom(info.clazz)||Number.class.isAssignableFrom(info.fclazz)||Date.class.isAssignableFrom(info.clazz)||InputStream.class.isAssignableFrom(info.clazz)||OutputStream.class.isAssignableFrom(info.clazz)||File.class.isAssignableFrom(info.clazz)||Clob.class.isAssignableFrom(info.clazz)||Blob.class.isAssignableFrom(info.clazz)||AtomicBoolean.class.isAssignableFrom(info.clazz)||AtomicInteger.class.isAssignableFrom(info.clazz)||AtomicLong.class.isAssignableFrom(info.clazz)||Calendar.class.isAssignableFrom(info.clazz)){
                 info.isBase=true;
             }

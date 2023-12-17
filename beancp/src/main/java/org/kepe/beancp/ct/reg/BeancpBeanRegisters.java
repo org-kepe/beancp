@@ -33,6 +33,7 @@ import org.kepe.beancp.ct.invocation.BeancpInvocationImp;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
 import org.kepe.beancp.ct.itf.BeancpASMConverter;
 import org.kepe.beancp.ct.itf.BeancpConverter;
+import org.kepe.beancp.ct.itf.BeancpConverterCreator;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
 import org.kepe.beancp.info.BeancpFieldInfo;
 import org.kepe.beancp.info.BeancpGetInfo;
@@ -2145,31 +2146,35 @@ public class BeancpBeanRegisters implements BeancpRegister{
 
 			
         },PRIORITY7);
-		registerMap2Bean(new BeancpCustomConverter() {
+		registerMap2Bean((feature,fromInfo,toInfo)->{
+			BeancpConvertMapper mapper=BeancpConvertMapper.of( toInfo, feature);
+			return new BeancpCustomConverter() {
 
 			@Override
 			public Object convert(BeancpInvocationOO invocation, BeancpContext context, Object fromObj, Object toObj) {
-				return BeancpConvertMapper.of( ((BeancpInvocationImp)invocation).getToInfo(), invocation.getFeature()).putAll(toObj, (Map)fromObj, ((BeancpInvocationImp)invocation).getFromInfo(), context);
+				return mapper.putAll(toObj, (Map)fromObj, fromInfo, context);
 			}
 			
-		},PRIORITY8);
-		registerBean2Map(new BeancpCustomConverter() {
+		};},PRIORITY8);
+		registerBean2Map((feature,fromInfo,toInfo)->{
+			BeancpConvertMapper mapper=BeancpConvertMapper.of( fromInfo, feature);
+			return new BeancpCustomConverter() {
 
 			@Override
 			public Object convert(BeancpInvocationOO invocation, BeancpContext context, Object fromObj, Object toObj) {
-				return BeancpConvertMapper.of(((BeancpInvocationImp)invocation).getFromInfo(), invocation.getFeature()).toMap(fromObj, (Map)toObj, ((BeancpInvocationImp)invocation).getToInfo(), context);
+				return mapper.toMap(fromObj, (Map)toObj, toInfo, context);
 			}
 			
-		},PRIORITY8);
+		};},PRIORITY8);
 	}
 	
 	private static void registerBean2Bean(BeancpConverter converter,int priority) {
         BeancpConvertProvider.register(BeancpConverterInfo.of(BeancpInfoMatcherTool.createBeanMatcher(), BeancpInfoMatcherTool.createBeanMatcher(), converter, priority));
     }
-	private static void registerMap2Bean(BeancpConverter converter,int priority) {
+	private static void registerMap2Bean(BeancpConverterCreator converter,int priority) {
         BeancpConvertProvider.register(BeancpConverterInfo.of(BeancpInfoMatcherTool.createExtendsMatcher(BeancpInfo.of(Map.class)), BeancpInfoMatcherTool.createBeanMatcher(), converter, priority));
     }
-	private static void registerBean2Map(BeancpConverter converter,int priority) {
+	private static void registerBean2Map(BeancpConverterCreator converter,int priority) {
         BeancpConvertProvider.register(BeancpConverterInfo.of(BeancpInfoMatcherTool.createBeanMatcher(), BeancpInfoMatcherTool.createExtendsMatcher(BeancpInfo.of(Map.class)), converter, priority));
     }
 }

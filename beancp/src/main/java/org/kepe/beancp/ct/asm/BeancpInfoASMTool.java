@@ -96,7 +96,7 @@ public class BeancpInfoASMTool implements Opcodes
 	}
 	
 	public static BeancpConvertASMProvider generateASMProvider(BeancpConvertProvider provider,BeancpConverterInfo info,BeancpFeature flag,BeancpInfo fromInfo,BeancpInfo toInfo){
-    	BeancpASMConverter asmConverter=(BeancpASMConverter) info.getConverter();
+    	BeancpASMConverter asmConverter=(BeancpASMConverter) info.getConverter(flag,fromInfo,toInfo);
     	ClassVisitor classWriter;
     	if(checkClass) {
         	classWriter = new CheckClassAdapter( new ClassWriter(ClassWriter.COMPUTE_MAXS));
@@ -1751,6 +1751,9 @@ public class BeancpInfoASMTool implements Opcodes
         		methodVisitor.visitMethodInsn(INVOKESTATIC, getClassName(method.getDeclaringClass()), method.getName(), getMethodDesc(method), method.getDeclaringClass().isInterface());
         	}else {
         		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(method.getDeclaringClass()), method.getName(), getMethodDesc(method), method.getDeclaringClass().isInterface());
+        	}
+        	if(method.getReturnType()!=void.class) {
+        		methodVisitor.visitInsn(POP);
         	}
     	}else {
     		Field field=setInfo.getField();

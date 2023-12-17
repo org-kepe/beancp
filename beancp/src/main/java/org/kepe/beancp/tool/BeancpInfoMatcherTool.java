@@ -1,5 +1,7 @@
 package org.kepe.beancp.tool;
 
+import java.util.Set;
+
 import org.kepe.beancp.config.BeancpTypeMatcher;
 import org.kepe.beancp.config.BeancpTypeRelMatcher;
 import org.kepe.beancp.ct.itf.BeancpInfoMatcher;
@@ -33,6 +35,11 @@ public class BeancpInfoMatcherTool
     public static BeancpInfoMatcher createExtendsMatcher(BeancpInfo info){
         return info1->{
             return info1.instanceOf(info.getBClass());
+        };
+    }
+    public static BeancpInfoMatcher creatOneMatcher(){
+        return info1->{
+            return !info1.isArray&&!info1.isList&&!info1.instanceOf(Set.class);
         };
     }
     public static BeancpInfoMatcher createEnumMatcher(){

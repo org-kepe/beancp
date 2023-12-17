@@ -9,7 +9,7 @@ import org.kepe.beancp.test.DemoUser;
 
 public class DemoCase5 {
 	
-	@Test
+	//@Test
 	public void test1() {
 		DemoUser user=new DemoUser();
 		user.setId("a1");

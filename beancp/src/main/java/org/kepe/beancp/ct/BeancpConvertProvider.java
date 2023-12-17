@@ -16,6 +16,7 @@ import org.kepe.beancp.ct.converter.BeancpConverterInfo;
 import org.kepe.beancp.ct.converter.BeancpConverterInfoGroup;
 import org.kepe.beancp.ct.invocation.BeancpInvocationImp;
 import org.kepe.beancp.ct.itf.BeancpASMConverter;
+import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
 import org.kepe.beancp.info.BeancpInfo;
 
@@ -30,6 +31,7 @@ public abstract class BeancpConvertProvider
 	private static List<BeancpConverterInfo> converterList=new ArrayList<>();
 
     protected BeancpConverterInfo info;
+    protected BeancpConverter converter ;
     protected BeancpInfo fromInfo;
     protected BeancpInfo toInfo;
     protected BeancpFeature flag;
@@ -37,18 +39,19 @@ public abstract class BeancpConvertProvider
     private BeancpConvertProvider parent;
     private BeancpInvocationImp invocation;
 
-    public BeancpConvertProvider(BeancpConvertProvider parent,BeancpFeature flag,BeancpConverterInfo info,BeancpInfo fromInfo,BeancpInfo toInfo){
+    public BeancpConvertProvider(BeancpConvertProvider parent,BeancpFeature feature,BeancpConverterInfo info,BeancpInfo fromInfo,BeancpInfo toInfo){
         this.info=info;
         this.fromInfo=fromInfo;
         this.toInfo=toInfo;
-        this.flag=flag;
+        this.flag=feature;
         if(info==null) {
         	this.distance=-1;
         }else {
-            this.distance=info.getConverter().distance(flag, fromInfo.getBType(), fromInfo.getBClass(), toInfo.getBType(), toInfo.getBClass());
+        	this.converter=info.getConverter(feature,fromInfo,toInfo);
+            this.distance=converter.distance(feature, fromInfo.getBType(), fromInfo.getBClass(), toInfo.getBType(), toInfo.getBClass());
         }
         this.parent=parent;
-        this.invocation=new BeancpInvocationImp(parent,this,flag,fromInfo,toInfo);
+        this.invocation=new BeancpInvocationImp(parent,this,feature,fromInfo,toInfo);
     }
     public int getDistance() {
     	return this.distance;
@@ -353,10 +356,11 @@ public abstract class BeancpConvertProvider
         for(int i=0;i<length;i++){
             BeancpConverterInfo info=converterList.get(i);
             if(info.matches(fromInfo,toInfo)){
-                if(info.getConverter() instanceof BeancpCustomConverter){
+            	BeancpConverter converter=info.getConverter(flag,fromInfo,toInfo);
+                if(converter instanceof BeancpCustomConverter){
                 	reaches++;
                 	provider = new BeancpConvertCustomProvider(provider,flag,info,fromInfo,toInfo);
-                }else if(info.getConverter() instanceof BeancpASMConverter){
+                }else if(converter instanceof BeancpASMConverter){
                 	reaches++;
                 	provider = BeancpInfoASMTool.generateASMProvider(provider,info,flag,fromInfo,toInfo);
                 }
@@ -371,9 +375,10 @@ public abstract class BeancpConvertProvider
         for(int i=0;i<length;i++){
             BeancpConverterInfo info=converterList.get(i);
             if(info.matches(fromInfo,toInfo)){
-                if(info.getConverter() instanceof BeancpCustomConverter){
+            	BeancpConverter converter=info.getConverter(flag,fromInfo,toInfo);
+                if(converter instanceof BeancpCustomConverter){
                 	reaches++;
-                }else if(info.getConverter() instanceof BeancpASMConverter){
+                }else if(converter instanceof BeancpASMConverter){
                 	reaches++;
                 }
             }
