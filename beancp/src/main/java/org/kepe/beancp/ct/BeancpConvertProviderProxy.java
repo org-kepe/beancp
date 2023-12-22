@@ -1,19 +1,13 @@
 package org.kepe.beancp.ct;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
-import org.kepe.beancp.ct.asm.BeancpInfoASMTool;
-import org.kepe.beancp.ct.convert.BeancpConvertCustomProvider;
-import org.kepe.beancp.ct.convert.BeancpConvertNonProvider;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
 import org.kepe.beancp.ct.invocation.BeancpInvocationImp;
-import org.kepe.beancp.ct.itf.BeancpASMConverter;
 import org.kepe.beancp.ct.itf.BeancpConvertByObject;
-import org.kepe.beancp.ct.itf.BeancpCustomConverter;
+import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.exception.BeancpException.EType;
 import org.kepe.beancp.info.BeancpInfo;
@@ -227,6 +221,15 @@ public class BeancpConvertProviderProxy extends BeancpConvertProvider implements
 			this.provider=proxy.provider;
 		}
 	}
+	public BeancpConvertProvider getProvider() {
+		return this.provider;
+	}
+	public BeancpConverter getConverter() {
+		if(this.provider==null) {
+			return null;
+		}
+    	return this.provider.converter;
+    }
 	
 	@Override
 	public Object convertByObject(BeancpContext context,Object fromObj,Object toObj) {

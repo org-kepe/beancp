@@ -69,7 +69,7 @@ public class BeancpInfoASMTool implements Opcodes
 	private static boolean checkClass=true;
 	private static final String CLASS_NAME_PREFIX="BeancpConvertGenProvider";
 	private static final String CLASS_NAME_PREFIX_MAPPER="BeancpConvertGenMapper";
-	private static final BeancpDynamicClassLoader CLASS_LOADER=new BeancpDynamicClassLoader(BeancpDynamicClassLoader.getInstance());
+	public static final BeancpDynamicClassLoader CLASS_LOADER=new BeancpDynamicClassLoader(BeancpDynamicClassLoader.getInstance());
 	private static Map<Class, String> descMapping = new HashMap<>();
 	private static Map<Class, String> typeMapping = new HashMap<>();
 	private static AtomicReference<char[]> descCacheRef = new AtomicReference<>();

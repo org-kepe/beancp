@@ -53,6 +53,7 @@ public abstract class BeancpConvertProvider
         this.parent=parent;
         this.invocation=new BeancpInvocationImp(parent,this,feature,fromInfo,toInfo);
     }
+    
     public int getDistance() {
     	return this.distance;
     }
