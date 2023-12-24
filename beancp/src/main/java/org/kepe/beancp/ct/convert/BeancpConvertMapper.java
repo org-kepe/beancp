@@ -67,6 +67,13 @@ public abstract class BeancpConvertMapper {
 		isBean2MapUnderline=feature.is(BeancpFeature.BEAN2MAP_UNDERLINE);
 		isBean2MapUnderlineUpper=feature.is(BeancpFeature.BEAN2MAP_UNDERLINE_UPPER);
 	}
+	public BeancpFieldInfo getFieldInfo(String key){
+		Tuple2<BeancpFieldInfo,Integer> tuple2=fields.get(key);
+		if(tuple2==null) {
+			return null;
+		}
+		return tuple2.r1;
+	}
 	
 	public static BeancpConvertMapper of(BeancpInfo info,BeancpFeature feature) {
 		return C_MAP.computeIfAbsent(info, key->new ConcurrentHashMap<>()).computeIfAbsent(feature, key->BeancpInfoASMTool.generateASMMapper(info, feature));
