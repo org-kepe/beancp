@@ -121,13 +121,15 @@ public class BeancpInfo
     public Map<String,BeancpFieldInfo> fields;
     private Set<String> simpleGetterKeys;
     private Set<String> simpleSetterKeys;
+    
     public List<BeancpInitInfo> inits;
     private BeancpInfo[] genericInfo;
     public BeancpCloneInfo cloneInfo;
+    public List<BeancpCompareInfo> compares;
     private BeancpConvertMapper mapper;
     private Enum[] enumConstants;
     private BeancpInfo componentType;
-
+    
     public BeancpInfo getComponentType() {
     	if(this.isArray&&this.componentType==null) {
     		if(type instanceof Class) {
@@ -356,6 +358,12 @@ public class BeancpInfo
             		Method[] methods1=mclazz.getDeclaredMethods();
             		for(Method method:methods1) {
             			String methodName=method.getName();
+            			if(BeancpCompareInfo.isCompareMethod(method)) {
+            				if(info.compares==null) {
+            					info.compares=new ArrayList<>();
+            				}
+            				info.compares.add(new BeancpCompareInfo(info,method));
+            			}
             			if(BeancpBeanTool.isPossMethod(method)) {
             				Class<?>[] types=method.getParameterTypes();
             				StringBuffer sb=new StringBuffer();

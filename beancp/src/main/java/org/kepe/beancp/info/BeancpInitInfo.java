@@ -46,7 +46,7 @@ public class BeancpInitInfo {
 						name=bp.value()[0];
 					}
 				}
-				params.put(parameter.getName(), BeancpInfo.of(BeancpBeanTool.getParamType(parentInfo.getFtype(), parentInfo.getFClass(),this.getConstructor().getDeclaringClass(), parameter, parameter.getParameterizedType())));
+				params.put(name, BeancpInfo.of(BeancpBeanTool.getParamType(parentInfo.getFtype(), parentInfo.getFClass(),this.getConstructor().getDeclaringClass(), parameter, parameter.getParameterizedType())));
 			}
 			this.params=params;
 		}
