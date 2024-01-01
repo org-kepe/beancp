@@ -17,7 +17,7 @@ import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 import org.kepe.beancp.tool.BeancpTool;
 
-public class BeancpBase6Registers  implements BeancpRegister{
+public class BeancpBase6Registers extends BeancpRegister{
 	public static void registers() {
 		
 		BeancpCustomConverter converter1=new BeancpCustomConverter() {

@@ -17,26 +17,31 @@ import java.time.format.DateTimeParseException;
 import java.time.zone.ZoneRules;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
+import org.kepe.beancp.config.BeancpCompare;
+import org.kepe.beancp.config.BeancpCompareFlag;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.convert.BeancpConvertMapper;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.invocation.BeancpInvocation;
 import org.kepe.beancp.ct.invocation.BeancpInvocationImp;
 import org.kepe.beancp.ct.invocation.BeancpInvocationJO;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOJ;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
 import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
+import org.kepe.beancp.ct.reg.compare.BeancpDefaultCustomCompare;
 import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 import org.kepe.beancp.tool.BeancpTool;
 
 
-public class BeancpBase4Registers  implements BeancpRegister{
+public class BeancpBase4Registers extends BeancpRegister{
 	public static final ZoneId DEFAULT_ZONE_ID = ZoneId.systemDefault();
     public static final String SHANGHAI_ZONE_ID_NAME = "Asia/Shanghai";
     public static final ZoneId SHANGHAI_ZONE_ID
@@ -80,6 +85,19 @@ public class BeancpBase4Registers  implements BeancpRegister{
 		registerEq2Extends(long.class,Date.class, converter1, PRIORITY8);
 		registerEq2Extends(Long.class,Date.class, converter1, PRIORITY8);
 		
+		BeancpCompare compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Date)toObj).getTime());
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Long)toObj).longValue(), ((Date)toObj).getTime());
+			}
+		};
+		cregister(long.class,Date.class,compare1,PRIORITY8);
+		cregister(Long.class,Date.class,compare1,PRIORITY8);
+		
 		converter1=new BeancpCustomConverter() {
 			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
 				return 5;
@@ -98,6 +116,21 @@ public class BeancpBase4Registers  implements BeancpRegister{
 		};
 		registerEq(long.class,LocalDateTime.class, converter1, PRIORITY8);
 		registerEq(Long.class,LocalDateTime.class, converter1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+				Instant instant=((LocalDateTime)toObj).atZone(ZoneId.systemDefault()).toInstant();
+				return this.compare(invocation, fromObj*1000000, instant.getEpochSecond()*1000000000+instant.getNano());
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				Instant instant=((LocalDateTime)toObj).atZone(ZoneId.systemDefault()).toInstant();
+				return this.compare(invocation, ((Long)toObj).longValue()*1000000, instant.getEpochSecond()*1000000000+instant.getNano());
+			}
+		};
+		cregister(long.class,LocalDateTime.class,compare1,PRIORITY8);
+		cregister(Long.class,LocalDateTime.class,compare1,PRIORITY8);
 		
 		converter1=new BeancpCustomConverter() {
 			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
@@ -118,6 +151,21 @@ public class BeancpBase4Registers  implements BeancpRegister{
 		registerEq(long.class,Instant.class, converter1, PRIORITY8);
 		registerEq(Long.class,Instant.class, converter1, PRIORITY8);
 		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+				Instant instant=(Instant)toObj;
+				return this.compare(invocation, fromObj*1000000, instant.getEpochSecond()*1000000000+instant.getNano());
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				Instant instant=(Instant)toObj;
+				return this.compare(invocation, ((Long)toObj).longValue()*1000000, instant.getEpochSecond()*1000000000+instant.getNano());
+			}
+		};
+		cregister(long.class,Instant.class,compare1,PRIORITY8);
+		cregister(Long.class,Instant.class,compare1,PRIORITY8);
+		
 		converter1=new BeancpCustomConverter() {
 			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
 				return 5;
@@ -137,24 +185,19 @@ public class BeancpBase4Registers  implements BeancpRegister{
 		registerEq(long.class,LocalDate.class, converter1, PRIORITY8);
 		registerEq(Long.class,LocalDate.class, converter1, PRIORITY8);
 		
-		converter1=new BeancpCustomConverter() {
-			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
-				return 5;
-			}
-
+		
+		compare1=new BeancpDefaultCustomCompare() {
 			@Override
-			public Object convert(BeancpInvocationOO invocation, BeancpContext context, Object fromObj,
-					Object toObj) {
-				return LocalDateTime.ofInstant(Instant.ofEpochMilli((Long)fromObj), ZoneId.systemDefault()).toLocalTime();
-			};
-			@Override
-			public Object convert(BeancpInvocationJO invocation, BeancpContext context, long fromObj, Object toObj) {
-				return LocalDateTime.ofInstant(Instant.ofEpochMilli(fromObj), ZoneId.systemDefault()).toLocalTime();
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((LocalDate)toObj).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 			}
-			
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Long)toObj).longValue(), ((LocalDate)toObj).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+			}
 		};
-		registerEq(long.class,LocalTime.class, converter1, PRIORITY8);
-		registerEq(Long.class,LocalTime.class, converter1, PRIORITY8);
+		cregister(long.class,LocalDate.class,compare1,PRIORITY8);
+		cregister(Long.class,LocalDate.class,compare1,PRIORITY8);
 		
 		converter1=new BeancpCustomConverter() {
 			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
@@ -324,12 +367,36 @@ public class BeancpBase4Registers  implements BeancpRegister{
 		registerExtends2Eq(Date.class,Instant.class,BeancpTool.create(10, (invocation,context,fromObj,toObj)->{
 			return ((Date)fromObj).toInstant();
 		}), PRIORITY8);
+		cregister(Date.class,Instant.class, new BeancpDefaultCustomCompare() {
+			
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				Instant instant=(Instant)toObj;
+				return this.compare(invocation, ((Date) fromObj).getTime()*1000000, instant.getEpochSecond()*1000000000+instant.getNano());
+			}
+		}, PRIORITY8);
 		registerExtends2Eq(Date.class,LocalDateTime.class,BeancpTool.create(10, (invocation,context,fromObj,toObj)->{
 			return LocalDateTime.ofInstant(((Date)fromObj).toInstant(), DEFAULT_ZONE_ID);
 		}), PRIORITY8);
+		cregister(Date.class,LocalDateTime.class, new BeancpDefaultCustomCompare() {
+			
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				Instant instant=((LocalDateTime)toObj).atZone(DEFAULT_ZONE_ID).toInstant();
+				return this.compare(invocation, ((Date) fromObj).getTime()*1000000, instant.getEpochSecond()*1000000000+instant.getNano());
+			}
+		}, PRIORITY8);
 		registerExtends2Eq(Date.class,LocalDate.class,BeancpTool.create(10, (invocation,context,fromObj,toObj)->{
 			return LocalDateTime.ofInstant(((Date)fromObj).toInstant(), DEFAULT_ZONE_ID).toLocalDate();
 		}), PRIORITY8);
+		cregister(Date.class,LocalDate.class, new BeancpDefaultCustomCompare() {
+			
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				Instant instant=((LocalDate)toObj).atStartOfDay().atZone(DEFAULT_ZONE_ID).toInstant();
+				return this.compare(invocation, ((Date) fromObj).getTime(), instant.toEpochMilli());
+			}
+		}, PRIORITY8);
 		registerExtends2Eq(Date.class,LocalTime.class,BeancpTool.create(10, (invocation,context,fromObj,toObj)->{
 			return LocalDateTime.ofInstant(((Date)fromObj).toInstant(), DEFAULT_ZONE_ID).toLocalTime();
 		}), PRIORITY8);
@@ -357,12 +424,28 @@ public class BeancpBase4Registers  implements BeancpRegister{
 		registerEq(Instant.class,LocalDateTime.class,BeancpTool.create(10, (invocation,context,fromObj,toObj)->{
 			return LocalDateTime.ofInstant((Instant)fromObj, DEFAULT_ZONE_ID);
 		}), PRIORITY8);
+		cregister(Instant.class,LocalDateTime.class, new BeancpDefaultCustomCompare() {
+			
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				Instant instant1=((Instant)fromObj);
+				Instant instant=((LocalDateTime)toObj).atZone(DEFAULT_ZONE_ID).toInstant();
+				return this.compare(invocation, instant1.getEpochSecond()*1000000000+instant1.getNano(), instant.getEpochSecond()*1000000000+instant.getNano());
+			}
+		}, PRIORITY8);
 		registerEq(Instant.class,LocalDate.class,BeancpTool.create(10, (invocation,context,fromObj,toObj)->{
 			return LocalDateTime.ofInstant((Instant)fromObj, DEFAULT_ZONE_ID).toLocalDate();
 		}), PRIORITY8);
-		registerEq(Instant.class,LocalDate.class,BeancpTool.create(10, (invocation,context,fromObj,toObj)->{
-			return LocalDateTime.ofInstant((Instant)fromObj, DEFAULT_ZONE_ID).toLocalTime();
-		}), PRIORITY8);
+		cregister(Instant.class,LocalDate.class, new BeancpDefaultCustomCompare() {
+			
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				Instant instant1=((Instant)fromObj);
+				Instant instant=((LocalDate)toObj).atStartOfDay().atZone(DEFAULT_ZONE_ID).toInstant();
+				return this.compare(invocation, instant1.getEpochSecond()*1000000000+instant1.getNano(), instant.getEpochSecond()*1000000000+instant.getNano());
+			}
+		}, PRIORITY8);
+		
 		registerEq(LocalDateTime.class,Instant.class,BeancpTool.create(10, (invocation,context,fromObj,toObj)->{
 			return ((LocalDateTime)fromObj).atZone(DEFAULT_ZONE_ID).toInstant();
 		}), PRIORITY8);
@@ -373,6 +456,12 @@ public class BeancpBase4Registers  implements BeancpRegister{
 		registerEq(LocalDateTime.class,LocalDate.class,BeancpTool.create(10, (invocation,context,fromObj,toObj)->{
 			return ((LocalDateTime)fromObj).toLocalDate();
 		}), PRIORITY8);
+		cregister(LocalDateTime.class,LocalDate.class, new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return BeancpCompareFlag.of( ((LocalDateTime)fromObj).compareTo(((LocalDate)toObj).atStartOfDay()));
+			}
+		}, PRIORITY8);
 		registerEq(LocalDateTime.class,LocalTime.class,BeancpTool.create(10, (invocation,context,fromObj,toObj)->{
 			return ((LocalDateTime)fromObj).toLocalTime();
 		}), PRIORITY8);

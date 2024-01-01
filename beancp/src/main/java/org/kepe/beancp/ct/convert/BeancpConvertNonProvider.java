@@ -12,11 +12,7 @@ import org.kepe.beancp.info.BeancpInfo;
  */
 public class BeancpConvertNonProvider extends BeancpConvertProvider
 {
-	public final static BeancpConvertNonProvider INSTANCE=new BeancpConvertNonProvider();
-
-	private BeancpConvertNonProvider() {
-        super(null,null, null, null, null);
-    }
+	
     public BeancpConvertNonProvider(BeancpConvertProvider parent, BeancpFeature flag,
 			BeancpInfo fromInfo, BeancpInfo toInfo) {
 		super(parent, flag, null, fromInfo, toInfo);

@@ -7,11 +7,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.kepe.beancp.config.BeancpCompare;
+import org.kepe.beancp.config.BeancpCompareFlag;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.config.BeancpOOConverter;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.invocation.BeancpInvocation;
 import org.kepe.beancp.ct.invocation.BeancpInvocationBO;
 import org.kepe.beancp.ct.invocation.BeancpInvocationCO;
 import org.kepe.beancp.ct.invocation.BeancpInvocationDO;
@@ -37,7 +40,7 @@ import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 import org.kepe.beancp.tool.BeancpTool;
 
-public class BeancpBase3Registers  implements BeancpRegister{
+public class BeancpBase3Registers extends BeancpRegister{
 	public static void registers() {
 		
 		BeancpCustomConverter converter1 = new BeancpCustomConverter() {
@@ -1116,6 +1119,20 @@ public class BeancpBase3Registers  implements BeancpRegister{
 		registerEq(BigInteger.class,BigDecimal.class,BeancpTool.create(2, (invocation,context,fromObj,toObj)->{
 			return new BigDecimal(((BigInteger)fromObj).longValue());
 		}),PRIORITY8);
+		
+		cregister(String.class,String.class,new BeancpCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return BeancpCompareFlag.of(((String)fromObj).compareTo((String)toObj));
+			}
+		},PRIORITY8);
+		
+		cregisterExtends2Any(String.class,new BeancpCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return BeancpCompareFlag.of(((String)fromObj).compareTo(toObj.toString()));
+			}
+		},PRIORITY7);
 		//String int/Integer long/Long double/Double float/Float short/Short boolean/Boolean char/Character BigDecimal/Number BigInteger
 
 //		registerEq(Integer.class,Long.class,BeancpTool.create(2, (invocation,context,fromObj,toObj)->{

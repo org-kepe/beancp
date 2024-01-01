@@ -8,10 +8,13 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.kepe.beancp.BeancpUtil;
+import org.kepe.beancp.config.BeancpCompare;
+import org.kepe.beancp.config.BeancpCompareFlag;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.invocation.BeancpInvocation;
 import org.kepe.beancp.ct.invocation.BeancpInvocationImp;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOI;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
@@ -23,7 +26,7 @@ import org.kepe.beancp.tool.BeancpBeanTool;
 import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 import org.kepe.beancp.tool.BeancpStringTool;
 
-public class BeancpCollectionRegisters implements BeancpRegister{
+public class BeancpCollectionRegisters extends BeancpRegister{
 	public static void registers() {
 		
 		
@@ -640,6 +643,332 @@ public class BeancpCollectionRegisters implements BeancpRegister{
 				
 			};
 		}  , PRIORITY6);
+		
+		cregisterArray2Array(new BeancpCompare() {
+			
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				BeancpInfo fromInfo=((BeancpInvocationImp)invocation).getFromInfo();
+				BeancpInfo toInfo=((BeancpInvocationImp)invocation).getToInfo();
+				BeancpConvertProvider provider=BeancpConvertProvider.of(invocation.getFeature(), fromInfo.getComponentType(), toInfo.getComponentType());
+				int length1=Array.getLength(fromObj);
+				int length2=Array.getLength(toObj);
+				int i=0;
+				while(true) {
+					if(i>=length1) {
+						if(i>=length2) {
+							return BeancpCompareFlag.EQUALS;
+						}
+						return BeancpCompareFlag.LESS;
+					}
+					if(i>=length2) {
+						return BeancpCompareFlag.GREATER;
+					}
+					switch(fromInfo.getComponentType().stage) {
+					case 0:
+						switch(toInfo.getComponentType().stage) {
+						case 0:
+							Object obj=Array.get(fromObj, i);
+							Object obj2=Array.get(toObj, i);
+							provider=provider.of(obj,obj2);
+							BeancpCompareFlag flag=provider.compare(obj, obj2);
+							break;
+						case 1:
+							obj=Array.get(fromObj, i);
+							Array.setInt(toObj, i, provider.of(obj).convert(context, obj, Array.getInt(toObj, i)));
+							break;
+						case 2:
+							obj=Array.get(fromObj, i);
+							Array.setLong(toObj, i, provider.of(obj).convert(context, obj, Array.getLong(toObj, i)));
+							break;
+						case 3:
+							obj=Array.get(fromObj, i);
+							Array.setBoolean(toObj, i, provider.of(obj).convert(context, obj, Array.getBoolean(toObj, i)));
+							break;
+						case 4:
+							obj=Array.get(fromObj, i);
+							Array.setFloat(toObj, i, provider.of(obj).convert(context, obj, Array.getFloat(toObj, i)));
+							break;
+						case 5:
+							obj=Array.get(fromObj, i);
+							Array.setDouble(toObj, i, provider.of(obj).convert(context, obj, Array.getDouble(toObj, i)));
+							break;
+						case 6:
+							obj=Array.get(fromObj, i);
+							Array.setChar(toObj, i, provider.of(obj).convert(context, obj, Array.getChar(toObj, i)));
+							break;
+						case 7:
+							obj=Array.get(fromObj, i);
+							Array.setShort(toObj, i, provider.of(obj).convert(context, obj, Array.getShort(toObj, i)));
+							break;
+						case 8:
+							obj=Array.get(fromObj, i);
+							Array.setByte(toObj, i, provider.of(obj).convert(context, obj, Array.getByte(toObj, i)));
+							break;
+						}
+						break;
+					case 1:
+						switch(toInfo.getComponentType().stage) {
+						case 0:
+							Object obj2=Array.get(toObj, i);
+							Array.set(toObj, i, provider.of2(obj2).convert(context, Array.getInt(fromObj, i), obj2));
+							break;
+						case 1:
+							Array.setInt(toObj, i, provider.convert(context, Array.getInt(fromObj, i), Array.getInt(toObj, i)));
+							break;
+						case 2:
+							Array.setLong(toObj, i, provider.convert(context, Array.getInt(fromObj, i), Array.getLong(toObj, i)));
+							break;
+						case 3:
+							Array.setBoolean(toObj, i, provider.convert(context, Array.getInt(fromObj, i), Array.getBoolean(toObj, i)));
+							break;
+						case 4:
+							Array.setFloat(toObj, i, provider.convert(context, Array.getInt(fromObj, i), Array.getFloat(toObj, i)));
+							break;
+						case 5:
+							Array.setDouble(toObj, i, provider.convert(context, Array.getInt(fromObj, i), Array.getDouble(toObj, i)));
+							break;
+						case 6:
+							Array.setChar(toObj, i, provider.convert(context, Array.getInt(fromObj, i), Array.getChar(toObj, i)));
+							break;
+						case 7:
+							Array.setShort(toObj, i, provider.convert(context, Array.getInt(fromObj, i), Array.getShort(toObj, i)));
+							break;
+						case 8:
+							Array.setByte(toObj, i, provider.convert(context, Array.getInt(fromObj, i), Array.getByte(toObj, i)));
+							break;
+						}
+						break;
+					case 2:
+						switch(toInfo.getComponentType().stage) {
+						case 0:
+							Object obj2=Array.get(toObj, i);
+							Array.set(toObj, i, provider.of2(obj2).convert(context, Array.getLong(fromObj, i), obj2));
+							break;
+						case 1:
+							Array.setInt(toObj, i, provider.convert(context, Array.getLong(fromObj, i), Array.getInt(toObj, i)));
+							break;
+						case 2:
+							Array.setLong(toObj, i, provider.convert(context, Array.getLong(fromObj, i), Array.getLong(toObj, i)));
+							break;
+						case 3:
+							Array.setBoolean(toObj, i, provider.convert(context, Array.getLong(fromObj, i), Array.getBoolean(toObj, i)));
+							break;
+						case 4:
+							Array.setFloat(toObj, i, provider.convert(context, Array.getLong(fromObj, i), Array.getFloat(toObj, i)));
+							break;
+						case 5:
+							Array.setDouble(toObj, i, provider.convert(context, Array.getLong(fromObj, i), Array.getDouble(toObj, i)));
+							break;
+						case 6:
+							Array.setChar(toObj, i, provider.convert(context, Array.getLong(fromObj, i), Array.getChar(toObj, i)));
+							break;
+						case 7:
+							Array.setShort(toObj, i, provider.convert(context, Array.getLong(fromObj, i), Array.getShort(toObj, i)));
+							break;
+						case 8:
+							Array.setByte(toObj, i, provider.convert(context, Array.getLong(fromObj, i), Array.getByte(toObj, i)));
+							break;
+						}
+						break;
+					case 3:
+						switch(toInfo.getComponentType().stage) {
+						case 0:
+							Object obj2=Array.get(toObj, i);
+							Array.set(toObj, i, provider.of2(obj2).convert(context, Array.getBoolean(fromObj, i), obj2));
+							break;
+						case 1:
+							Array.setInt(toObj, i, provider.convert(context, Array.getBoolean(fromObj, i), Array.getInt(toObj, i)));
+							break;
+						case 2:
+							Array.setLong(toObj, i, provider.convert(context, Array.getBoolean(fromObj, i), Array.getLong(toObj, i)));
+							break;
+						case 3:
+							Array.setBoolean(toObj, i, provider.convert(context, Array.getBoolean(fromObj, i), Array.getBoolean(toObj, i)));
+							break;
+						case 4:
+							Array.setFloat(toObj, i, provider.convert(context, Array.getBoolean(fromObj, i), Array.getFloat(toObj, i)));
+							break;
+						case 5:
+							Array.setDouble(toObj, i, provider.convert(context, Array.getBoolean(fromObj, i), Array.getDouble(toObj, i)));
+							break;
+						case 6:
+							Array.setChar(toObj, i, provider.convert(context, Array.getBoolean(fromObj, i), Array.getChar(toObj, i)));
+							break;
+						case 7:
+							Array.setShort(toObj, i, provider.convert(context, Array.getBoolean(fromObj, i), Array.getShort(toObj, i)));
+							break;
+						case 8:
+							Array.setByte(toObj, i, provider.convert(context, Array.getBoolean(fromObj, i), Array.getByte(toObj, i)));
+							break;
+						}
+						break;
+					case 4:
+						switch(toInfo.getComponentType().stage) {
+						case 0:
+							Object obj2=Array.get(toObj, i);
+							Array.set(toObj, i, provider.of2(obj2).convert(context, Array.getFloat(fromObj, i), obj2));
+							break;
+						case 1:
+							Array.setInt(toObj, i, provider.convert(context, Array.getFloat(fromObj, i), Array.getInt(toObj, i)));
+							break;
+						case 2:
+							Array.setLong(toObj, i, provider.convert(context, Array.getFloat(fromObj, i), Array.getLong(toObj, i)));
+							break;
+						case 3:
+							Array.setBoolean(toObj, i, provider.convert(context, Array.getFloat(fromObj, i), Array.getBoolean(toObj, i)));
+							break;
+						case 4:
+							Array.setFloat(toObj, i, provider.convert(context, Array.getFloat(fromObj, i), Array.getFloat(toObj, i)));
+							break;
+						case 5:
+							Array.setDouble(toObj, i, provider.convert(context, Array.getFloat(fromObj, i), Array.getDouble(toObj, i)));
+							break;
+						case 6:
+							Array.setChar(toObj, i, provider.convert(context, Array.getFloat(fromObj, i), Array.getChar(toObj, i)));
+							break;
+						case 7:
+							Array.setShort(toObj, i, provider.convert(context, Array.getFloat(fromObj, i), Array.getShort(toObj, i)));
+							break;
+						case 8:
+							Array.setByte(toObj, i, provider.convert(context, Array.getFloat(fromObj, i), Array.getByte(toObj, i)));
+							break;
+						}
+						break;
+					case 5:
+						switch(toInfo.getComponentType().stage) {
+						case 0:
+							Object obj2=Array.get(toObj, i);
+							Array.set(toObj, i, provider.of2(obj2).convert(context, Array.getDouble(fromObj, i), obj2));
+							break;
+						case 1:
+							Array.setInt(toObj, i, provider.convert(context, Array.getDouble(fromObj, i), Array.getInt(toObj, i)));
+							break;
+						case 2:
+							Array.setLong(toObj, i, provider.convert(context, Array.getDouble(fromObj, i), Array.getLong(toObj, i)));
+							break;
+						case 3:
+							Array.setBoolean(toObj, i, provider.convert(context, Array.getDouble(fromObj, i), Array.getBoolean(toObj, i)));
+							break;
+						case 4:
+							Array.setFloat(toObj, i, provider.convert(context, Array.getDouble(fromObj, i), Array.getFloat(toObj, i)));
+							break;
+						case 5:
+							Array.setDouble(toObj, i, provider.convert(context, Array.getDouble(fromObj, i), Array.getDouble(toObj, i)));
+							break;
+						case 6:
+							Array.setChar(toObj, i, provider.convert(context, Array.getDouble(fromObj, i), Array.getChar(toObj, i)));
+							break;
+						case 7:
+							Array.setShort(toObj, i, provider.convert(context, Array.getDouble(fromObj, i), Array.getShort(toObj, i)));
+							break;
+						case 8:
+							Array.setByte(toObj, i, provider.convert(context, Array.getDouble(fromObj, i), Array.getByte(toObj, i)));
+							break;
+						}
+						break;
+					case 6:
+						switch(toInfo.getComponentType().stage) {
+						case 0:
+							Object obj2=Array.get(toObj, i);
+							Array.set(toObj, i, provider.of2(obj2).convert(context, Array.getChar(fromObj, i), obj2));
+							break;
+						case 1:
+							Array.setInt(toObj, i, provider.convert(context, Array.getChar(fromObj, i), Array.getInt(toObj, i)));
+							break;
+						case 2:
+							Array.setLong(toObj, i, provider.convert(context, Array.getChar(fromObj, i), Array.getLong(toObj, i)));
+							break;
+						case 3:
+							Array.setBoolean(toObj, i, provider.convert(context, Array.getChar(fromObj, i), Array.getBoolean(toObj, i)));
+							break;
+						case 4:
+							Array.setFloat(toObj, i, provider.convert(context, Array.getChar(fromObj, i), Array.getFloat(toObj, i)));
+							break;
+						case 5:
+							Array.setDouble(toObj, i, provider.convert(context, Array.getChar(fromObj, i), Array.getDouble(toObj, i)));
+							break;
+						case 6:
+							Array.setChar(toObj, i, provider.convert(context, Array.getChar(fromObj, i), Array.getChar(toObj, i)));
+							break;
+						case 7:
+							Array.setShort(toObj, i, provider.convert(context, Array.getChar(fromObj, i), Array.getShort(toObj, i)));
+							break;
+						case 8:
+							Array.setByte(toObj, i, provider.convert(context, Array.getChar(fromObj, i), Array.getByte(toObj, i)));
+							break;
+						}
+						break;
+					case 7:
+						switch(toInfo.getComponentType().stage) {
+						case 0:
+							Object obj2=Array.get(toObj, i);
+							Array.set(toObj, i, provider.of2(obj2).convert(context, Array.getShort(fromObj, i), obj2));
+							break;
+						case 1:
+							Array.setInt(toObj, i, provider.convert(context, Array.getShort(fromObj, i), Array.getInt(toObj, i)));
+							break;
+						case 2:
+							Array.setLong(toObj, i, provider.convert(context, Array.getShort(fromObj, i), Array.getLong(toObj, i)));
+							break;
+						case 3:
+							Array.setBoolean(toObj, i, provider.convert(context, Array.getShort(fromObj, i), Array.getBoolean(toObj, i)));
+							break;
+						case 4:
+							Array.setFloat(toObj, i, provider.convert(context, Array.getShort(fromObj, i), Array.getFloat(toObj, i)));
+							break;
+						case 5:
+							Array.setDouble(toObj, i, provider.convert(context, Array.getShort(fromObj, i), Array.getDouble(toObj, i)));
+							break;
+						case 6:
+							Array.setChar(toObj, i, provider.convert(context, Array.getShort(fromObj, i), Array.getChar(toObj, i)));
+							break;
+						case 7:
+							Array.setShort(toObj, i, provider.convert(context, Array.getShort(fromObj, i), Array.getShort(toObj, i)));
+							break;
+						case 8:
+							Array.setByte(toObj, i, provider.convert(context, Array.getShort(fromObj, i), Array.getByte(toObj, i)));
+							break;
+						}
+						break;
+					case 8:
+						switch(toInfo.getComponentType().stage) {
+						case 0:
+							Object obj2=Array.get(toObj, i);
+							Array.set(toObj, i, provider.of2(obj2).convert(context, Array.getByte(fromObj, i), obj2));
+							break;
+						case 1:
+							Array.setInt(toObj, i, provider.convert(context, Array.getByte(fromObj, i), Array.getInt(toObj, i)));
+							break;
+						case 2:
+							Array.setLong(toObj, i, provider.convert(context, Array.getByte(fromObj, i), Array.getLong(toObj, i)));
+							break;
+						case 3:
+							Array.setBoolean(toObj, i, provider.convert(context, Array.getByte(fromObj, i), Array.getBoolean(toObj, i)));
+							break;
+						case 4:
+							Array.setFloat(toObj, i, provider.convert(context, Array.getByte(fromObj, i), Array.getFloat(toObj, i)));
+							break;
+						case 5:
+							Array.setDouble(toObj, i, provider.convert(context, Array.getByte(fromObj, i), Array.getDouble(toObj, i)));
+							break;
+						case 6:
+							Array.setChar(toObj, i, provider.convert(context, Array.getByte(fromObj, i), Array.getChar(toObj, i)));
+							break;
+						case 7:
+							Array.setShort(toObj, i, provider.convert(context, Array.getByte(fromObj, i), Array.getShort(toObj, i)));
+							break;
+						case 8:
+							Array.setByte(toObj, i, provider.convert(context, Array.getByte(fromObj, i), Array.getByte(toObj, i)));
+							break;
+						}
+						break;
+					}
+					i++;
+				}
+				return null;
+			}
+		}, PRIORITY6);
 		registerArray2Extends(List.class,(feature,fromInfo,toInfo)->{
 			BeancpConvertProvider provider=BeancpConvertProvider.of(feature, fromInfo.getComponentType(), BeancpStringTool.nvl(toInfo.getGenericInfo(0), BeancpInfo.OBJECT_INFO));
 			return new BeancpCustomConverter() {

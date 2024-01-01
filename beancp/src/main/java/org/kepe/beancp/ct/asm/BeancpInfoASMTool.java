@@ -35,6 +35,7 @@ import org.kepe.beancp.ct.converter.BeancpConverterInfo;
 import org.kepe.beancp.ct.itf.BeancpASMConverter;
 import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.info.BeancpCloneInfo;
+import org.kepe.beancp.info.BeancpCompareInfo;
 import org.kepe.beancp.info.BeancpFieldInfo;
 import org.kepe.beancp.info.BeancpGetInfo;
 import org.kepe.beancp.info.BeancpInfo;
@@ -1120,6 +1121,73 @@ public class BeancpInfoASMTool implements Opcodes
     		
     	}
     	
+    	for(Class<?> clazz:bases) {
+    		asmContext.getNextLine(5);
+    		BeancpInfo clazzInfo=BeancpInfo.of(clazz);
+    		methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "compareTo", "(Ljava/lang/Object;I"+desc(clazz)+")I", null, new String[] { "java/lang/Exception" });
+    		methodVisitor.visitCode();
+    		Label label0 = new Label();
+    		methodVisitor.visitLabel(label0);
+    		methodVisitor.visitLineNumber(asmContext.getNextLine(), label0);
+    		if(info.compares==null||info.compares.isEmpty()) {
+        		methodVisitor.visitIntInsn(BIPUSH, -2);
+        	}else if(info.compares.size()==1) {
+        		BeancpCompareInfo compareInfo=info.compares.get(0);
+        		if((compareInfo.getInfo().isPrimitive&&compareInfo.getInfo()==clazzInfo)||(!compareInfo.getInfo().isPrimitive&&BeancpInfo.OBJECT_INFO==clazzInfo)) {
+        			methodVisitor.visitVarInsn(ALOAD, 1);
+        			if(!info.isPrimitive) {
+            			methodVisitor.visitTypeInsn(CHECKCAST, getClassName(BeancpBeanTool.getFinalPublicClass(info.getBClass())));
+            		}
+            		methodVisitor.visitVarInsn(ILOAD, 3);
+            		if(!compareInfo.getInfo().isPrimitive) {
+            			methodVisitor.visitTypeInsn(CHECKCAST, getClassName(BeancpBeanTool.getFinalPublicClass(compareInfo.getInfo().getBClass())));
+            		}
+            		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpBeanTool.getFinalPublicClass(info.getBClass())), compareInfo.getMethod().getName(), getMethodDesc(compareInfo.getMethod()), false);
+        		}else {
+        			methodVisitor.visitIntInsn(BIPUSH, -2);
+        		}
+        	}else {
+        		methodVisitor.visitVarInsn(ILOAD, 2);
+        		Label[] labels=new Label[info.compares.size()];
+        		for(int i=0;i<info.compares.size();i++) {
+        			labels[i]=new Label();
+        		}
+        		Label label5 = new Label();
+        		methodVisitor.visitTableSwitchInsn(0, info.compares.size()-1, label5, labels);
+        		for(int i=0;i<info.compares.size();i++) {
+        			Label label1=labels[i];
+        			BeancpCompareInfo compareInfo=info.compares.get(i);
+        			if((compareInfo.getInfo().isPrimitive&&compareInfo.getInfo()==clazzInfo)||(!compareInfo.getInfo().isPrimitive&&BeancpInfo.OBJECT_INFO==clazzInfo)) {
+        				methodVisitor.visitLabel(label1);
+                		methodVisitor.visitLineNumber(asmContext.getNextLine(), label1);
+                		methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+                		methodVisitor.visitVarInsn(ALOAD, 1);
+                		if(!info.isPrimitive) {
+                			methodVisitor.visitTypeInsn(CHECKCAST, getClassName(BeancpBeanTool.getFinalPublicClass(info.getBClass())));
+                		}
+                		methodVisitor.visitVarInsn(ALOAD, 3);
+                		if(!compareInfo.getInfo().isPrimitive) {
+                			methodVisitor.visitTypeInsn(CHECKCAST, getClassName(BeancpBeanTool.getFinalPublicClass(compareInfo.getInfo().getBClass())));
+                		}
+                		methodVisitor.visitMethodInsn(INVOKEVIRTUAL, getClassName(BeancpBeanTool.getFinalPublicClass(info.getBClass())), compareInfo.getMethod().getName(), getMethodDesc(compareInfo.getMethod()), false);
+                		methodVisitor.visitInsn(IRETURN);
+        			}else {
+        				methodVisitor.visitLabel(label1);
+                		methodVisitor.visitLineNumber(asmContext.getNextLine(), label1);
+                		methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+                		methodVisitor.visitIntInsn(BIPUSH, -2);
+                		methodVisitor.visitInsn(IRETURN);
+        			}
+        		}
+        		methodVisitor.visitLabel(label5);
+        		methodVisitor.visitLineNumber(asmContext.getNextLine(), label5);
+        		methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+        		methodVisitor.visitIntInsn(BIPUSH, -2);
+        	}
+    		methodVisitor.visitInsn(IRETURN);
+    		methodVisitor.visitMaxs(1, 4);
+    		methodVisitor.visitEnd();
+    	}
     	for(Class<?> clazz:bases) {
     		int py=0;
     		if(clazz==double.class||clazz==long.class) {

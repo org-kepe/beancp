@@ -50,7 +50,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-public class BeancpBeanRegisters implements BeancpRegister{
+public class BeancpBeanRegisters extends BeancpRegister{
 	public static void registers() {
 		registerBean2Bean(new BeancpASMConverter() {
 			//BeancpInitInfo initInfo=null;

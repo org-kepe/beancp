@@ -188,9 +188,6 @@ public class BeancpInfo
     
     public BeancpConvertMapper  getDefaultMapper() {
     	if(mapper==null) {
-    		if(this.isPrimitive) {
-    			return null;
-    		}
     		mapper=BeancpConvertMapper.of(this, BeancpFeature.DEFAULT_FEATURE);
     	}
     	return mapper;

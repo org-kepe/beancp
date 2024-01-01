@@ -12,11 +12,12 @@ import org.kepe.beancp.ct.invocation.BeancpInvocationOI;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
 import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
+import org.kepe.beancp.ct.reg.compare.BeancpDefaultCustomCompare;
 import org.kepe.beancp.ct.reg.converter.BeancpDirectCustomConverter;
 import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 
-public class BeancpDirectRegisters implements BeancpRegister {
+public class BeancpDirectRegisters extends BeancpRegister {
 	public static void registers() {
 		registerSame(BeancpDirectCustomConverter.INSTANCE, PRIORITY9);
 		register(int.class,Integer.class, BeancpDirectCustomConverter.INSTANCE, PRIORITY8);
@@ -36,6 +37,27 @@ public class BeancpDirectRegisters implements BeancpRegister {
 		register(Short.class,short.class, BeancpDirectCustomConverter.INSTANCE, PRIORITY8);
 		register(Double.class,double.class, BeancpDirectCustomConverter.INSTANCE, PRIORITY8);
 		register(Byte.class,byte.class, BeancpDirectCustomConverter.INSTANCE, PRIORITY8);
+		
+		cregister(int.class,Integer.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(char.class,Character.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(long.class,Long.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(float.class,Float.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(boolean.class,Boolean.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(short.class,Short.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(double.class,Double.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(byte.class,Byte.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		
+		
+		cregister(Integer.class,int.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(Character.class,char.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(Long.class,long.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(Float.class,float.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(Boolean.class,boolean.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(Short.class,short.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(Double.class,double.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		cregister(Byte.class,byte.class, BeancpDefaultCustomCompare.INSTANCE, PRIORITY8);
+		
+		
 		
 		registerSuper(new BeancpDirectCustomConverter() {
 			@Override

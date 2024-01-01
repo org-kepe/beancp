@@ -14,23 +14,28 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.sql.Blob;
 import java.sql.Clob;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 
+import org.kepe.beancp.config.BeancpCompareFlag;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.invocation.BeancpInvocation;
 import org.kepe.beancp.ct.invocation.BeancpInvocationImp;
 import org.kepe.beancp.ct.invocation.BeancpInvocationJO;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
 import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
+import org.kepe.beancp.ct.reg.compare.BeancpDefaultCustomCompare;
 import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 import org.kepe.beancp.tool.BeancpTool;
 
-public class BeancpBase5Registers  implements BeancpRegister{
+public class BeancpBase5Registers extends BeancpRegister{
 	public static void registers() {
 		
 		BeancpCustomConverter converter1=new BeancpCustomConverter() {
@@ -60,6 +65,16 @@ public class BeancpBase5Registers  implements BeancpRegister{
 		registerEq(String.class,char[].class, BeancpTool.create(5, (invocation,context,fromObj,toObj)->{
 			return ((String)fromObj).toCharArray();
 		}), PRIORITY8);
+		registerEq(char[].class,String.class, BeancpTool.create(5, (invocation,context,fromObj,toObj)->{
+			return String.valueOf((char[])fromObj);
+		}), PRIORITY8);
+		cregister(String.class,char[].class, new BeancpDefaultCustomCompare() {
+			
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return BeancpCompareFlag.of(((String)fromObj).compareTo(new String((char[])toObj)));
+			}
+		}, PRIORITY8);
 		register(Serializable.class,byte[].class, BeancpTool.create(110, (invocation,context,fromObj,toObj)->{
 			ByteArrayOutputStream bos=null;
 			ObjectOutputStream out=null;

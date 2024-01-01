@@ -5,11 +5,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.kepe.beancp.config.BeancpCompare;
+import org.kepe.beancp.config.BeancpCompareFlag;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.config.BeancpOOConverter;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.invocation.BeancpInvocation;
 import org.kepe.beancp.ct.invocation.BeancpInvocationIO;
 import org.kepe.beancp.ct.invocation.BeancpInvocationJO;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOI;
@@ -19,12 +22,13 @@ import org.kepe.beancp.ct.invocation.BeancpInvocationOZ;
 import org.kepe.beancp.ct.invocation.BeancpInvocationZO;
 import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
+import org.kepe.beancp.ct.reg.compare.BeancpDefaultCustomCompare;
 import org.kepe.beancp.ct.reg.converter.BeancpDirectCustomConverter;
 import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 import org.kepe.beancp.tool.BeancpTool;
 
-public class BeancpBase2Registers  implements BeancpRegister{
+public class BeancpBase2Registers  extends BeancpRegister{
 	public static void registers() {
 		
 		BeancpCustomConverter converter1=new BeancpCustomConverter<Boolean,AtomicBoolean>() {
@@ -54,6 +58,18 @@ public class BeancpBase2Registers  implements BeancpRegister{
 		};
 		registerEq(boolean.class,AtomicBoolean.class, converter1, PRIORITY8);
 		registerEq(Boolean.class,AtomicBoolean.class, converter1, PRIORITY8);
+		BeancpCompare compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((AtomicBoolean)toObj).get());
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Boolean)toObj).booleanValue(), ((AtomicBoolean)toObj).get());
+			}
+		};
+		cregister(boolean.class,AtomicBoolean.class,compare1,PRIORITY8);
+		cregister(Boolean.class,AtomicBoolean.class,compare1,PRIORITY8);
 		
 		converter1=new BeancpCustomConverter<AtomicBoolean,Boolean>() {
 			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
@@ -105,6 +121,19 @@ public class BeancpBase2Registers  implements BeancpRegister{
 		};
 		registerEq(int.class,AtomicInteger.class, converter1, PRIORITY8);
 		registerEq(Integer.class,AtomicInteger.class, converter1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((AtomicInteger)toObj).get());
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Integer)toObj).intValue(), ((AtomicInteger)toObj).get());
+			}
+		};
+		cregister(int.class,AtomicInteger.class,compare1,PRIORITY8);
+		cregister(Integer.class,AtomicInteger.class,compare1,PRIORITY8);
 		
 		converter1=new BeancpCustomConverter<AtomicInteger,Integer>() {
 			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
@@ -158,6 +187,19 @@ public class BeancpBase2Registers  implements BeancpRegister{
 		registerEq(long.class,AtomicLong.class, converter1, PRIORITY8);
 		registerEq(Long.class,AtomicLong.class, converter1, PRIORITY8);
 		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((AtomicLong)toObj).get());
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Long)toObj).longValue(), ((AtomicLong)toObj).get());
+			}
+		};
+		cregister(long.class,AtomicLong.class,compare1,PRIORITY8);
+		cregister(Long.class,AtomicLong.class,compare1,PRIORITY8);
+		
 		converter1=new BeancpCustomConverter<AtomicLong,Long>() {
 			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
 				return 1;
@@ -181,7 +223,24 @@ public class BeancpBase2Registers  implements BeancpRegister{
 		registerEq(AtomicLong.class,long.class, converter1, PRIORITY8);
 		registerEq(AtomicLong.class,Long.class, converter1, PRIORITY8);
 		
-		
+		cregister(AtomicLong.class,AtomicLong.class,new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((AtomicLong)fromObj).get(), ((AtomicLong)toObj).get());
+			}
+		},PRIORITY8);
+		cregister(AtomicInteger.class,AtomicInteger.class,new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((AtomicInteger)fromObj).get(), ((AtomicInteger)toObj).get());
+			}
+		},PRIORITY8);
+		cregister(AtomicBoolean.class,AtomicBoolean.class,new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((AtomicBoolean)fromObj).get(), ((AtomicBoolean)toObj).get());
+			}
+		},PRIORITY8);
 		//AtomicBoolean AtomicInteger  AtomicLong
 		
 		

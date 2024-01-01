@@ -14,6 +14,7 @@ public class BeancpInvocationImp implements BeancpInvocationOI,BeancpInvocationO
 	private BeancpFeature feature;
 	private BeancpInfo fromInfo;
 	private BeancpInfo toInfo;
+	private BeancpInvocationImp reverse;
 	public BeancpInvocationImp(BeancpConvertProvider parent,BeancpConvertProvider provider,BeancpFeature feature,BeancpInfo fromInfo,BeancpInfo toInfo) {
 		this.provider=provider;
 		this.parent=parent;
@@ -21,7 +22,13 @@ public class BeancpInvocationImp implements BeancpInvocationOI,BeancpInvocationO
 		this.fromInfo=fromInfo;
 		this.toInfo=toInfo;
 	}
-	
+	@Override
+	public BeancpInvocation reverse() {
+		if(reverse==null) {
+			reverse=BeancpConvertProvider.of(feature, toInfo, fromInfo).getInvocation();
+		}
+		return reverse;
+	}
 	@Override
 	public Object proceed(BeancpContext context, Object fromObj, Object toObj) {
 		if(parent!=null) {
@@ -616,6 +623,8 @@ public class BeancpInvocationImp implements BeancpInvocationOI,BeancpInvocationO
 	public Class getToClass() {
 		return this.toInfo.getBClass();
 	}
+
+	
 	
 	
 	 

@@ -13,4 +13,6 @@ public interface BeancpInvocation {
 	
 	Class<?> getToClass();
 	Type getToType();
+	
+	BeancpInvocation reverse();
 }

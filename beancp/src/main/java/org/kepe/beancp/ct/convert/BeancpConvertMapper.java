@@ -2,6 +2,7 @@ package org.kepe.beancp.ct.convert;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +10,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.kepe.beancp.config.BeancpCompareFlag;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.config.BeancpValueFilter;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.asm.BeancpInfoASMTool;
-import org.kepe.beancp.ct.invocation.BeancpInvocationII;
 import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.info.BeancpFieldInfo;
 import org.kepe.beancp.info.BeancpGetInfo;
@@ -76,7 +77,211 @@ public abstract class BeancpConvertMapper {
 	}
 	
 	public static BeancpConvertMapper of(BeancpInfo info,BeancpFeature feature) {
-		return C_MAP.computeIfAbsent(info, key->new ConcurrentHashMap<>()).computeIfAbsent(feature, key->BeancpInfoASMTool.generateASMMapper(info, feature));
+		return C_MAP.computeIfAbsent(info, key->new ConcurrentHashMap<>()).computeIfAbsent(feature, key->{
+			if(info.isPrimitive) {
+				return new BeancpConvertMapper(info,feature,new HashSet<>(),new HashSet<>(),new HashMap<>(),new ArrayList<>(),new ArrayList<>()) {
+					
+					@Override
+					protected void put(Object obj, int idx, int setIdx, short value, String[] key, BeancpInfo valueInfo,
+							BeancpInfo toInfo, BeancpContext context) throws Exception {
+						
+					}
+					
+					@Override
+					protected void put(Object obj, int idx, int setIdx, double value, String[] key, BeancpInfo valueInfo,
+							BeancpInfo toInfo, BeancpContext context) throws Exception {
+						
+						
+					}
+					
+					@Override
+					protected void put(Object obj, int idx, int setIdx, float value, String[] key, BeancpInfo valueInfo,
+							BeancpInfo toInfo, BeancpContext context) throws Exception {
+						
+						
+					}
+					
+					@Override
+					protected void put(Object obj, int idx, int setIdx, boolean value, String[] key, BeancpInfo valueInfo,
+							BeancpInfo toInfo, BeancpContext context) throws Exception {
+						
+						
+					}
+					
+					@Override
+					protected void put(Object obj, int idx, int setIdx, char value, String[] key, BeancpInfo valueInfo,
+							BeancpInfo toInfo, BeancpContext context) throws Exception {
+						
+						
+					}
+					
+					@Override
+					protected void put(Object obj, int idx, int setIdx, byte value, String[] key, BeancpInfo valueInfo,
+							BeancpInfo toInfo, BeancpContext context) throws Exception {
+						
+						
+					}
+					
+					@Override
+					protected void put(Object obj, int idx, int setIdx, int value, String[] key, BeancpInfo valueInfo,
+							BeancpInfo toInfo, BeancpContext context) throws Exception {
+						
+						
+					}
+					
+					@Override
+					protected void put(Object obj, int idx, int setIdx, long value, String[] key, BeancpInfo valueInfo,
+							BeancpInfo toInfo, BeancpContext context) throws Exception {
+						
+						
+					}
+					
+					@Override
+					protected void put(Object obj, int idx, int setIdx, Object value, String[] key, BeancpInfo valueInfo,
+							BeancpInfo toInfo, BeancpContext context) throws Exception {
+						
+						
+					}
+					
+					@Override
+					protected Object newInstance(int idx, Object bean, BeancpConvertMapper beanmapper, BeancpContext context)
+							throws Exception {
+						
+						return null;
+					}
+					
+					@Override
+					protected Object newInstance(int idx, Object[] args, BeancpInfo[] argInfos, BeancpContext context)
+							throws Exception {
+						
+						return null;
+					}
+					
+					@Override
+					protected short get(Object obj, int idx, int getIdx, short value, BeancpInfo valueInfo, BeancpInfo fromInfo,
+							BeancpContext context) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					protected double get(Object obj, int idx, int getIdx, double value, BeancpInfo valueInfo, BeancpInfo fromInfo,
+							BeancpContext context) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					protected float get(Object obj, int idx, int getIdx, float value, BeancpInfo valueInfo, BeancpInfo fromInfo,
+							BeancpContext context) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					protected boolean get(Object obj, int idx, int getIdx, boolean value, BeancpInfo valueInfo, BeancpInfo fromInfo,
+							BeancpContext context) throws Exception {
+						
+						return false;
+					}
+					
+					@Override
+					protected char get(Object obj, int idx, int getIdx, char value, BeancpInfo valueInfo, BeancpInfo fromInfo,
+							BeancpContext context) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					protected byte get(Object obj, int idx, int getIdx, byte value, BeancpInfo valueInfo, BeancpInfo fromInfo,
+							BeancpContext context) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					protected int get(Object obj, int idx, int getIdx, int value, BeancpInfo valueInfo, BeancpInfo fromInfo,
+							BeancpContext context) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					protected long get(Object obj, int idx, int getIdx, long value, BeancpInfo valueInfo, BeancpInfo fromInfo,
+							BeancpContext context) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					protected Object get(Object obj, int idx, int getIdx, Object value, BeancpInfo valueInfo, BeancpInfo fromInfo,
+							BeancpContext context) throws Exception {
+						
+						return null;
+					}
+					
+					@Override
+					public int compareTo(Object fromObj, int idx, byte toObj) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					public int compareTo(Object fromObj, int idx, short toObj) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					public int compareTo(Object fromObj, int idx, char toObj) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					public int compareTo(Object fromObj, int idx, double toObj) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					public int compareTo(Object fromObj, int idx, float toObj) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					public int compareTo(Object fromObj, int idx, boolean toObj) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					public int compareTo(Object fromObj, int idx, long toObj) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					public int compareTo(Object fromObj, int idx, int toObj) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					public int compareTo(Object fromObj, int idx, Object toObj) throws Exception {
+						
+						return 0;
+					}
+					
+					@Override
+					protected Object clone(Object obj) throws Exception {
+						return null;
+					}
+				};
+			}
+			return BeancpInfoASMTool.generateASMMapper(info, feature);
+		});
 	}
 	
 	public Object newInstance(BeancpContext context,Object... args) {
@@ -168,7 +373,7 @@ public abstract class BeancpConvertMapper {
 				for(Entry<String, BeancpInfo> e:initInfo.getParams().entrySet()) {
 					String key=e.getKey();
 					BeancpInfo paramInfo=e.getValue();
-					String mapkey=mapContainsKey(argsMap,e.getKey());
+					String mapkey=mapContainsKey(argsMap,key);
 					if(mapkey==null) {
 						allHave=false;
 						break;
@@ -1228,9 +1433,30 @@ public abstract class BeancpConvertMapper {
 	protected int indexOf(String key) {
 		return fields.get(key).r2.intValue();
 	}
-
+	public BeancpCompareFlag compare(Object fromObj,Object toObj,BeancpInfo toInfo) {
+		if(toInfo==null) {
+			toInfo=BeancpInfo.OBJECT_INFO.of(toObj);
+		}
+		return BeancpConvertProvider.of(this.feature, this.info, toInfo).compare(fromObj, toObj);
+	}
 	
+	public abstract int compareTo(Object fromObj,int idx,Object toObj) throws Exception; 
 
-	
+	public abstract int compareTo(Object fromObj,int idx,int toObj) throws Exception; 
+
+	public abstract int compareTo(Object fromObj,int idx,long toObj) throws Exception; 
+
+	public abstract int compareTo(Object fromObj,int idx,boolean toObj) throws Exception; 
+
+	public abstract int compareTo(Object fromObj,int idx,float toObj) throws Exception; 
+
+	public abstract int compareTo(Object fromObj,int idx,double toObj) throws Exception; 
+
+	public abstract int compareTo(Object fromObj,int idx,char toObj) throws Exception; 
+
+	public abstract int compareTo(Object fromObj,int idx,short toObj) throws Exception; 
+
+	public abstract int compareTo(Object fromObj,int idx,byte toObj) throws Exception; 
+
 	
 }

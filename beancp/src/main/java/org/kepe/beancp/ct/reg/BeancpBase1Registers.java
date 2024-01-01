@@ -5,11 +5,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.kepe.beancp.config.BeancpCompare;
+import org.kepe.beancp.config.BeancpCompareFlag;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.config.BeancpOOConverter;
+import org.kepe.beancp.ct.BeancpCompareProvider;
 import org.kepe.beancp.ct.BeancpConvertProvider;
+import org.kepe.beancp.ct.converter.BeancpConverterCompareInfo;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.invocation.BeancpInvocation;
 import org.kepe.beancp.ct.invocation.BeancpInvocationIO;
 import org.kepe.beancp.ct.invocation.BeancpInvocationJO;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOI;
@@ -19,12 +24,14 @@ import org.kepe.beancp.ct.invocation.BeancpInvocationOZ;
 import org.kepe.beancp.ct.invocation.BeancpInvocationZO;
 import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
+import org.kepe.beancp.ct.reg.compare.BeancpDefaultCustomCompare;
 import org.kepe.beancp.ct.reg.converter.BeancpDirectCustomConverter;
+import org.kepe.beancp.info.BeancpCompareInfo;
 import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 import org.kepe.beancp.tool.BeancpTool;
 
-public class BeancpBase1Registers  implements BeancpRegister{
+public class BeancpBase1Registers  extends BeancpRegister{
 	public static void registers() {
 		BeancpOOConverter defaultOOConverter=(invocation, context, fromObj, toObj) -> null;
 		BeancpCustomConverter<Object,Object> defaultConverter=(invocation, context, fromObj, toObj) -> null;
@@ -98,6 +105,71 @@ public class BeancpBase1Registers  implements BeancpRegister{
 		register(long.class,short.class,BeancpTool.create(1, defaultOOConverter),PRIORITY8);
 		register(long.class,byte.class,BeancpTool.create(200, defaultOOConverter),PRIORITY8);
 		
+		
+		cregister(int.class,int.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(int.class,float.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(int.class,boolean.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(int.class,char.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(int.class,double.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(int.class,short.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(int.class,byte.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(int.class,long.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(float.class,int.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(float.class,float.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(float.class,boolean.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(float.class,char.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(float.class,double.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(float.class,short.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(float.class,byte.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(float.class,long.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(boolean.class,int.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(boolean.class,float.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(boolean.class,boolean.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(boolean.class,char.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(boolean.class,double.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(boolean.class,short.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(boolean.class,byte.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(boolean.class,long.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(char.class,int.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(char.class,float.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(char.class,boolean.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(char.class,char.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(char.class,double.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(char.class,short.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(char.class,byte.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(char.class,long.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(double.class,int.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(double.class,float.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(double.class,boolean.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(double.class,char.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(double.class,double.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(double.class,short.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(double.class,byte.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(double.class,long.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(short.class,int.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(short.class,float.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(short.class,boolean.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(short.class,char.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(short.class,double.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(short.class,short.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(short.class,byte.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(short.class,long.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(byte.class,int.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(byte.class,float.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(byte.class,boolean.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(byte.class,char.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(byte.class,double.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(byte.class,short.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(byte.class,byte.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(byte.class,long.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(long.class,int.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(long.class,float.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(long.class,boolean.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(long.class,char.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(long.class,double.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(long.class,short.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(long.class,byte.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
+		cregister(long.class,long.class,BeancpDefaultCustomCompare.INSTANCE,PRIORITY8);
 		
 		BeancpCustomConverter prim2ObjectConverter=new BeancpDirectCustomConverter() {
 			public int distance(BeancpFeature flag, Class fromClass, Class toClass) {

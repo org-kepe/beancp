@@ -24,7 +24,7 @@ import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 import org.kepe.beancp.tool.BeancpTool;
 
-public class BeancpBaseRegisters  implements BeancpRegister{
+public class BeancpBaseRegisters {
 	public static void registers() {
 		BeancpBase1Registers.registers();
 		BeancpBase2Registers.registers();
