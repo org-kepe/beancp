@@ -34,6 +34,7 @@ import org.kepe.beancp.ct.invocation.BeancpInvocationSO;
 import org.kepe.beancp.ct.invocation.BeancpInvocationZO;
 import org.kepe.beancp.ct.itf.BeancpConverter;
 import org.kepe.beancp.ct.itf.BeancpCustomConverter;
+import org.kepe.beancp.ct.reg.compare.BeancpDefaultCustomCompare;
 import org.kepe.beancp.ct.reg.converter.BeancpDirectCustomConverter;
 import org.kepe.beancp.exception.BeancpException;
 import org.kepe.beancp.info.BeancpInfo;
@@ -181,6 +182,43 @@ public class BeancpBase3Registers extends BeancpRegister{
 		registerEq(String.class,double.class,converter1,PRIORITY8);
 		registerEq(String.class,float.class,converter1,PRIORITY8);
 		registerEq(String.class,char.class,converter1,PRIORITY8);
+		cregister(String.class, char.class, new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, char toObj) {
+				String str=(String)fromObj;
+				int length=str.length();
+				if(length==0) {
+					return BeancpCompareFlag.LESS;
+				}
+				BeancpCompareFlag flag=this.compare(invocation,str.charAt(0), toObj);
+				if(flag==BeancpCompareFlag.EQUALS) {
+					if(length>1) {
+						return BeancpCompareFlag.GREATER;
+					}
+					return flag;
+				}
+				return flag;
+			}
+		}, PRIORITY8);
+		cregister(String.class, Character.class, new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, char toObj) {
+				String str=(String)fromObj;
+				int length=str.length();
+				if(length==0) {
+					return BeancpCompareFlag.LESS;
+				}
+				BeancpCompareFlag flag=this.compare(invocation,str.charAt(0), ((Character)toObj).charValue());
+				if(flag==BeancpCompareFlag.EQUALS) {
+					if(length>1) {
+						return BeancpCompareFlag.GREATER;
+					}
+					return flag;
+				}
+				return flag;
+			}
+		}, PRIORITY8);
+		
 		registerEq(String.class,boolean.class,converter1,PRIORITY8);
 		
 		registerEq(String.class,Long.class,BeancpTool.create(5, (invocation,context,fromObj,toObj)->{
@@ -417,6 +455,10 @@ public class BeancpBase3Registers extends BeancpRegister{
 		registerExtends2Eq(Number.class,Byte.class,BeancpTool.create(2, (invocation,context,fromObj,toObj)->{
 			return ((Number)fromObj).byteValue();
 		}),PRIORITY8);
+		
+		
+		
+		
 		
 		converter1=new BeancpCustomConverter() {
 			public int distance(BeancpFeature feature, Class fromClass, Class toClass) {
@@ -1133,7 +1175,675 @@ public class BeancpBase3Registers extends BeancpRegister{
 				return BeancpCompareFlag.of(((String)fromObj).compareTo(toObj.toString()));
 			}
 		},PRIORITY7);
-		//String int/Integer long/Long double/Double float/Float short/Short boolean/Boolean char/Character BigDecimal/Number BigInteger
+		
+		
+		BeancpCompare compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), ((Number)toObj).intValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, int toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Number)toObj).intValue()) ;
+			}
+		};
+		
+		cregister(Short.class, Integer.class, compare1, PRIORITY8);
+		cregister(Short.class, int.class, compare1, PRIORITY8);
+		cregister(short.class, Integer.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), ((Number)toObj).longValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, long toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Number)toObj).longValue()) ;
+			}
+		};
+		
+		cregister(Short.class, Long.class, compare1, PRIORITY8);
+		cregister(Short.class, long.class, compare1, PRIORITY8);
+		cregister(short.class, Long.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), ((Number)toObj).floatValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, float toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Number)toObj).floatValue()) ;
+			}
+		};
+		cregister(Short.class, Float.class, compare1, PRIORITY8);
+		cregister(Short.class, float.class, compare1, PRIORITY8);
+		cregister(short.class, Float.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), ((Number)toObj).doubleValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, double toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Number)toObj).doubleValue()) ;
+			}
+		};
+		cregister(Short.class, Double.class, compare1, PRIORITY8);
+		cregister(Short.class, double.class, compare1, PRIORITY8);
+		cregister(short.class, Double.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), ((Boolean)toObj).booleanValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, boolean toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Boolean)toObj).booleanValue()) ;
+			}
+		};
+		cregister(Short.class, Boolean.class, compare1, PRIORITY8);
+		cregister(Short.class, boolean.class, compare1, PRIORITY8);
+		cregister(short.class, Boolean.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), ((Character)toObj).charValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, char toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Character)toObj).charValue()) ;
+			}
+		};
+		cregister(Short.class, Character.class, compare1, PRIORITY8);
+		cregister(Short.class, char.class, compare1, PRIORITY8);
+		cregister(short.class, Character.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), ((BigDecimal)toObj).doubleValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigDecimal)toObj).doubleValue()) ;
+			}
+		};
+		cregister(Short.class, BigDecimal.class, compare1, PRIORITY8);
+		cregister(short.class, BigDecimal.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).shortValue(), ((BigInteger)toObj).intValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigInteger)toObj).intValue()) ;
+			}
+		};
+		cregister(Short.class, BigInteger.class, compare1, PRIORITY8);
+		cregister(short.class, BigInteger.class, compare1, PRIORITY8);
+		
+		
+		//------
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), ((Number)toObj).longValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, long toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Number)toObj).longValue()) ;
+			}
+		};
+		
+		cregister(Integer.class, Long.class, compare1, PRIORITY8);
+		cregister(Integer.class, long.class, compare1, PRIORITY8);
+		cregister(int.class, Long.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), ((Number)toObj).floatValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, float toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Number)toObj).floatValue()) ;
+			}
+		};
+		cregister(Integer.class, Float.class, compare1, PRIORITY8);
+		cregister(Integer.class, float.class, compare1, PRIORITY8);
+		cregister(int.class, Float.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), ((Number)toObj).doubleValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, double toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Number)toObj).doubleValue()) ;
+			}
+		};
+		cregister(Integer.class, Double.class, compare1, PRIORITY8);
+		cregister(Integer.class, double.class, compare1, PRIORITY8);
+		cregister(int.class, Double.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), ((Boolean)toObj).booleanValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, boolean toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Boolean)toObj).booleanValue()) ;
+			}
+		};
+		cregister(Integer.class, Boolean.class, compare1, PRIORITY8);
+		cregister(Integer.class, boolean.class, compare1, PRIORITY8);
+		cregister(int.class, Boolean.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), ((Character)toObj).charValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, char toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Character)toObj).charValue()) ;
+			}
+		};
+		cregister(Integer.class, Character.class, compare1, PRIORITY8);
+		cregister(Integer.class, char.class, compare1, PRIORITY8);
+		cregister(int.class, Character.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), ((BigDecimal)toObj).doubleValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigDecimal)toObj).doubleValue()) ;
+			}
+		};
+		cregister(Integer.class, BigDecimal.class, compare1, PRIORITY8);
+		cregister(int.class, BigDecimal.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).intValue(), ((BigInteger)toObj).longValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigInteger)toObj).longValue()) ;
+			}
+		};
+		cregister(Integer.class, BigInteger.class, compare1, PRIORITY8);
+		cregister(int.class, BigInteger.class, compare1, PRIORITY8);
+		
+		
+		//------
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).longValue(), ((Number)toObj).floatValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, float toObj) {
+				return this.compare(invocation, ((Number)fromObj).longValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Number)toObj).floatValue()) ;
+			}
+		};
+		cregister(Long.class, Float.class, compare1, PRIORITY8);
+		cregister(Long.class, float.class, compare1, PRIORITY8);
+		cregister(long.class, Float.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).longValue(), ((Number)toObj).doubleValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, double toObj) {
+				return this.compare(invocation, ((Number)fromObj).longValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Number)toObj).doubleValue()) ;
+			}
+		};
+		cregister(Long.class, Double.class, compare1, PRIORITY8);
+		cregister(Long.class, double.class, compare1, PRIORITY8);
+		cregister(long.class, Double.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).longValue(), ((Boolean)toObj).booleanValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, boolean toObj) {
+				return this.compare(invocation, ((Number)fromObj).longValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Boolean)toObj).booleanValue()) ;
+			}
+		};
+		cregister(Long.class, Boolean.class, compare1, PRIORITY8);
+		cregister(Long.class, boolean.class, compare1, PRIORITY8);
+		cregister(long.class, Boolean.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).longValue(), ((Character)toObj).charValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, char toObj) {
+				return this.compare(invocation, ((Number)fromObj).longValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Character)toObj).charValue()) ;
+			}
+		};
+		cregister(Long.class, Character.class, compare1, PRIORITY8);
+		cregister(Long.class, char.class, compare1, PRIORITY8);
+		cregister(long.class, Character.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).longValue(), ((BigDecimal)toObj).doubleValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigDecimal)toObj).doubleValue()) ;
+			}
+		};
+		cregister(Long.class, BigDecimal.class, compare1, PRIORITY8);
+		cregister(long.class, BigDecimal.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return BeancpCompareFlag.of(BigInteger.valueOf(((Number)fromObj).longValue()).compareTo((BigInteger)toObj)) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+				return BeancpCompareFlag.of(BigInteger.valueOf(fromObj).compareTo((BigInteger)toObj)) ;
+			}
+		};
+		cregister(Long.class, BigInteger.class, compare1, PRIORITY8);
+		cregister(long.class, BigInteger.class, compare1, PRIORITY8);
+		
+		//------
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).floatValue(), ((Number)toObj).doubleValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, double toObj) {
+				return this.compare(invocation, ((Number)fromObj).floatValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Number)toObj).doubleValue()) ;
+			}
+		};
+		cregister(Float.class, Double.class, compare1, PRIORITY8);
+		cregister(Float.class, double.class, compare1, PRIORITY8);
+		cregister(float.class, Double.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).floatValue(), ((Boolean)toObj).booleanValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, boolean toObj) {
+				return this.compare(invocation, ((Number)fromObj).floatValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Boolean)toObj).booleanValue()) ;
+			}
+		};
+		cregister(Float.class, Boolean.class, compare1, PRIORITY8);
+		cregister(Float.class, boolean.class, compare1, PRIORITY8);
+		cregister(float.class, Boolean.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).floatValue(), ((Character)toObj).charValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, char toObj) {
+				return this.compare(invocation, ((Number)fromObj).floatValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Character)toObj).charValue()) ;
+			}
+		};
+		cregister(Float.class, Character.class, compare1, PRIORITY8);
+		cregister(Float.class, char.class, compare1, PRIORITY8);
+		cregister(float.class, Character.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).floatValue(), ((BigDecimal)toObj).doubleValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigDecimal)toObj).doubleValue()) ;
+			}
+		};
+		cregister(Float.class, BigDecimal.class, compare1, PRIORITY8);
+		cregister(float.class, BigDecimal.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return BeancpCompareFlag.of(new BigDecimal(String.valueOf( ((Number)fromObj).floatValue() )).compareTo(new BigDecimal((BigInteger)toObj)) );
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, R toObj) {
+				return BeancpCompareFlag.of(new BigDecimal(String.valueOf( fromObj )).compareTo(new BigDecimal((BigInteger)toObj)) );
+			}
+		};
+		cregister(Float.class, BigInteger.class, compare1, PRIORITY8);
+		cregister(float.class, BigInteger.class, compare1, PRIORITY8);
+		
+		
+		//------
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).doubleValue(), ((Boolean)toObj).booleanValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, boolean toObj) {
+				return this.compare(invocation, ((Number)fromObj).doubleValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Boolean)toObj).booleanValue()) ;
+			}
+		};
+		cregister(Double.class, Boolean.class, compare1, PRIORITY8);
+		cregister(Double.class, boolean.class, compare1, PRIORITY8);
+		cregister(double.class, Boolean.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).doubleValue(), ((Character)toObj).charValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, char toObj) {
+				return this.compare(invocation, ((Number)fromObj).doubleValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Character)toObj).charValue()) ;
+			}
+		};
+		cregister(Double.class, Character.class, compare1, PRIORITY8);
+		cregister(Double.class, char.class, compare1, PRIORITY8);
+		cregister(double.class, Character.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return BeancpCompareFlag.of(new BigDecimal(String.valueOf( ((Number)fromObj).doubleValue() )).compareTo((BigDecimal)toObj) );
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, R toObj) {
+				return BeancpCompareFlag.of(new BigDecimal(fromObj).compareTo((BigDecimal)toObj) );
+			}
+		};
+		cregister(Double.class, BigDecimal.class, compare1, PRIORITY8);
+		cregister(double.class, BigDecimal.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return BeancpCompareFlag.of(new BigDecimal(String.valueOf( ((Number)fromObj).doubleValue() )).compareTo(new BigDecimal((BigInteger)toObj)) );
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, R toObj) {
+				return BeancpCompareFlag.of(new BigDecimal(String.valueOf( fromObj )).compareTo(new BigDecimal((BigInteger)toObj)) );
+			}
+		};
+		cregister(Double.class, BigInteger.class, compare1, PRIORITY8);
+		cregister(double.class, BigInteger.class, compare1, PRIORITY8);
+		//------
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Boolean)fromObj).booleanValue(), ((Character)toObj).charValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, char toObj) {
+				return this.compare(invocation, ((Boolean)fromObj).booleanValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Character)toObj).charValue()) ;
+			}
+		};
+		cregister(Boolean.class, Character.class, compare1, PRIORITY8);
+		cregister(Boolean.class, char.class, compare1, PRIORITY8);
+		cregister(boolean.class, Character.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Boolean)fromObj).booleanValue(), ((BigDecimal)toObj).doubleValue() ) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigDecimal)toObj).doubleValue() ) ;
+			}
+		};
+		cregister(Boolean.class, BigDecimal.class, compare1, PRIORITY8);
+		cregister(boolean.class, BigDecimal.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Boolean)fromObj).booleanValue(), ((BigDecimal)toObj).intValue() ) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigDecimal)toObj).intValue() ) ;
+			}
+		};
+		cregister(Boolean.class, BigInteger.class, compare1, PRIORITY8);
+		cregister(boolean.class, BigInteger.class, compare1, PRIORITY8);
+		
+		//------
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).doubleValue(), ((Boolean)toObj).booleanValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, boolean toObj) {
+				return this.compare(invocation, ((Number)fromObj).doubleValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Boolean)toObj).booleanValue()) ;
+			}
+		};
+		cregister(Double.class, Boolean.class, compare1, PRIORITY8);
+		cregister(Double.class, boolean.class, compare1, PRIORITY8);
+		cregister(double.class, Boolean.class, compare1, PRIORITY8);
+		
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Number)fromObj).doubleValue(), ((Character)toObj).charValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, char toObj) {
+				return this.compare(invocation, ((Number)fromObj).doubleValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Character)toObj).charValue()) ;
+			}
+		};
+		cregister(Double.class, Character.class, compare1, PRIORITY8);
+		cregister(Double.class, char.class, compare1, PRIORITY8);
+		cregister(double.class, Character.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return BeancpCompareFlag.of(new BigDecimal(String.valueOf( ((Number)fromObj).doubleValue() )).compareTo((BigDecimal)toObj) );
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, R toObj) {
+				return BeancpCompareFlag.of(new BigDecimal(fromObj).compareTo((BigDecimal)toObj) );
+			}
+		};
+		cregister(Double.class, BigDecimal.class, compare1, PRIORITY8);
+		cregister(double.class, BigDecimal.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return BeancpCompareFlag.of(new BigDecimal(String.valueOf( ((Number)fromObj).doubleValue() )).compareTo(new BigDecimal((BigInteger)toObj)) );
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, R toObj) {
+				return BeancpCompareFlag.of(new BigDecimal(String.valueOf( fromObj )).compareTo(new BigDecimal((BigInteger)toObj)) );
+			}
+		};
+		cregister(Double.class, BigInteger.class, compare1, PRIORITY8);
+		cregister(double.class, BigInteger.class, compare1, PRIORITY8);
+		//------
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Boolean)fromObj).booleanValue(), ((Character)toObj).charValue()) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, char toObj) {
+				return this.compare(invocation, ((Boolean)fromObj).booleanValue(), toObj) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((Character)toObj).charValue()) ;
+			}
+		};
+		cregister(Boolean.class, Character.class, compare1, PRIORITY8);
+		cregister(Boolean.class, char.class, compare1, PRIORITY8);
+		cregister(boolean.class, Character.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Boolean)fromObj).booleanValue(), ((BigDecimal)toObj).doubleValue() ) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigDecimal)toObj).doubleValue() ) ;
+			}
+		};
+		cregister(Boolean.class, BigDecimal.class, compare1, PRIORITY8);
+		cregister(boolean.class, BigDecimal.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Boolean)fromObj).booleanValue(), ((BigInteger)toObj).doubleValue() ) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigInteger)toObj).doubleValue() ) ;
+			}
+		};
+		cregister(Boolean.class, BigInteger.class, compare1, PRIORITY8);
+		cregister(boolean.class, BigInteger.class, compare1, PRIORITY8);
+		//------
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Character)fromObj).charValue(), ((BigDecimal)toObj).doubleValue() ) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, char fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigDecimal)toObj).doubleValue() ) ;
+			}
+		};
+		cregister(Character.class, BigDecimal.class, compare1, PRIORITY8);
+		cregister(char.class, BigDecimal.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return this.compare(invocation, ((Boolean)fromObj).booleanValue(), ((BigInteger)toObj).intValue() ) ;
+			}
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, char fromObj, R toObj) {
+				return this.compare(invocation, fromObj, ((BigInteger)toObj).intValue() ) ;
+			}
+		};
+		cregister(Character.class, BigInteger.class, compare1, PRIORITY8);
+		cregister(char.class, BigInteger.class, compare1, PRIORITY8);
+		compare1=new BeancpDefaultCustomCompare() {
+			@Override
+			public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
+				return BeancpCompareFlag.of(((BigDecimal)fromObj).compareTo(new BigDecimal((BigInteger)toObj) ) );
+			}
+		};
+		cregister(BigDecimal.class, BigInteger.class, compare1, PRIORITY8);
+		//String short/Short int/Integer long/Long float/Float double/Double   boolean/Boolean char/Character BigDecimal/Number BigInteger
 
 //		registerEq(Integer.class,Long.class,BeancpTool.create(2, (invocation,context,fromObj,toObj)->{
 //			return null;

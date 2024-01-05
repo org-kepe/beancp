@@ -1,5 +1,7 @@
 package org.kepe.beancp.tool;
 
+import java.util.Objects;
+
 /**
  * Hello world!
  *
@@ -18,4 +20,19 @@ public class BeancpStringTool
     	}
     	return t;
     }
+    
+    public static boolean in(Object obj,Object... objs) {
+		if(objs==null) {
+			return false;
+		}
+		for(Object o:objs) {
+			if(Objects.equals(obj, o)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public static boolean notIn(Object obj,Object... objs) {
+		return !in(obj,objs);
+	}
 }

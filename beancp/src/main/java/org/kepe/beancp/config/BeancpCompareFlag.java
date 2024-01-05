@@ -15,7 +15,12 @@ public enum BeancpCompareFlag
 	BeancpCompareFlag(int i) {
 		this.flag=i;
 	}
-	
+	public boolean isLessOrEquals() {
+		return flag==-1||flag==0;
+	}
+	public boolean isGreaterOrEquals() {
+		return flag==1||flag==0;
+	}
 	public static BeancpCompareFlag of(int compareInt) {
 		if(compareInt>0) {
 			return BeancpCompareFlag.GREATER;

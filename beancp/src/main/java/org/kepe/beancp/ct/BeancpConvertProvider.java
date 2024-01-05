@@ -27,7 +27,7 @@ import org.kepe.beancp.info.BeancpInfo;
  * Hello world!
  *
  */
-public abstract class BeancpConvertProvider implements BeancpCompare
+public abstract class BeancpConvertProvider
 {
 
     private final static Map<BeancpInfo,Map<BeancpInfo,Map<BeancpFeature,BeancpConvertProvider>>> C_MAP=new ConcurrentHashMap<>();
@@ -62,494 +62,489 @@ public abstract class BeancpConvertProvider implements BeancpCompare
     public int getDistance() {
     	return this.distance;
     }
-    @Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, R toObj) {
-		
-		return null;
+    
+	public <T, R> BeancpCompareFlag compare( T fromObj, R toObj) {
+		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, int toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( T fromObj, int toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, float toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( T fromObj, float toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, boolean toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( T fromObj, boolean toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, char toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( T fromObj, char toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, double toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( T fromObj, double toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, short toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( T fromObj, short toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, byte toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( T fromObj, byte toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, T fromObj, long toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( T fromObj, long toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, R toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( int fromObj, R toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, int toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( int fromObj, int toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, float toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( int fromObj, float toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, boolean toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( int fromObj, boolean toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, char toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( int fromObj, char toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, double toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( int fromObj, double toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, short toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( int fromObj, short toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, byte toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( int fromObj, byte toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, int fromObj, long toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( int fromObj, long toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, R toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( float fromObj, R toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, int toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( float fromObj, int toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, float toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( float fromObj, float toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, boolean toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( float fromObj, boolean toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, char toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( float fromObj, char toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, double toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( float fromObj, double toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, short toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( float fromObj, short toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, byte toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( float fromObj, byte toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, float fromObj, long toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( float fromObj, long toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, R toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( boolean fromObj, R toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, int toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( boolean fromObj, int toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, float toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( boolean fromObj, float toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, boolean toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( boolean fromObj, boolean toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, char toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( boolean fromObj, char toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, double toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( boolean fromObj, double toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, short toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( boolean fromObj, short toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, byte toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( boolean fromObj, byte toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, boolean fromObj, long toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( boolean fromObj, long toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, char fromObj, R toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( char fromObj, R toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, char fromObj, int toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( char fromObj, int toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, char fromObj, float toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( char fromObj, float toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, char fromObj, boolean toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( char fromObj, boolean toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, char fromObj, char toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( char fromObj, char toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, char fromObj, double toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( char fromObj, double toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, char fromObj, short toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( char fromObj, short toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, char fromObj, byte toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( char fromObj, byte toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, char fromObj, long toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( char fromObj, long toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, R toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( double fromObj, R toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, int toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( double fromObj, int toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, float toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( double fromObj, float toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, boolean toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( double fromObj, boolean toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, char toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( double fromObj, char toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, double toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( double fromObj, double toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, short toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( double fromObj, short toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, byte toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( double fromObj, byte toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, double fromObj, long toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( double fromObj, long toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, R toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( short fromObj, R toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, int toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( short fromObj, int toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, float toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( short fromObj, float toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, boolean toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( short fromObj, boolean toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, char toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( short fromObj, char toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, double toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( short fromObj, double toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, short toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( short fromObj, short toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, byte toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( short fromObj, byte toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, short fromObj, long toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( short fromObj, long toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, byte fromObj, R toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( byte fromObj, R toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, byte fromObj, int toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( byte fromObj, int toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, byte fromObj, float toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( byte fromObj, float toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, byte fromObj, boolean toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( byte fromObj, boolean toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, byte fromObj, char toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( byte fromObj, char toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, byte fromObj, double toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( byte fromObj, double toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, byte fromObj, short toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( byte fromObj, short toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, byte fromObj, byte toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( byte fromObj, byte toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, byte fromObj, long toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( byte fromObj, long toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, R toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( long fromObj, R toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, int toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( long fromObj, int toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, float toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( long fromObj, float toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, boolean toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( long fromObj, boolean toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, char toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( long fromObj, char toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, double toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( long fromObj, double toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, short toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( long fromObj, short toObj) {
 		
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, byte toObj) {
-		
+	
+	public <T, R> BeancpCompareFlag compare( long fromObj, byte toObj) {
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	@Override
-	public <T, R> BeancpCompareFlag compare(BeancpInvocation invocation, long fromObj, long toObj) {
+	
+	public <T, R> BeancpCompareFlag compare( long fromObj, long toObj) {
 		return compareProvider.compare(invocation, fromObj, toObj);
 	}
 
-	public  <T,R> BeancpCompareFlag compare(T fromObj,R toObj) {
-    	return compareProvider.compare(invocation, fromObj, toObj);
-    }
     public abstract <T,R> R convert(BeancpContext context,T fromObj,R toObj);
     public <R> R convert(BeancpContext context,int fromObj,R toObj) {
     	return convert(context,(Integer)fromObj,toObj);

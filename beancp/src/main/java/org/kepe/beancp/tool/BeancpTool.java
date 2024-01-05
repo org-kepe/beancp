@@ -8,12 +8,14 @@ import java.lang.reflect.Type;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.config.BeancpOOConverter;
+import org.kepe.beancp.config.BeancpPropertyGetAndSet;
 import org.kepe.beancp.config.BeancpTypeConverter;
 import org.kepe.beancp.config.BeancpTypeMatcher;
 import org.kepe.beancp.config.BeancpTypeRelMatcher;
 import org.kepe.beancp.ct.BeancpConvertProvider;
 import org.kepe.beancp.ct.convert.BeancpConvertMapper;
 import org.kepe.beancp.ct.converter.BeancpConverterInfo;
+import org.kepe.beancp.ct.converter.BeancpMapperPropertyInfo;
 import org.kepe.beancp.ct.invocation.BeancpInvocationOO;
 import org.kepe.beancp.ct.itf.BeancpConvertByObject;
 import org.kepe.beancp.ct.itf.BeancpConverter;
@@ -232,7 +234,12 @@ public class BeancpTool {
     		
     	};
     }
+	public static void registerPropertyGetAndSet(Type type,BeancpPropertyGetAndSet pgas) {
+		registerPropertyGetAndSet(type,pgas,100);
+	}
 	
-	
+	public static void registerPropertyGetAndSet(Type type,BeancpPropertyGetAndSet pgas,int priority) {
+		BeancpConvertMapper.register(BeancpMapperPropertyInfo.of(BeancpInfoMatcherTool.createExtendsMatcher(BeancpInfo.of(type)), pgas, priority));
+	}
 	
 }

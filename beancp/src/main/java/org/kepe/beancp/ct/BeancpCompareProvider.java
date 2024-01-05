@@ -3,6 +3,7 @@ package org.kepe.beancp.ct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.kepe.beancp.config.BeancpCompare;
@@ -116,7 +117,12 @@ public class BeancpCompareProvider implements BeancpCompare {
 			}
 		}
 		if(flag==null) {
-			return BeancpCompareFlag.UNKOWN;
+			flag=BeancpCompareFlag.UNKOWN;
+		}
+		if(flag==BeancpCompareFlag.UNKOWN) {
+			if(Objects.equals(fromObj, toObj)) {
+				return BeancpCompareFlag.EQUALS;
+			}
 		}
 		return flag;
 	}

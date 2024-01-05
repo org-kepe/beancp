@@ -5,11 +5,16 @@ import java.lang.reflect.Type;
 import org.kepe.beancp.config.BeancpContext;
 import org.kepe.beancp.config.BeancpFeature;
 import org.kepe.beancp.config.BeancpOOConverter;
+import org.kepe.beancp.config.BeancpPropertyGetAndSet;
 import org.kepe.beancp.config.BeancpTypeConverter;
 import org.kepe.beancp.config.BeancpTypeMatcher;
 import org.kepe.beancp.config.BeancpTypeRelMatcher;
 import org.kepe.beancp.ct.convert.BeancpContextImp;
+import org.kepe.beancp.ct.convert.BeancpConvertMapper;
+import org.kepe.beancp.ct.converter.BeancpMapperPropertyInfo;
+import org.kepe.beancp.info.BeancpInfo;
 import org.kepe.beancp.tool.BeancpBeanTool;
+import org.kepe.beancp.tool.BeancpInfoMatcherTool;
 import org.kepe.beancp.tool.BeancpTool;
 
 /**
@@ -367,5 +372,11 @@ public class BeancpUtil
 		BeancpTool.registerTypeConversion(fromTypeMatcher, toTypeMatcher, typeRelMatcher, distance, oconverter, priority);
 	}
 	
+    public static void registerPropertyGetAndSet(Type type,BeancpPropertyGetAndSet pgas) {
+		BeancpTool.registerPropertyGetAndSet(type, pgas);
+	}
 	
+	public static void registerPropertyGetAndSet(Type type,BeancpPropertyGetAndSet pgas,int priority) {
+		BeancpTool.registerPropertyGetAndSet(type, pgas,priority);
+	}
 }
